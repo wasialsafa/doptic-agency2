@@ -4,7 +4,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
-// 1. Reusable Tilt Component for the "Tilting Effect"
+// 1. Reusable Tilt Component
 const TiltImage = ({ src, alt, className, direction }) => {
   const containerRef = useRef(null);
   const imageRef = useRef(null);
@@ -21,8 +21,8 @@ const TiltImage = ({ src, alt, className, direction }) => {
       const y = (e.clientY - top) / height - 0.5;
 
       gsap.to(image, {
-        rotationY: x * 10, // Tilt left/right
-        rotationX: -y * 10, // Tilt up/down
+        rotationY: x * 10, 
+        rotationX: -y * 10,
         transformPerspective: 1000,
         ease: "power2.out",
         duration: 0.5,
@@ -53,7 +53,7 @@ const TiltImage = ({ src, alt, className, direction }) => {
         ref={imageRef}
         src={src}
         alt={alt}
-        className={`w-full h-full object-cover transition-transform will-change-transform ${direction}`} // Added direction class for targeting
+        className={`w-full h-full object-cover transition-transform will-change-transform ${direction}`} 
       />
     </div>
   );
@@ -92,9 +92,7 @@ const ImpactSection = () => {
         }
       });
 
-      // Image Animations (Directional)
-      
-      // Top Image: Coming from Top
+      // Image Animations
       gsap.from(".anim-top", {
         y: -100,
         opacity: 0,
@@ -106,19 +104,17 @@ const ImpactSection = () => {
         }
       });
 
-      // Left Image: Coming from Left
       gsap.from(".anim-left", {
         x: -100,
         opacity: 0,
         duration: 1.2,
         ease: "power3.out",
         scrollTrigger: {
-          trigger: ".grid-container", // Trigger when the grid row starts
+          trigger: ".grid-container", 
           start: "top 75%",
         }
       });
 
-      // Right Image: Coming from Right
       gsap.from(".anim-right", {
         x: 100,
         opacity: 0,
@@ -136,61 +132,72 @@ const ImpactSection = () => {
   }, []);
 
   return (
-    <section className="w-full bg-bg-light dark:bg-bg-dark min-h-screen">
-      {/* Container with specific spacing requested */}
+    <section className="w-full bg-bg-light dark:bg-bg-dark flex justify-center">
+      
+      {/* Page Container:
+        Width: 1440px
+        Padding: Top 60px, Right 75px, Bottom 60px, Left 75px 
+      */}
       <div 
         ref={sectionRef}
-        className="max-w-[calc(100%-40px)] md:max-w-[calc(100%-60px)] lg:max-w-[calc(100%-120px)] mx-auto px-0 py-16"
+        className="w-full max-w-[1440px] px-[75px] py-[60px]"
       >
-        {/* Header Text */}
-        <div className="mb-12">
-          <h2 
-            ref={titleRef} 
-            className="text-4xl md:text-5xl font-medium text-black mb-4 tracking-tight"
-          >
-            The Impact
-          </h2>
-          <p 
-            ref={subTitleRef} 
-            className="text-sm md:text-base text-gray-600 max-w-xl leading-relaxed"
-          >
-            The new platform launched in time for their Fall Collection. The results were immediate.
-          </p>
-        </div>
+        
+        {/* Main Content Wrapper */}
+        <div className="flex flex-col gap-[64px]">
 
-        {/* Grid Layout */}
-        <div className="flex flex-col gap-4 md:gap-6">
-          
-          {/* Top Image (Full Width) */}
-          <div className="w-full h-[300px] md:h-[500px]">
-            <TiltImage 
-              src="\images\projectspage\projectdetails01\impactimage1.svg" // Basketball vibe
-              alt="Basketball Player"
-              direction="anim-top"
-              className="w-full h-full"
-            />
+          {/* Header Text Section */}
+          <div>
+            <h2 
+              ref={titleRef} 
+              className="text-[42px] md:text-[54px] lg:text-[64px] font-medium tracking-tight leading-none mb-4"
+            >
+              The Impact
+            </h2>
+            <p 
+              ref={subTitleRef} 
+              className="text-sm md:text-base text-gray-600 w-full leading-relaxed"
+            >
+              The new platform launched in time for their Fall Collection. The results were immediate.
+            </p>
           </div>
 
-          {/* Bottom Row (Two Columns) */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 grid-container">
-            {/* Left Image */}
-            <div className="h-[400px] md:h-[600px]">
+          {/* Images Section Wrapper with 32px vertical gap */}
+          <div className="flex flex-col gap-[32px]">
+            
+            {/* Top Image (Full Width: 1290px, Height: 640px) */}
+            <div className="w-full h-[640px]">
               <TiltImage 
-                src="\images\projectspage\projectdetails01\impactimage2.svg" // Pink hair fashion vibe
-                alt="Fashion Model Pink Hair"
-                direction="anim-left"
-                className="w-full h-full"
+                src="/images/projectspage/projectdetails01/impactimage1.svg" 
+                alt="Basketball Player"
+                direction="anim-top"
+                className="w-full h-full rounded-sm"
               />
             </div>
 
-            {/* Right Image */}
-            <div className="h-[400px] md:h-[600px]">
-              <TiltImage 
-                src="\images\projectspage\projectdetails01\impactimage3.svg" // Glasses/Coat vibe
-                alt="Man in Coat"
-                direction="anim-right"
-                className="w-full h-full"
-              />
+            {/* Bottom Row (Two Columns, Gap 32px) */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-[32px] grid-container">
+              
+              {/* Left Image (Height: 640px) */}
+              <div className="h-[640px]">
+                <TiltImage 
+                  src="/images/projectspage/projectdetails01/impactimage2.svg" 
+                  alt="Fashion Model Pink Hair"
+                  direction="anim-left"
+                  className="w-full h-full rounded-sm"
+                />
+              </div>
+
+              {/* Right Image (Height: 640px) */}
+              <div className="h-[640px]">
+                <TiltImage 
+                  src="/images/projectspage/projectdetails01/impactimage3.svg" 
+                  alt="Man in Coat"
+                  direction="anim-right"
+                  className="w-full h-full rounded-sm"
+                />
+              </div>
+
             </div>
           </div>
 

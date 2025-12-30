@@ -27,71 +27,84 @@ const Project04 = () => {
   }, []);
 
   return (
-    // Changed px to [30px] to match your exact requirement
-    <section 
-      ref={sectionRef}
-      className="bg-bg-light dark:bg-bg-dark min-h-screen px-[30px] py-20 flex flex-col items-start" 
-    >
-      <div className="w-full max-w-full relative">
+    <div className="bg-bg-light dark:bg-bg-dark min-h-screen transition-colors duration-300 font-sans overflow-x-hidden flex justify-center items-center">
+      
+      {/* SECTION: Fixed Dimensions (1440px x 998px) */}
+      {/* Added 'relative' here so the absolute number positions relative to this box */}
+      <section 
+        ref={sectionRef}
+        className="relative w-[1440px] h-[998px] px-[75px] py-[60px] flex-shrink-0 box-border" 
+      >
         
-        {/* Header Text Block - We keep this items-end so the TEXT stays on the right */}
-        <div ref={textRef} className="flex flex-col items-end mb-12 relative z-10">
-          <h2 
-            className="font-medium leading-[1.1] tracking-[-0.03em] text-[#0e0e0e] dark:text-text-light"
-            style={{ 
-              fontFamily: '"Inter Variable", sans-serif', 
-              fontSize: 'clamp(48px, 8vw, 110px)' 
-            }}
-          >
-            Nova Banking Mobile
-          </h2>
-          <h3 
-            className="mt-[-10px] text-[#0e0e0e] dark:text-text-light"
-            style={{ 
-              fontFamily: '"Italiana", serif', 
-              fontSize: 'clamp(32px, 5vw, 72px)' 
-            }}
-          >
-            App
-          </h3>
+        {/* NUMBER 04: "Out of bounds" element
+            Positioned relative to the 1440px section, ignoring the 75px padding.
+            Right: 40px from the edge.
+            Size: 167px x 154px.
+        */}
+        <div 
+          className="absolute flex items-center justify-center font-bold text-black/[0.08] dark:text-white/[0.08] select-none z-0 leading-none"
+          style={{ 
+            width: '167px',
+            height: '154px',
+            right: '40px', // 40px gap from the right side of the screen/container
+            top: '280px',  // Aligned roughly with the top of the image
+            fontSize: '200px' 
+          }}
+        >
+          04
         </div>
 
-        {/* Image and Number Container */}
-        <div className="relative w-full">
-          {/* Large Background Number "02" */}
-          <span 
-            className="absolute right-[-10px] top-[-60px] md:top-[-100px] font-bold text-black/[0.08] dark:text-white/[0.08] select-none z-0"
-            style={{ 
-                fontFamily: '"Inter Variable", sans-serif',
-                fontSize: 'clamp(120px, 22vw, 280px)' 
-            }}
-          >
-            04
-          </span>
-
-          {/* FIX: Removed w-[80%] and added w-full with a max-width. 
-             Removed any ml-auto or centering to let it sit against the 30px padding.
-          */}
-          <div 
-            ref={imageRef}
-            className="relative z-10 w-full max-w-[1100px] h-[600px] overflow-hidden shadow-2xl"
-          >
-            <img 
-              src="/images/projectspage/projectimage1.svg" 
-              alt="Scaling Enterprise SaaS"
-              className="w-full h-full object-cover hover:scale-105 transition-transform duration-700 ease-out"
-            />
+        {/* Main Content Div: 1290px x 878px with 24px Gap */}
+        <div className="relative w-[1290px] h-[878px] flex flex-col gap-[24px]">
+          
+          {/* 1. Header Text Block - Right Aligned */}
+          <div ref={textRef} className="flex flex-col items-end z-20 w-full h-[150px] justify-end">
+            <h2 
+              className="font-medium leading-[1.1] tracking-[-0.03em] text-[#0e0e0e] dark:text-text-light text-right"
+              style={{ 
+                fontFamily: '"Inter Variable", sans-serif', 
+                fontSize: '96px' 
+              }}
+            >
+              Nova Banking Mobile
+            </h2>
+            <h3 
+              className="mt-[-10px] text-[#0e0e0e] dark:text-text-light text-right"
+              style={{ 
+                fontFamily: '"Italiana", serif', 
+                fontSize: '64px' 
+              }}
+            >
+              App
+            </h3>
           </div>
-        </div>
 
-        {/* Footer Description */}
-        <div className="mt-8 w-full max-w-[600px]">
-          <p className="text-[#0e0e0e]/70 dark:text-text-light/60 text-[14px] md:text-[16px] leading-relaxed font-light">
-            A robust dashboard redesign for Optixmn that improves user workflow and visualizes complex data clearly.
-          </p>
+          {/* 2. Image Container */}
+          <div className="relative w-full flex items-start">
+            {/* Image: w-[1098px] h-[614px] */}
+            <div 
+              ref={imageRef}
+              className="relative z-10 overflow-hidden shadow-2xl"
+              style={{ width: '1098px', height: '614px' }}
+            >
+              <img 
+                src="/images/projectspage/projectimage1.svg" 
+                alt="Nova Banking App"
+                className="w-full h-full object-cover hover:scale-105 transition-transform duration-700 ease-out"
+              />
+            </div>
+          </div>
+
+          {/* 3. Footer Description - One Liner */}
+          <div className="w-[1098px]">
+            <p className="text-[#0e0e0e]/70 dark:text-text-light/60 text-[16px] leading-relaxed font-light whitespace-nowrap overflow-hidden text-ellipsis">
+              A robust dashboard redesign for Optixmn that improves user workflow and visualizes complex data clearly.
+            </p>
+          </div>
+
         </div>
-      </div>
-    </section>
+      </section>
+    </div>
   );
 };
 

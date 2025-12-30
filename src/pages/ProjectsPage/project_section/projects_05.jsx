@@ -1,72 +1,95 @@
 import React from 'react';
-import { useTheme } from '../../../context/ThemeContext'; // Ensure this matches your project structure
+import { useTheme } from '../../../context/ThemeContext';
 
 const Project05 = () => {
   const { theme } = useTheme();
 
   return (
-    <div className="bg-[#e2e2e2] dark:bg-bg-dark min-h-screen transition-colors duration-300 font-sans overflow-x-hidden">
+    <div className="bg-[#e2e2e2] dark:bg-bg-dark min-h-screen transition-colors duration-300 font-sans overflow-x-hidden flex justify-center items-center">
       
-    
-
-      {/* SECTION 2: PROJECT SHOWCASE */}
-      <section className="px-[20px] md:px-[30px] lg:px-[60px] py-16">
-        <div className="flex flex-col w-full max-w-full relative">
+      {/* SECTION: 
+          Mobile: w-full, h-auto, padding 20px
+          Desktop (lg): Fixed 1440px x 998px, padding 75px
+      */}
+      <section className="w-full h-auto px-5 py-10 lg:w-[1440px] lg:h-[998px] lg:px-[75px] lg:py-[60px] flex-shrink-0 box-border transition-all">
+        
+        {/* Main Content Div:
+            Mobile: Flex column, fluid width
+            Desktop (lg): Block, Fixed 1290px x 878px
+        */}
+        <div className="relative w-full flex flex-col gap-8 lg:block lg:w-[1290px] lg:h-[878px]">
           
-          {/* "Redefining Urban" - Inter Variable */}
-          <h2 
-            className="font-medium leading-[120%] tracking-[-0.04em] text-[#0e0e0e] dark:text-text-light"
-            style={{ 
-              fontFamily: '"Inter Variable", sans-serif', 
-              fontSize: 'clamp(36px, 6.6vw, 96px)' 
-            }}
-          >
-            Vitality Telehealth
-          </h2>
-
-          {/* "Fashion" - Italiana */}
-          <h2 
-            className="leading-[120%] tracking-[-0.02em] text-[#0e0e0e] dark:text-text-light mt-[-5px]"
-            style={{ 
-              fontFamily: '"Italiana", serif', 
-              fontSize: 'clamp(28px, 4.4vw, 64px)' 
-            }}
-          >
-            UI/UX
-          </h2>
-
-          {/* Project Content Box */}
-          <div className="relative w-full mt-10">
-            
-            {/* Background Project Number "01" */}
-            <span 
-              className="absolute left-[-10px] top-[-20px] md:top-[-40px] font-bold text-black/[0.04] dark:text-white/[0.04] select-none z-0"
-              style={{ fontSize: 'clamp(100px, 20vw, 240px)' }}
+          {/* 1. Headings */}
+          <div className="relative z-20 lg:absolute lg:top-0 lg:left-0">
+            <h2 
+              className="font-medium leading-[120%] tracking-[-0.04em] text-[#0e0e0e] dark:text-text-light text-[48px] md:text-[72px] lg:text-[96px]"
+              style={{ fontFamily: '"Inter Variable", sans-serif' }}
             >
-              05
-            </span>
-            
-            {/* Content Wrapper with offset to reveal number and align under title */}
-            <div className="ml-[20%] md:ml-[25%] w-[60%] md:w-[75%] flex flex-col">
-              {/* Main Project Image */}
-              <div className="relative z-10 w-full flex">
-                <div className="w-[80%] h-auto ml-16 overflow-hidden">
-                  <img 
-                    src="/images/projectspage/projectimage1.svg" // Replace with your actual image path
-                    alt="Redefining Urban Fashion"
-                    className="w-full h-auto object-cover max-h-[600px]"
-                  />
-                </div>
-              </div>
+              Vitality Telehealth
+            </h2>
+            <h2 
+              className="leading-[120%] tracking-[-0.02em] text-[#0e0e0e] dark:text-text-light mt-[-5px] lg:mt-[-10px] text-[36px] md:text-[48px] lg:text-[64px]"
+              style={{ fontFamily: '"Italiana", serif' }}
+            >
+              UI/UX
+            </h2>
+          </div>
 
-              {/* Description Text */}
-              <div className="w-full flex justify-start mt-6">
-                <p className="text-left text-[#0e0e0e]/60 dark:text-text-light/60 text-[12px] md:text-[14px] w-full leading-relaxed">
-                  We transformed a local label into a global brand. Our strategic design 
-                  increased conversion rates and customer loyalty instantly.
-                </p>
-              </div>
-            </div>
+          {/* 2. Number "05" 
+              Mobile: Static, smaller font
+              Desktop (lg): Absolute, Left 112px, Bottom 460px
+          */}
+          <div 
+            className="relative lg:absolute flex items-center justify-start lg:justify-center font-bold text-black/[0.04] dark:text-white/[0.04] select-none z-0 leading-none lg:w-[158px] lg:h-[154px] lg:left-[112px] lg:bottom-[460px]"
+          >
+                           <span 
+                className="block text-[#0e0e0e] dark:text-white leading-[120%] select-none"
+                style={{ 
+                    fontFamily: '"Inter Variable", sans-serif',
+                    fontWeight: 800, 
+                    fontSize: 'clamp(64px, 10vw, 128px)', 
+                    letterSpacing: '-0.04em',
+                    opacity: 0.3 
+                }}
+              >
+                05
+              </span>
+          </div>
+
+          {/* 3. Image 
+              Mobile: W-full, H-auto, aspect-video
+              Desktop (lg): Absolute, W-960px, Left-330px
+          */}
+          <div 
+            className="relative z-10 overflow-hidden w-full h-[300px] md:h-[500px] lg:absolute lg:w-[960px] lg:h-[614px] lg:left-[330px] lg:top-[200px]"
+          >
+            <img 
+              src="/images/projectspage/projectimage1.svg" 
+              alt="Vitality Telehealth UI/UX"
+              className="w-full h-full object-cover"
+            />
+          </div>
+
+          {/* 4. Description Text 
+              Mobile: Text Left, fluid width
+              Desktop (lg): Text Right, Width 1290px, Absolute Bottom
+          */}
+          <div 
+            className="relative w-full lg:absolute lg:bottom-[20px] lg:left-0 lg:w-[1290px]"
+          >
+            <p 
+              className="text-[#0e0e0e] dark:text-text-light text-left lg:text-right"
+              style={{
+                fontFamily: '"Inter Variable", sans-serif',
+                fontWeight: 400,
+                fontStyle: 'normal',
+                fontSize: '18px',
+                lineHeight: '160%',
+                letterSpacing: '0%',
+              }}
+            >
+              We transformed a local label into a global brand. Our strategic design increased conversion rates and customer loyalty instantly.
+            </p>
           </div>
 
         </div>

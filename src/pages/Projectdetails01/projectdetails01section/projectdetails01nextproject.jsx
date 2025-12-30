@@ -5,135 +5,252 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 gsap.registerPlugin(ScrollTrigger);
 
 const NextProjectPage = () => {
-  const sectionRef = useRef(null);
-  const headerRef = useRef(null); // For the top "Next Project" part
-  const titleRef = useRef(null);  // For "Scaling Enterprise"
+  const containerRef = useRef(null);
+  const headerRef = useRef(null);
+  const contentRef = useRef(null);
   const imageRef = useRef(null);
-  const footerRef = useRef(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
       
-      // 1. Animate the Top Header (Next Project / View All)
+      // 1. Header Animation
       gsap.from(headerRef.current, {
         opacity: 0,
         y: 30,
         duration: 1,
         ease: "power3.out",
         scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top 90%",
-        }
-      });
-
-      // 2. Animate Main Titles and Image
-      // We create a timeline to sequence them slightly or just stagger them
-      gsap.from([titleRef.current, imageRef.current, footerRef.current], {
-        opacity: 0,
-        y: 60,
-        duration: 1.2,
-        stagger: 0.2, // Time between each element starting
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: titleRef.current, // Trigger when the title hits view
+          trigger: containerRef.current,
           start: "top 80%",
         }
       });
 
-    }, sectionRef);
+      // 2. Main Content Stagger
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: contentRef.current,
+          start: "top 70%",
+        }
+      });
+
+      tl.from(".anim-title", {
+        y: 60,
+        opacity: 0,
+        duration: 1,
+        stagger: 0.15,
+        ease: "power3.out"
+      })
+      .from(imageRef.current, {
+        scale: 1.05,
+        opacity: 0,
+        duration: 1.2,
+        ease: "power3.out"
+      }, "-=0.6")
+      .from(".anim-number", {
+        x: 20,
+        opacity: 0,
+        duration: 1,
+        ease: "power3.out"
+      }, "-=1")
+      .from(".anim-caption", { 
+        opacity: 0,
+        y: 10,
+        duration: 0.8
+      }, "-=0.5");
+
+    }, containerRef);
 
     return () => ctx.revert();
   }, []);
 
   return (
-    <section 
-      ref={sectionRef}
-      className="bg-bg-light dark:bg-bg-dark text-[#0e0e0e] min-h-screen px-[30px] py-16 flex flex-col relative overflow-hidden"
-    >
+    // OUTER WRAPPER
+    <div className="w-full bg-bg-light dark:bg-bg-dark transition-colors duration-300 flex justify-center">
       
-      {/* --- TOP HEADER SECTION --- */}
-      <div ref={headerRef} className="flex flex-col md:flex-row justify-between items-start md:items-center mb-24 w-full border-b border-black/5 pb-8 md:pb-0 md:border-none">
+      {/* INNER CONTAINER */}
+      <section 
+        ref={containerRef}
+        className="w-full max-w-[1440px] relative overflow-hidden font-sans text-[#0e0e0e] px-5 lg:px-0"
+        style={{
+          // Responsive padding: 60px on mobile, 120px on desktop
+          paddingTop: 'clamp(60px, 10vw, 120px)',
+          paddingBottom: 'clamp(60px, 10vw, 120px)',
+        }}
+      >
         
-        {/* Logo / Title Area */}
-        <div className="max-w-md">
-          <h1 className="text-4xl md:text-5xl mb-3">
-            <span className="font-bold tracking-tight" style={{ fontFamily: '"Inter Variable", sans-serif' }}>Next</span>
-            <span className="italic ml-2 font-serif font-light" style={{ fontFamily: '"Italiana", serif' }}>Project</span>
-          </h1>
-          <p className="text-sm md:text-base text-gray-600 leading-relaxed max-w-sm">
-            We share what we learn. Read our latest thoughts on the future of digital design.
-          </p>
+        {/* --- TOP HEADER SECTION --- */}
+        <div 
+          ref={headerRef} 
+          className="mx-auto flex flex-col md:flex-row justify-between items-start"
+          style={{
+            // Max-width keeps desktop size, w-full allows shrinking
+            maxWidth: '1290px',
+            width: '100%',
+            marginBottom: '64px'
+          }}
+        >
+          {/* Left: Title & Subtext Group */}
+          <div className="flex flex-col gap-[20px] lg:gap-[32px]">
+            
+            {/* "Next Project" Title */}
+            <h1 className="leading-[120%] tracking-[-0.04em] flex flex-wrap items-baseline gap-2 lg:gap-3 m-0 p-0">
+              <span 
+                className="font-medium"
+                style={{ 
+                  fontFamily: '"Inter", sans-serif', 
+                  fontWeight: 500,
+                  // Responsive font size
+                  fontSize: 'clamp(48px, 6vw, 72px)' 
+                }}
+              >
+                Next
+              </span>
+              <span 
+                className="italic font-normal"
+                style={{ 
+                  fontFamily: '"Libre Caslon Text", serif', 
+                  fontSize: 'clamp(48px, 6vw, 72px)' 
+                }}
+              >
+                Project
+              </span>
+            </h1>
+
+            {/* Subtext */}
+            <p 
+              className="text-gray-600 m-0 p-0"
+              style={{
+                maxWidth: '768px',
+                fontFamily: '"Inter", sans-serif',
+                fontSize: '18px',
+                fontWeight: 400,
+                lineHeight: '160%',
+              }}
+            >
+              We share what we learn. Read our latest thoughts on the future of digital design.
+            </p>
+          </div>
+
+          {/* Right: View All Button */}
+          <div className="pt-6 md:pt-4 self-start md:self-auto">
+             <button 
+               className="px-6 py-3 border border-gray-400 text-sm font-medium hover:bg-black hover:text-white transition-colors duration-300"
+               style={{ fontFamily: '"Inter", sans-serif' }}
+             >
+               View All
+             </button>
+          </div>
         </div>
 
-        {/* View All Button */}
-        <button className="mt-6 md:mt-0 px-8 py-3 border border-black/20 text-sm font-medium hover:bg-black hover:text-white transition-colors duration-300">
-          View All
-        </button>
-      </div>
-
-      {/* --- MAIN CONTENT SECTION --- */}
-      <div className="w-full relative">
-        
-        {/* Titles: Aligned Right */}
-        <div ref={titleRef} className="flex flex-col items-end relative z-20 mb-[-20px] md:mb-[-40px]">
-          <h2 
-            className="font-medium leading-[1] tracking-[-0.03em] text-right"
-            style={{ 
-              fontFamily: '"Inter Variable", sans-serif', 
-              fontSize: 'clamp(48px, 8vw, 110px)' 
-            }}
-          >
-            Scaling Enterprise
-          </h2>
+        {/* --- MAIN CONTENT SECTION --- */}
+        <div 
+          ref={contentRef}
+          className="mx-auto flex flex-col"
+          style={{ 
+             maxWidth: '1262px',
+             width: '100%' 
+          }}
+        >
           
-          <div className="relative">
-            {/* The SaaS Text */}
+          {/* TITLES (Aligned Right) */}
+          <div className="flex flex-col items-end mb-8 lg:mb-4">
+            <h2 
+              className="anim-title text-right text-[#0e0e0e]"
+              style={{ 
+                fontFamily: '"Inter", sans-serif', 
+                fontWeight: 500,
+                fontSize: 'clamp(48px, 8vw, 96px)', // Responsive scaling
+                lineHeight: '120%',
+                letterSpacing: '-0.04em'
+              }}
+            >
+              Scaling Enterprise
+            </h2>
+            
             <h3 
-              className="text-right relative z-20"
+              className="anim-title text-right text-[#0e0e0e]"
               style={{ 
                 fontFamily: '"Italiana", serif', 
-                fontSize: 'clamp(48px, 8vw, 110px)' 
+                fontWeight: 400,
+                fontSize: 'clamp(32px, 6vw, 64px)', // Responsive scaling
+                lineHeight: '120%',
+                letterSpacing: '-0.02em',
+                marginTop: '-5px' 
               }}
             >
               SaaS
             </h3>
+          </div>
 
-            {/* The Background "02" Number */}
-            {/* Positioned absolute relative to the "SaaS" container to sit behind it */}
-            <span 
-              className="absolute right-0 top-1/2 -translate-y-1/2 font-bold text-black/[0.05] pointer-events-none select-none z-0 leading-none"
-              style={{ 
-                fontFamily: '"Inter Variable", sans-serif',
-                fontSize: 'clamp(150px, 25vw, 350px)',
-                transform: 'translate(10%, -15%)' // Fine tuning position to match image
+          {/* IMAGE & NUMBER ROW */}
+          {/* Stacks vertically on small screens, row on Large */}
+          <div className="w-full flex flex-col lg:flex-row items-start">
+            
+            {/* Left Column: Image + Caption */}
+            <div className="flex flex-col gap-6 w-full lg:w-auto">
+              {/* Image Container */}
+              <div 
+                className="overflow-hidden bg-black w-full"
+                style={{
+                  // Max width ensures it stops at 1043px on desktop
+                  maxWidth: '1043px', 
+                  // Aspect ratio keeps shape on mobile, fixed height on desktop
+                  height: 'auto',
+                  aspectRatio: '1043/640'
+                }}
+              >
+                <img 
+                  ref={imageRef}
+                  src="/images/projectspage/projectimage2.svg" 
+                  alt="Scaling Enterprise SaaS"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+
+              {/* Bottom Caption */}
+              <p 
+                className="anim-caption text-gray-600 lg:whitespace-nowrap"
+                style={{
+                  fontFamily: '"Inter", sans-serif',
+                  fontSize: '16px',
+                  maxWidth: '600px'
+                }}
+              >
+                A robust dashboard redesign for Optixmn that improves user workflow and visualizes complex data clearly.
+              </p>
+            </div>
+
+            {/* Spacer Gap (60px) - Hidden on mobile, visible on Large */}
+            <div className="hidden lg:block" style={{ width: '60px', flexShrink: 0 }} />
+
+            {/* Right Column: Number 02 */}
+            <div 
+              className="anim-number flex items-start justify-start pt-8 lg:pt-4"
+              style={{
+                width: '159px',
+                // Height auto on mobile to avoid cutoff
+                height: 'auto', 
+                minHeight: '154px'
               }}
             >
-              02
-            </span>
+              <span 
+                className="font-bold leading-none text-[#D1D1D1]"
+                style={{
+                  fontFamily: '"Inter", sans-serif',
+                  fontSize: 'clamp(80px, 10vw, 120px)',
+                  letterSpacing: '-0.04em'
+                }}
+              >
+                02
+              </span>
+            </div>
+
           </div>
+
         </div>
 
-        {/* Main Image */}
-        <div ref={imageRef} className="relative w-full mt-4 md:mt-8 z-10">
-          <div className="relative z-10 w-full max-w-[1043px] aspect-[1043/640] overflow-hidden">
-            {/* Using a placeholder for the abstract orange spiral */}
-            <img 
-              src="/images/projectspage/projectimage2.svg" 
-              alt="Abstract 3D Shape"
-              className="w-[80%] h-full object-cover hover:scale-105 transition-transform duration-[1.5s] ease-out opacity-90"
-            />
-          </div>
-        </div>
-
-        {/* Bottom Caption */}
-        <div ref={footerRef} className="mt-6 md:mt-8 max-w-2xl">
-          <p className="text-gray-600 text-sm md:text-base leading-relaxed">
-            A robust dashboard redesign for Optixmn that improves user workflow and visualizes complex data clearly.
-          </p>
-        </div>
-
-      </div>
-    </section>
+      </section>
+    </div>
   );
 };
 

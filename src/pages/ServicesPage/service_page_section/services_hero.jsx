@@ -1,16 +1,23 @@
 import { useEffect, useRef } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { useTheme } from '../../../context/ThemeContext'
 
 gsap.registerPlugin(ScrollTrigger)
 
 const ServicesHero = () => {
-  const { theme } = useTheme()
+  const theme = 'light' 
+
   const sectionRef = useRef(null)
-  const listContainerRef = useRef(null)
+  const mainContentRef = useRef(null)
+  const listWrapperRef = useRef(null)
   const slidesRef = useRef([])
   const itemsRef = useRef([])
+
+  // MATH CONSTANTS (Strictly preserved from your code)
+  const TOTAL_HEIGHT = 906;
+  const ITEM_COUNT = 7;
+  const ITEM_HEIGHT = TOTAL_HEIGHT / ITEM_COUNT; // ~129.428px
+  const IMAGE_HEIGHT = ITEM_HEIGHT * 4; // ~517.71px
 
   const services = [
     { name: "UI/UX Design", image: "/images/servicesimage1.svg" },
@@ -19,190 +26,203 @@ const ServicesHero = () => {
     { name: "Mobile App Design", image: "/images/servicesimage4.svg" },
     { name: "Ecommerce Store Design", image: "/images/servicesimage1.svg" },
     { name: "Digital Growth Strategy", image: "/images/servicesimage2.svg" },
-    { name: "Banding Design", image: "/images/servicesimage3.svg" }
+    { name: "Branding Design", image: "/images/servicesimage3.svg" }
   ]
+
+  // Doubled array for visual continuity
+  const displayServices = [...services, ...services]; 
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      const listItems = itemsRef.current
+      const activeColor = theme === 'dark' ? "#FFFFFF" : "#0E0E0E"
+      const inactiveColor = "rgba(160, 160, 160, 0.3)" // Faded for distant items
+      const activeBarColor = "#FF6B35"
+      
       const slides = slidesRef.current
-      const activeColor = theme === 'dark' ? "rgb(226, 226, 226)" : "rgb(14, 14, 14)"
+      const items = itemsRef.current
+      const listWrapper = listWrapperRef.current
 
-      gsap.set(slides, {
-        zIndex: (i, target, targets) => targets.length - i
-      })
+      ScrollTrigger.matchMedia({
+        "(min-width: 1024px)": function() {
+            // 1. SETUP
+            gsap.set(slides, { 
+                zIndex: (i) => slides.length - i,
+                height: "100%" 
+            })
 
-      listItems.forEach((item) => {
-        const textDiv = item.querySelector('.service-text')
-        const orangeBar = item.querySelector('.orange-bar')
+            // 2. TIMELINE with Distance-Based Logic
+            const tl = gsap.timeline({
+                scrollTrigger: {
+                    trigger: mainContentRef.current, 
+                    start: "top top+=65", 
+                    end: () => "+=" + (window.innerHeight * 3),
+                    pin: sectionRef.current,
+                    scrub: 0.4, // Snappier response
+                    invalidateOnRefresh: true,
+                    onUpdate: (self) => {
+                        // Calculate which index is currently in the "Focus Slot" (Slot 2)
+                        const progress = self.progress * (services.length - 1);
+                        
+                        items.forEach((item, i) => {
+                            if (!item) return;
+                            const text = item.querySelector('.service-text');
+                            const bar = item.querySelector('.orange-bar');
+                            
+                            // Distance from the active scroll point
+                            const distance = Math.abs(i - progress);
+                            
+                            // Slot-based opacity: Focused item is 1, neighbors are lower
+                            const opacity = Math.max(0.5, 1 - (distance * 0.2));
+                            const scale = Math.max(0.9, 1 - (distance * 0.05));
 
-        gsap.set(textDiv, {
-          color: "rgba(192, 192, 192, 1)",
-          fontWeight: 400,
-          fontSize: "1em"
-        })
+                            gsap.to(text, { 
+                                opacity: opacity, 
+                                scale: scale,
+                                color: distance < 0.5 ? activeColor : inactiveColor,
+                                fontWeight: distance < 0.5 ? 500 : 400,
+                                duration: 0.2,
+                                overwrite: 'auto'
+                            });
+                            
+                            gsap.to(bar, {
+                                opacity: opacity,
+                                height: distance < 0.5 ? "1.5px" : "0.5px", // Thinner lines
+                                backgroundColor: distance < 0.5 ? activeBarColor : "rgba(192, 192, 192, 0.2)",
+                                duration: 0.2,
+                                overwrite: 'auto'
+                            });
+                        });
+                    }
+                }
+            })
 
-        gsap.set(orangeBar, {
-          backgroundColor: "rgba(192, 192, 192, 1)",
-          transformOrigin: "left center"
-        })
-      })
+            // 3. Coordinate List and Image transitions
+            services.forEach((_, i) => {
+                if (i === services.length - 1) return;
 
-      gsap.set(slides, { height: "100%" })
+                const currentSlide = slides[i]
 
-      slides.forEach((slide, i) => {
-        if (i < slides.length - 1) {
-          gsap.timeline({
-            scrollTrigger: {
-              trigger: sectionRef.current,
-              start: () => "top -" + (window.innerHeight * (i + 0.5)),
-              end: () => "+=" + window.innerHeight,
-              scrub: true,
-              invalidateOnRefresh: true,
-            }
-          }).to(slide, { height: 0 })
+                tl.to(listWrapper, {
+                    y: -(ITEM_HEIGHT * (i + 1)), 
+                    duration: 1,
+                    ease: "none"
+                }, i)
+                .to(currentSlide, { 
+                    height: 0, 
+                    duration: 1, 
+                    ease: "none" 
+                }, i)
+            })
+        },
+
+        "(max-width: 1023px)": function() {
+            gsap.set(".service-text", { color: activeColor, fontWeight: 500, opacity: 1, scale: 1 });
+            gsap.set(".orange-bar", { backgroundColor: inactiveColor, opacity: 0.5, height: "1px" });
+            gsap.set(slides, { clearProps: "all" });
+            gsap.set(listWrapper, { y: 0, clearProps: "all" });
         }
-      })
-
-      listItems.forEach((item, i) => {
-        const textDiv = item.querySelector('.service-text')
-        const orangeBar = item.querySelector('.orange-bar')
-
-        gsap.timeline({
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: () => "top -" + (window.innerHeight * i),
-            end: () => "+=" + window.innerHeight,
-            scrub: true,
-            invalidateOnRefresh: true,
-          }
-        })
-        .to(textDiv, {
-          duration: 0.33,
-          color: activeColor,
-          fontWeight: 500,
-          fontSize: "2.15em",
-          ease: "power2.out"
-        })
-        .to(orangeBar, {
-          duration: 0.33,
-          backgroundColor: "#FF6B35",
-        }, 0)
-        .to(textDiv, {
-          duration: 0.33,
-          color: "rgba(192, 192, 192, 1)",
-          fontWeight: 400,
-          fontSize: "1.75em",
-          ease: "power2.in"
-        }, 0.66)
-        .to(orangeBar, {
-          duration: 0.33,
-          backgroundColor: "rgba(192, 192, 192, 1)",
-        }, 0.66)
-      })
-
-      ScrollTrigger.create({
-        trigger: sectionRef.current,
-        start: "top top",
-        end: () => "+=" + (listItems.length * window.innerHeight * 0.8),
-        pin: true,
-        scrub: true,
-        invalidateOnRefresh: true,
-      })
+      });
 
     }, sectionRef)
 
     return () => ctx.revert()
-  }, [theme])
+  }, [theme, services.length, ITEM_HEIGHT])
 
   return (
     <section
       ref={sectionRef}
-      className="bg-bg-light dark:bg-bg-dark  transition-colors duration-300 overflow-hidden h-screen flex items-center px-[20px] md:px-[30px] lg:px-[60px] pt-26 pb-8"
+      className="w-full min-h-screen bg-bg-light dark:bg-bg-dark transition-colors duration-300 relative overflow-hidden flex flex-col justify-center"
       id="services"
     >
-      <div className="flex flex-col items-center gap-2 md:gap-4 lg:gap-6 w-full h-full py-2 md:py-4 lg:py-6 justify-center">
+      <div className="w-full lg:max-w-[1440px] mx-auto px-6 py-12 md:py-16 lg:px-[75px] lg:pt-[200px] lg:pb-[120px] flex flex-col box-border">
         
-        {/* Header Section - Now matches Navbar horizontal span */}
-        <div className="flex flex-col relative z-[100] items-start gap-1 md:gap-2 w-full max-w-full shrink-0">
-          <div className="font-medium text-[#0e0e0e] dark:text-text-light text-xs md:text-sm lg:text-base tracking-[2px] leading-[20px] uppercase">
+        {/* HEADER */}
+        <div className="flex flex-col items-start gap-[12px] w-full lg:max-w-[1290px] shrink-0 mb-8 md:mb-10 lg:mb-[64px] z-20 relative">
+          <div className="font-medium text-[#0e0e0e] dark:text-gray-200 text-[12px] md:text-[14px] tracking-[2px] uppercase opacity-60">
             SERVICE
           </div>
 
-          <h2 className="font-normal text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl tracking-tight leading-tight">
-            <span className="font-medium text-[#0e0e0e] dark:text-text-light">
+          <h2 className="text-[#0e0e0e] dark:text-white w-full lg:w-[1290px] font-medium">
+            <span 
+              className="block text-[32px] md:text-5xl lg:text-[72px] leading-[120%] tracking-[-0.04em] font-medium"
+              style={{ fontFamily: "'Inter Variable', sans-serif" }}
+            >
               We make your{" "}
-            </span>
-            <span className="font-serif italic text-[#0e0e0e] dark:text-text-light">
-              complex ideas{" "}
-            </span>
-            <span className="font-medium text-[#0e0e0e] dark:text-text-light">
-              simple <br />and beautiful.
+              <span 
+                className="italic font-normal"
+                style={{ fontFamily: "'Libre Caslon Text', serif" }}
+              >
+                complex ideas
+              </span>{" "}
+              simple <br className="hidden md:block" /> and beautiful.
             </span>
           </h2>
         </div>
 
-        {/* Services List and Image Container */}
-        <div className="flex flex-col lg:flex-row items-center lg:items-start gap-6 md:gap-8 lg:gap-10 xl:gap-12 w-full max-w-full relative flex-1">
-          
-          {/* LEFT - Service List */}
-          <div className="relative w-full lg:flex-1 h-full flex items-start justify-center overflow-hidden">
-            <div
-              ref={listContainerRef}
-              className="flex flex-col w-full items-start relative z-10 py-4"
+        {/* MAIN CONTENT DIV */}
+        <div 
+          ref={mainContentRef} 
+          className="flex flex-col-reverse lg:flex-row items-start w-full lg:max-w-[1290px] gap-8 md:gap-12 lg:gap-[80px] relative"
+          style={{ 
+             height: typeof window !== 'undefined' && window.innerWidth >= 1024 ? `${TOTAL_HEIGHT}px` : 'auto' 
+          }} 
+        >
+          {/* LEFT: Text List */}
+          <div className="w-full lg:w-[690px] h-auto lg:h-full relative overflow-visible lg:overflow-hidden">
+            <div 
+              ref={listWrapperRef}
+              className="flex flex-col w-full relative will-change-transform" 
             >
-              {services.map((service, i) => (
+              {displayServices.map((service, i) => (
                 <div
                   key={i}
                   ref={(el) => (itemsRef.current[i] = el)}
-                  className="flex flex-col items-start py-3 md:py-4 lg:py-5 w-full service-item relative"
-                  style={{ willChange: 'transform, color, opacity' }}
+                  // Added conditional classes: 
+                  // 1. Hide the duplicate items (index >= 7) on mobile so the list isn't huge.
+                  // 2. Adjust padding and sizing for mobile.
+                  className={`flex-col w-full relative justify-center py-3 md:py-4 lg:py-0 ${i >= services.length ? 'hidden lg:flex' : 'flex'}`} 
+                  style={{ height: typeof window !== 'undefined' && window.innerWidth >= 1024 ? `${ITEM_HEIGHT}px` : 'auto' }} 
                 >
-                  <div className="service-border w-full relative pb-2">
-                    <div className="service-text transition-all duration-200 text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl leading-tight relative z-10">
-                      {service.name}
-                    </div>
-                    <div className="orange-bar absolute bottom-0 left-0 w-full h-[2px]" style={{ transformOrigin: 'left center', backgroundColor: 'rgba(192, 192, 192, 1)' }}></div>
+                  <div 
+                    className="service-text transition-all duration-300 whitespace-nowrap cursor-pointer text-[#0e0e0e] dark:text-white origin-left text-2xl md:text-4xl lg:text-[2.5em]"
+                  >
+                    {service.name}
                   </div>
+                  <div className="orange-bar w-full h-[0.5px] mt-[10px] origin-left bg-gray-300 opacity-20"></div>
                 </div>
               ))}
             </div>
-
-            {/* Gradients */}
-            <div className="hidden lg:block dark:lg:hidden absolute top-0 left-0 w-full h-full pointer-events-none z-20"
-                 style={{ background: 'linear-gradient(180deg, rgba(226,226,226,1) 0%, rgba(226,226,226,0) 12%, rgba(226,226,226,0) 88%, rgba(226,226,226,1) 100%)' }}
-            />
-            <div className="hidden dark:lg:block absolute top-0 left-0 w-full h-full pointer-events-none z-20"
-                 style={{ background: 'linear-gradient(180deg, rgba(14,14,14,1) 0%, rgba(14,14,14,0) 12%, rgba(14,14,14,0) 88%, rgba(14,14,14,1) 100%)' }}
-            />
           </div>
 
-          {/* RIGHT - Images and Button */}
-          <div className="flex flex-col items-center lg:items-end justify-center gap-6 md:gap-8 w-full lg:w-auto">
-            <div className="relative w-[300px] h-[300px] sm:w-[320px] sm:h-[320px] md:w-[360px] md:h-[360px] lg:w-[400px] lg:h-[400px] xl:w-[450px] xl:h-[450px] overflow-hidden">
-              {services.map((service, i) => (
+          {/* RIGHT: Images + Button */}
+          <div 
+            className="w-full lg:w-[520px] shrink-0 relative flex flex-col gap-6 md:gap-10 lg:gap-[56px]"
+            style={{ height: typeof window !== 'undefined' && window.innerWidth >= 1024 ? `${IMAGE_HEIGHT + 56 + 54}px` : 'auto' }} 
+          >
+            {/* Image Container: Adjusted height for mobile to maintain aspect ratio */}
+            <div className="w-full lg:w-[520px] relative overflow-hidden shadow-2xl bg-white dark:bg-gray-800 shrink-0 h-[220px] md:h-[350px] lg:h-[517px] rounded-lg lg:rounded-none">
+               {services.map((service, i) => (
                 <div
                   key={i}
                   ref={(el) => (slidesRef.current[i] = el)}
-                  className="absolute top-0 left-0 right-0 bottom-0 w-full h-full flex items-center justify-center overflow-hidden"
-                  style={{ willChange: 'height' }}
+                  className="absolute top-0 left-0 w-full h-full bg-cover bg-center"
                 >
                   <img
                     src={service.image}
                     alt={service.name}
                     className="w-full h-full object-cover"
-                    loading="lazy"
                   />
                 </div>
               ))}
             </div>
 
-            {/* Button aligned to the right, matching Navbar Menu button side */}
-            <button className="inline-flex items-center justify-center gap-2 px-5 py-2.5 border border-solid border-[#0e0e0e66] dark:border-gray-500 hover:bg-[#0e0e0e0d] dark:hover:bg-gray-800 transition-colors bg-[#e2e2e2] dark:bg-bg-dark rounded-[12px]">
-              <div className="font-medium text-[#0e0e0e] dark:text-text-light text-sm md:text-base leading-[24px] whitespace-nowrap">
-                View All Services
-              </div>
-            </button>
+            <div className="w-full flex justify-start lg:justify-end">
+              <button className="w-full lg:w-[210px] h-[48px] md:h-[54px] px-[24px] py-[12px] flex items-center justify-center gap-[8px] border border-[#0e0e0e66] dark:border-gray-500 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-all rounded-md lg:rounded-none">
+                  <span className="whitespace-nowrap font-medium text-[14px] md:text-[16px]">
+                    View All Services
+                  </span>
+              </button>
+            </div>
           </div>
         </div>
       </div>
