@@ -7,6 +7,8 @@ import { ThemeProvider } from './context/ThemeContext'
 // [1] Import the CursorProvider
 import { CursorProvider } from './context/CursorContext'
 
+import SmoothScroll from './components/SmoothScroll'
+
 const root = ReactDOM.createRoot(document.getElementById('root'))
 
 // Remove StrictMode in production to improve performance
@@ -17,7 +19,9 @@ if (import.meta.env.DEV) {
         <BrowserRouter>
           {/* [2] Wrap App with CursorProvider */}
           <CursorProvider>
-            <App />
+            <SmoothScroll>
+               <App />
+            </SmoothScroll>
           </CursorProvider>
         </BrowserRouter>
       </ThemeProvider>
@@ -29,7 +33,9 @@ if (import.meta.env.DEV) {
       <BrowserRouter>
         {/* [2] Wrap App with CursorProvider here as well */}
         <CursorProvider>
-          <App />
+          <SmoothScroll>
+               <App />
+          </SmoothScroll>
         </CursorProvider>
       </BrowserRouter>
     </ThemeProvider>
