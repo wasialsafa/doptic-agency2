@@ -1,3 +1,4 @@
+import 'leaflet/dist/leaflet.css';
 import { useState } from 'react'
 import { Routes, Route } from 'react-router-dom'
 import CustomCursor from './components/CustomCursor'

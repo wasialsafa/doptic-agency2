@@ -1,148 +1,156 @@
-import React, { useLayoutEffect, useRef, useState } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import React, { useState, useEffect } from 'react';
+import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
+import L from 'leaflet';
 
-gsap.registerPlugin(ScrollTrigger);
+// Fix for default Leaflet marker icons
+import icon from 'leaflet/dist/images/marker-icon.png';
+import iconShadow from 'leaflet/dist/images/marker-shadow.png';
+
+let DefaultIcon = L.icon({
+    iconUrl: icon,
+    shadowUrl: iconShadow,
+    iconSize: [25, 41],
+    iconAnchor: [12, 41]
+});
+L.Marker.prototype.options.icon = DefaultIcon;
+
+// Helper to animate map
+const MapUpdater = ({ center, zoom }) => {
+  const map = useMap();
+  useEffect(() => {
+    map.flyTo(center, zoom, { duration: 1.5 });
+  }, [center, zoom, map]);
+  return null;
+};
 
 const OfficeLocations = () => {
-  const containerRef = useRef(null);
-  const mapRef = useRef(null);
-  
-  // Data for locations
   const locations = [
     {
       id: 'sydney',
       city: 'Sydney',
       address: '123 Sample St, Sydney NSW 2000 AU',
-      image: 'https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?q=80&w=2070&auto=format&fit=crop',
+      coords: [-33.8688, 151.2093], 
     },
     {
       id: 'newyork',
       city: 'New York',
       address: '123 Sample St, New York NY 10000 USA',
-      image: 'https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?q=80&w=2070&auto=format&fit=crop',
+      coords: [40.7128, -74.0060], 
     },
     {
       id: 'london',
       city: 'London',
       address: '61 Union Street, Dunstable, England',
-      image: 'https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?q=80&w=2070&auto=format&fit=crop',
+      coords: [51.5074, -0.1278], 
     }
   ];
 
   const [activeId, setActiveId] = useState(locations[0].id);
-
-  useLayoutEffect(() => {
-    const ctx = gsap.context(() => {
-      
-      // Setup ScrollTriggers for each text block
-      locations.forEach((loc) => {
-        ScrollTrigger.create({
-          trigger: `#loc-${loc.id}`,
-          start: "top center+=100", // Activates when text hits slightly below center
-          end: "bottom center+=100",
-          onEnter: () => setActiveId(loc.id),
-          onEnterBack: () => setActiveId(loc.id),
-        });
-      });
-
-    }, containerRef);
-
-    return () => ctx.revert();
-  }, []);
-
-  // Effect to animate image when activeId changes
-  React.useEffect(() => {
-    if (mapRef.current) {
-      gsap.fromTo(mapRef.current, 
-        { opacity: 0, x: -30 }, 
-        { opacity: 1, x: 0, duration: 0.6, ease: "power2.out" }
-      );
-    }
-  }, [activeId]);
-
-  // Get active image URL
-  const activeImage = locations.find(l => l.id === activeId)?.image;
+  const activeLocation = locations.find(l => l.id === activeId);
 
   return (
-    <div className="bg-bg-light dark:bg-bg-dark font-sans text-black min-h-screen">
-      
+    <div className="bg-bg-light dark:bg-bg-dark min-h-screen flex justify-center w-full">
       <style>
         {`
           @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Libre+Caslon+Text:ital,wght@0,400;1,400&display=swap');
         `}
       </style>
 
-      {/* Main Container */}
+      {/* Main Container - Responsive */}
       <div 
-        ref={containerRef}
-        className="max-w-[calc(100%-40px)] md:max-w-[calc(100%-60px)] lg:max-w-[calc(100%-120px)] mx-auto px-0 py-16"
+        className="relative box-border w-full mx-auto flex flex-col"
+        // On mobile: fluid width & padding. On Large (lg): strict fixed width & padding.
+        style={{}} 
       >
-        
-        {/* Header Section */}
-        <div className="mb-16 md:mb-24">
-          <h1 className="flex flex-wrap items-baseline gap-3 mb-6">
-            <span className="font-['Inter'] font-semibold text-5xl md:text-[64px] tracking-tight">
-              Our office
-            </span>
-            <span className="font-['Libre_Caslon_Text'] italic font-normal text-5xl md:text-[64px]">
-              Locations
-            </span>
-          </h1>
-          <p className="text-gray-600 text-sm md:text-base leading-relaxed max-w-xl">
-            Getting started is made simple and transparent right from day one. We guide you through every step with us.
-          </p>
-        </div>
-
-        {/* Scroll Interaction Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 relative items-start">
+        <div className="w-full lg:max-w-[1440px] mx-auto px-6 py-12 lg:py-[120px] lg:px-[75px]">
           
-          {/* LEFT COLUMN: Scrollable Text List */}
-          {/* We add large gaps so scrolling triggers the changes naturally */}
-          <div className="md:col-span-4 flex flex-col pb-[20vh]"> 
-            {locations.map((loc, index) => {
-              const isActive = activeId === loc.id;
-              
-              return (
-                <div 
-                  key={loc.id}
-                  id={`loc-${loc.id}`}
-                  className={`
-                    flex flex-col justify-center
-                    transition-all duration-500 py-4 mb-[10vh] min-h-[20vh]
-                    ${isActive ? 'pl-6 border-l-4 border-[#FF4422]' : 'pl-0 border-l-4 border-transparent opacity-30'}
-                  `}
-                >
-                  <h3 className={`
-                    text-3xl md:text-4xl font-['Inter'] tracking-tight mb-2
-                    ${isActive ? 'text-black font-medium' : 'text-gray-500'}
-                  `}>
-                    {loc.city}
-                  </h3>
-                  
-                  <p className="text-gray-600 text-sm md:text-base">
-                    {loc.address}
-                  </p>
-                </div>
-              );
-            })}
+          {/* Header */}
+          <div 
+            className="flex flex-col justify-between w-full lg:w-[768px] h-auto lg:h-[156px] mb-10 lg:mb-[80px] gap-4 lg:gap-3"
+          >
+            <h1 className="flex flex-wrap items-baseline gap-2 lg:gap-3 m-0">
+              <span className="font-['Inter'] font-semibold text-4xl lg:text-[64px] leading-tight tracking-tight text-black">
+                Our office
+              </span>
+              <span className="font-['Libre_Caslon_Text'] italic font-normal text-4xl lg:text-[64px] leading-tight text-black">
+                Locations
+              </span>
+            </h1>
+            <p className="font-['Inter'] text-sm lg:text-base text-gray-600 leading-relaxed max-w-xl m-0">
+              Getting started is made simple and transparent right from day one. We guide you through every step with us.
+            </p>
           </div>
 
-          {/* RIGHT COLUMN: Sticky Image */}
-          {/* sticky top-10 keeps it pinned while you scroll the left side */}
-          <div className="hidden md:block md:col-span-8 h-[600px] sticky top-10">
-             <div className="w-full h-full overflow-hidden bg-gray-200 relative">
-                <img 
-                  ref={mapRef}
-                  src={activeImage} 
-                  alt="Office Location Map"
-                  className="w-full h-full object-cover"
+          {/* Content Area - Flex Column on Mobile, Row on Desktop */}
+          <div 
+            className="flex flex-col-reverse lg:flex-row w-full lg:w-[1290px] h-auto lg:h-[369px] gap-8 lg:gap-[64px]"
+          >
+            
+            {/* LEFT COLUMN: Locations List */}
+            <div 
+              className="flex flex-col justify-between w-full lg:w-[500px] h-auto lg:h-full gap-4 lg:gap-0"
+            >
+              {locations.map((loc) => {
+                const isActive = activeId === loc.id;
+                
+                return (
+                  <div 
+                    key={loc.id}
+                    onClick={() => setActiveId(loc.id)}
+                    className={`
+                      flex flex-col justify-center cursor-pointer transition-all duration-300 box-border
+                      w-full lg:flex-1
+                      py-4 px-4 lg:py-[20px] lg:px-[30px]
+                      border-l-2
+                    `}
+                    style={{
+                      borderColor: isActive ? '#FF4422' : 'transparent',
+                      opacity: isActive ? 1 : 0.3,
+                      // On mobile we might want a background to distinguish items
+                      backgroundColor: isActive ? 'rgba(0,0,0,0.02)' : 'transparent'
+                    }}
+                  >
+                    <h3 className={`
+                      font-['Inter'] text-xl lg:text-[32px] tracking-tight mb-1 m-0
+                      ${isActive ? 'text-black font-medium' : 'text-gray-500'}
+                    `}>
+                      {loc.city}
+                    </h3>
+                    
+                    <p className="font-['Inter'] text-gray-600 text-sm lg:text-base m-0 truncate">
+                      {loc.address}
+                    </p>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* RIGHT COLUMN: Map */}
+            {/* On mobile: Fixed height. On Desktop: Fixed width & height */}
+            <div 
+              className="w-full h-[300px] lg:w-[726px] lg:h-[369px] rounded-lg lg:rounded-none overflow-hidden"
+            >
+              <MapContainer 
+                center={activeLocation.coords} 
+                zoom={13} 
+                style={{ width: '100%', height: '100%' }}
+                zoomControl={true}
+                scrollWheelZoom={false}
+              >
+                <TileLayer
+                  attribution='&copy; OpenStreetMap contributors'
+                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
-             </div>
+                <MapUpdater center={activeLocation.coords} zoom={13} />
+                <Marker position={activeLocation.coords}>
+                  <Popup>{activeLocation.address}</Popup>
+                </Marker>
+              </MapContainer>
+            </div>
+
           </div>
-
         </div>
-
       </div>
     </div>
   );

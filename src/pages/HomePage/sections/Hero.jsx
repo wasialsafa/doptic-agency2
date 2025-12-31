@@ -219,12 +219,23 @@ const Hero = () => {
                         </div>
                     </div>
 
-                    {/* Bottom Right: Image */}
+                    {/* Bottom Right: Video (Replaces Image) */}
                     {/* Z-Index 10: Lower than text so it stays behind when text overlaps */}
                     <div className="w-full lg:w-[630px] flex justify-end items-center z-10 relative">
                         <div ref={imageContainerRef} className="relative w-full aspect-video lg:w-[630px] lg:h-[352px] will-change-transform">
-                            <div ref={innerImageRef} className="image-container  overflow-hidden shadow-2xl w-full h-full">
-                                <img src="/images/homepageImage.svg" alt="Agency work showcase" className="w-full h-full object-cover" />
+                            {/* CHANGED: Replaced img with video, kept classes and refs same */}
+                            <div ref={innerImageRef} className="image-container overflow-hidden shadow-2xl w-full h-full bg-black">
+                                <video 
+                                    className="w-full h-full object-cover"
+                                    autoPlay 
+                                    muted 
+                                    loop 
+                                    playsInline
+                                    // Make sure to add poster="/path/to/poster.jpg" for loading state if you want
+                                >
+                                    <source src="/vids/homepageherovid.mp4" type="video/mp4" />
+                                    Your browser does not support the video tag.
+                                </video>
                             </div>
                         </div>
                     </div>
