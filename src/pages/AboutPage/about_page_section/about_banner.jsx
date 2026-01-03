@@ -115,7 +115,7 @@ const AboutBanner = () => {
                     width: '3314px', 
                     height: '100px',
                     left: '-50%', 
-                    top: '50%', 
+                    top: '65%', 
                     transform: 'translateY(-50%) rotate(-8deg)', 
                     backgroundColor: '#FF4920',
                     borderWidth: '1px', 

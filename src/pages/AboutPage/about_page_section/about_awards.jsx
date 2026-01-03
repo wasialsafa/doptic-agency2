@@ -12,43 +12,33 @@ const AwardsSection = () => {
   const [activeImage, setActiveImage] = useState(awards[0].image);
   const containerRef = useRef(null);
   
-  // References for the floating cursor container
   const cursorLabelRef = useRef(null);
   const cursorLabelInnerRef = useRef(null);
   
-  // GSAP quickTo for high-performance mouse following
   const xMoveCursor = useRef(null);
   const yMoveCursor = useRef(null);
   const xRotateCursor = useRef(null);
 
-  // Track previous mouse position to calculate velocity/direction
-  const previousMouseX = useRef(0);
-
   useEffect(() => {
-    const ctx = gsap.context(() => {
-      // Setup quickTo for smooth following
+    // 1. Use gsap.matchMedia for responsive animation logic
+    let mm = gsap.matchMedia();
+
+    // Only run cursor setup on screens wider than 1024px (Desktop/Landscape Tablet)
+    mm.add("(min-width: 1024px)", () => {
       xMoveCursor.current = gsap.quickTo(cursorLabelRef.current, "left", { duration: 0.5, ease: "power3" });
       yMoveCursor.current = gsap.quickTo(cursorLabelRef.current, "top", { duration: 0.5, ease: "power3" });
-      
-      // Setup quickTo for rotation (tilt)
       xRotateCursor.current = gsap.quickTo(cursorLabelInnerRef.current, "rotation", { duration: 0.5, ease: "power3" });
-    }, containerRef);
+    });
 
-    return () => ctx.revert();
+    return () => mm.revert();
   }, []);
 
   const handleMouseMove = (e) => {
-    const { clientX, clientY } = e;
-
-    // 1. Calculate Tilt based on direction/velocity
-    const deltaX = clientX - previousMouseX.current;
-    previousMouseX.current = clientX;
-    
-    // Clamp the rotation between -20 and 20 degrees so it doesn't flip over
-    const tiltAmount = gsap.utils.clamp(-20, 20, deltaX * 0.8);
-
-    // 2. Move the floating container
+    // Logic stays same, but only executes if refs are initialized (Desktop)
     if (xMoveCursor.current && yMoveCursor.current && xRotateCursor.current) {
+      const { clientX, clientY } = e;
+      const tiltAmount = gsap.utils.mapRange(0, window.innerWidth, -40, 40, clientX);
+      
       xMoveCursor.current(clientX);
       yMoveCursor.current(clientY);
       xRotateCursor.current(tiltAmount);
@@ -56,9 +46,10 @@ const AwardsSection = () => {
   };
 
   const handleMouseEnter = (img) => {
-    // "Blooming" / Smooth Swap Animation
+    // Only animate on desktop to prevent mobile glitches
+    if (window.innerWidth < 1024) return; 
+
     const tl = gsap.timeline();
-    
     tl.to(cursorLabelInnerRef.current, {
       scale: 0.8,
       opacity: 0,
@@ -68,7 +59,6 @@ const AwardsSection = () => {
     })
     .to(cursorLabelInnerRef.current, {
       scale: 1,
-      // Note: We don't force rotation here anymore, let handleMouseMove control it
       opacity: 1,
       duration: 0.4,
       ease: "back.out(1.7)"
@@ -76,7 +66,8 @@ const AwardsSection = () => {
   };
 
   const handleMouseLeave = () => {
-    // Animate Image OUT
+    if (window.innerWidth < 1024) return;
+
     gsap.to(cursorLabelInnerRef.current, {
       scale: 0,
       opacity: 0,
@@ -91,21 +82,16 @@ const AwardsSection = () => {
       className="w-full bg-bg-light dark:bg-bg-dark relative overflow-hidden"
       onMouseMove={handleMouseMove}
     >
-      {/* FLOATING IMAGE CONTAINER 
-        - Removed mix-blend-difference so images look normal
-      */}
+      {/* FLOATING IMAGE CONTAINER - Hidden on Mobile via CSS */}
       <div 
         ref={cursorLabelRef}
-        className="fixed top-0 left-0 pointer-events-none z-50 flex items-center justify-center" 
-        style={{ transform: 'translate(-50%, -50%)' }}
+        className="fixed top-0 left-0 pointer-events-none z-50 hidden lg:flex items-center justify-center" 
+        style={{ transform: 'translate(-50%, -120%)' }}
       >
         <div 
           ref={cursorLabelInnerRef}
-          className="relative overflow-hidden shadow-2xl  origin-center scale-0 opacity-0"
-          style={{ 
-            width: '200px', 
-            height: '200px',
-          }} 
+          className="relative overflow-hidden shadow-2xl origin-center scale-0 opacity-0"
+          style={{ width: '200px', height: '200px' }} 
         >
           <img
             src={activeImage}
@@ -115,80 +101,93 @@ const AwardsSection = () => {
         </div>
       </div>
 
-      {/* MAIN CONTENT LAYOUT */}
-      <div className="w-full max-w-[1440px] mx-auto px-[75px] py-[120px]">
+      {/* Main Container: Mobile px-6 -> Desktop px-[75px] */}
+      <div className="w-full max-w-[1440px] mx-auto px-6 md:px-10 lg:px-[75px] py-16 md:py-[120px]">
         
-        {/* HEADER SECTION */}
-        <div className="mb-[64px] relative z-10 w-full max-w-[1290px]">
-          <h2 className="text-[#0e0e0e] dark:text-white" style={{ 
-            fontSize: '72px', 
+        {/* Header Section */}
+        <div className="mb-10 md:mb-[64px] relative z-10 w-full max-w-[1290px]">
+          {/* Responsive H2 Font Size */}
+          <h2 className="text-[#0e0e0e] dark:text-white text-4xl md:text-6xl lg:text-[72px]" style={{ 
             fontWeight: '500', 
             lineHeight: '120%', 
             letterSpacing: '-0.04em',
             fontFamily: '"Inter Variable", sans-serif'
             }}>
             Awards &{' '}
-            <span 
-                className="italic" 
-                style={{ 
-                fontFamily: '"Libre Caslon Text", serif',
-                fontWeight: '400',
-                fontStyle: 'italic'
-                }}
-            >
+            <span className="italic" style={{ fontFamily: '"Libre Caslon Text", serif', fontWeight: '400', fontStyle: 'italic' }}>
                 Accolades
             </span>
           </h2>
-
-          {/* SUBTEXT WITH NEWLINE AFTER "HAS" */}
-          <p className="mt-6 text-[#0e0e0e] dark:text-white max-w-2xl opacity-80" style={{
-            fontFamily: '"Inter Variable", sans-serif',
-            fontWeight: '400',
-            fontStyle: 'normal',
-            fontSize: '16px',
-            lineHeight: '160%',
-            letterSpacing: '0%'
+          <p className="mt-4 md:mt-6 text-[#0e0e0e] dark:text-white max-w-2xl opacity-80" style={{
+            fontFamily: '"Inter Variable", sans-serif', fontWeight: '400', fontSize: '16px', lineHeight: '160%',
           }}>
-            Our commitment to exceptional design has <br /> earned global recognition and industry accolades.
+            Our commitment to exceptional design has <br className="hidden md:block" /> earned global recognition and industry accolades.
           </p>
         </div>
 
-        {/* AWARDS LIST */}
+        {/* Awards List */}
         <div className="w-full max-w-[1290px] border-t border-black/10 dark:border-white/10">
           {awards.map((award, index) => (
             <div
               key={index}
               onMouseEnter={() => handleMouseEnter(award.image)}
               onMouseLeave={handleMouseLeave}
-              className="group relative grid grid-cols-1 md:grid-cols-12 py-12 border-b border-black/10 dark:border-white/10 items-center cursor-default overflow-hidden"
+              // Flex-Col on Mobile, Flex-Row on Desktop
+              className="group relative flex flex-col md:flex-row items-start md:items-center py-8 md:py-12 border-b border-black/10 dark:border-white/10 cursor-default"
             >
-              {/* ORANGE BACKGROUND FILL EFFECT */}
-              <div className="absolute inset-0 bg-[#FF6B35] translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-[cubic-bezier(0.19,1,0.22,1)] z-0" />
-
-              {/* DATE */}
-              <div className="relative z-10 col-span-2 text-sm font-medium text-[#0e0e0e] dark:text-white group-hover:text-white transition-colors duration-300">
-                <span className="block text-2xl" style={{ fontFamily: '"Inter Variable", sans-serif' }}>
+              
+              {/* 1. DATE SECTION */}
+              <div className="flex flex-col items-start md:items-center justify-center text-[#0e0e0e] dark:text-white shrink-0 mb-4 md:mb-0 md:mr-[34px]" 
+                   style={{ width: '85px' }}>
+                
+                <span 
+                  className="transition-all duration-300 text-[32px] group-hover:text-[40px]" 
+                  style={{ 
+                    fontFamily: '"Inter Variable", sans-serif',
+                    fontWeight: 700,
+                    lineHeight: '130%',
+                    textAlign: 'center'
+                }}>
                   {award.date.split(' ')[0]}
                 </span>
-                <span className="opacity-60 uppercase text-xs tracking-wider group-hover:opacity-100">
+                
+                <span className="whitespace-nowrap" style={{ 
+                    fontFamily: '"Inter Variable", sans-serif',
+                    fontWeight: 400,
+                    fontSize: '16px',
+                    lineHeight: '150%',
+                    textAlign: 'center'
+                }}>
                   {award.date.split(' ').slice(1).join(' ')}
                 </span>
               </div>
 
-              {/* TITLE */}
-              <div className="relative z-10 col-span-4 transition-colors duration-300 pl-0 md:pl-4 group-hover:text-white">
-                <h3 className="text-3xl font-medium tracking-tight text-[#0e0e0e] dark:text-white uppercase group-hover:text-white" style={{ fontFamily: '"Inter Variable", sans-serif' }}>
+              {/* 2. TITLE SECTION */}
+              {/* Width auto on mobile, fixed 488px on desktop */}
+              <div className="shrink-0 flex flex-col justify-center w-full md:w-[488px] mb-4 md:mb-0 md:mr-[64px]" 
+                   style={{ minHeight: '60px' }}>
+                <h3 className="text-[#0e0e0e] dark:text-white text-2xl md:text-[32px]" style={{ 
+                    fontFamily: '"Inter Variable", sans-serif', fontWeight: 500, lineHeight: '120%', letterSpacing: '-0.04em'
+                }}>
                   {award.title}
                 </h3>
-                <p className="text-[#0e0e0e] dark:text-white opacity-60 text-sm mt-1 group-hover:text-white group-hover:opacity-90">{award.subtitle}</p>
+                <p style={{ 
+                    fontFamily: '"Inter Variable", sans-serif', fontWeight: 400, fontSize: '14px', lineHeight: '160%', color: '#0E0E0E', opacity: 0.7 
+                }} className="dark:text-white dark:opacity-70">
+                    {award.subtitle}
+                </p>
               </div>
 
-              {/* DESCRIPTION */}
-              <div className="relative z-10 col-span-6 transition-colors duration-300 pl-0 md:pl-8 group-hover:text-white">
-                <p className="text-lg leading-[140%] text-[#0e0e0e] dark:text-white opacity-70 max-w-xl group-hover:text-white group-hover:opacity-90" style={{ fontFamily: '"Inter Variable", sans-serif' }}>
+              {/* 3. DESCRIPTION SECTION */}
+              <div className="flex-1 flex justify-start md:justify-end items-end w-full md:w-auto md:pb-[34px]">
+                {/* Text Wrap on mobile, No-Wrap on desktop */}
+                <p className="text-[#0e0e0e] dark:text-white opacity-70 whitespace-normal md:whitespace-nowrap text-left md:text-right" style={{ 
+                    fontFamily: '"Inter Variable", sans-serif', fontWeight: 400, fontSize: '16px', lineHeight: '160%',
+                }}>
                   {award.desc}
                 </p>
               </div>
+
             </div>
           ))}
         </div>

@@ -102,7 +102,17 @@ const AboutPartners = () => {
              style={{ fontFamily: FONT_INTER }}>
                Creative Partners
              </h3>
-             <div className="relative flex-1 overflow-hidden">
+             
+             {/* UPDATED: Added Mask Image styles for fade effect on left/right edges 
+                transparent -> black (visible) -> transparent 
+             */}
+             <div 
+                className="relative flex-1 overflow-hidden"
+                style={{ 
+                    maskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)',
+                    WebkitMaskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)'
+                }}
+             >
                 <div ref={scrollRef} className="flex items-center gap-12 w-max">
                   {[...partners, ...partners].map((p, i) => (
                     <div key={i} className="flex items-center gap-12">
@@ -117,14 +127,9 @@ const AboutPartners = () => {
       </div>
 
       {/* --- VALUES SECTION --- */}
-      {/* Width Calculation: 
-          max-w-[1440px] - (75px padding-left + 75px padding-right) = 1290px Content Width 
-          Top Gap: 120px (pt-[120px])
-          Bottom Gap: 120px (pb-[120px])
-      */}
       <div className="w-full max-w-[1440px] mx-auto px-[75px] pt-[120px] pb-[120px]">
         
-        {/* Main Content Grid: Gap 30px between "Values" heading and Right Content */}
+        {/* Main Content Grid */}
         <div className="flex flex-col lg:flex-row gap-[30px]">
           
           {/* Left: Heading */}
@@ -158,17 +163,15 @@ const AboutPartners = () => {
             {/* Gap 40px */}
             <div className="h-[40px] w-full"></div>
 
-            {/* Stats Grid 
-                Width: 850px (max-w-[850px])
-                Height: 193px (min-h-[193px])
-            */}
+            {/* Stats Grid */}
             <div className="w-full max-w-[850px] min-h-[193px] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12 border-t border-gray-200 pt-8">
               {[
                 { label: "Established for", value: 1, suffix: "0", unit: "Years" },
                 { label: "Work across", value: 1, suffix: "6", unit: "Countries" },
                 { label: "Over", value: 9, suffix: "0", unit: "Projects" }
               ].map((stat, i) => (
-                <div key={i} className="flex flex-col min-w-max">
+                /* UPDATED: Added fontFamily style to the stats container wrapper */
+                <div key={i} className="flex flex-col min-w-max" style={{ fontFamily: FONT_INTER }}>
                   <span className="text-[12px] md:text-sm uppercase tracking-widest text-gray-500 mb-4">{stat.label}</span>
                   <div className="flex items-baseline text-[80px] md:text-[128px] font-medium leading-[1] tracking-[-4%] text-[#0e0e0e] dark:text-white">
                     <RollingNumber target={stat.value} />

@@ -15,6 +15,8 @@ const teamMembers = [
   { id: 4, name: "Michael Chen", role: "Creative Director", image: "/images/aboutpage/teamimage4.svg" },
 ]
 
+const FONT_INTER = 'Inter Variable, sans-serif';
+
 export default function AboutTeams() {
   const containerRef = useRef(null);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -53,8 +55,12 @@ export default function AboutTeams() {
   return (
     <section 
       ref={containerRef} 
-      className="w-full bg-bg-light dark:bg-bg-dark transition-colors duration-300 font-['Inter_Variable']"
-      style={{ paddingTop: '120px', paddingBottom: '120px' }}
+      className="w-full bg-bg-light dark:bg-bg-dark transition-colors duration-300"
+      style={{ 
+        paddingTop: '120px', 
+        paddingBottom: '120px',
+        fontFamily: FONT_INTER 
+      }}
     >
       {/* 1290px content width */}
       <div className="max-w-[1440px] mx-auto px-[20px] md:px-[75px]">
@@ -63,6 +69,7 @@ export default function AboutTeams() {
         <div className="header-content flex flex-col md:flex-row justify-between items-start mb-[64px] border-b border-zinc-300 dark:border-zinc-700 pb-12 w-full min-h-[243px]">
           <div className="max-w-[800px]">
             <h1 className="text-[#1A1A1A] dark:text-white" style={{
+              fontFamily: FONT_INTER,
               fontWeight: 500,
               fontSize: 'clamp(36px, 5vw, 72px)',
               lineHeight: '120%',
@@ -71,7 +78,7 @@ export default function AboutTeams() {
               The Creative Minds
             </h1>
             <h2 className="text-[#1A1A1A] dark:text-white" style={{
-              fontFamily: 'Libre Caslon Text, serif',
+              fontFamily: FONT_INTER, 
               fontWeight: 400,
               fontStyle: 'italic',
               fontSize: 'clamp(36px, 5vw, 72px)',
@@ -82,6 +89,7 @@ export default function AboutTeams() {
             </h2>
             
             <p className="mt-8 text-zinc-600 dark:text-zinc-400" style={{
+              fontFamily: FONT_INTER,
               fontWeight: 400,
               fontSize: '18px',
               lineHeight: '160%',
@@ -91,15 +99,15 @@ export default function AboutTeams() {
             </p>
           </div>
 
-          <button className="mt-8 md:mt-0 px-8 py-3 border border-zinc-400 dark:border-zinc-600 text-sm uppercase tracking-widest hover:bg-[#FF4D2A] hover:border-[#FF4D2A] hover:text-white transition-all duration-300 dark:text-white">
+          <button 
+            className="mt-8 md:mt-0 px-8 py-3 border border-zinc-400 dark:border-zinc-600 text-sm uppercase tracking-widest hover:bg-[#FF4D2A] hover:border-[#FF4D2A] hover:text-white transition-all duration-300 dark:text-white"
+            style={{ fontFamily: FONT_INTER }}
+          >
             View All
           </button>
         </div>
 
-        {/* Team Grid 
-            Fixed height: 520px
-            items-start: Forces all cards to align perfectly to the top line
-        */}
+        {/* Team Grid */}
         <div 
           className="team-grid flex flex-row items-start" 
           style={{ gap: '30px', height: '520px', width: '100%' }}
@@ -115,23 +123,21 @@ export default function AboutTeams() {
                 style={{
                   width: isActive ? '520px' : '226.66px',
                   height: '520px',
-                  flex: 'none', // Prevents the flexbox from distorting height
+                  flex: 'none', 
                 }}
               >
-                {/* Image is absolute to allow the container to expand/shrink width 
-                    without triggering a height change in the image element.
+                {/* UPDATED IMAGE LOGIC:
+                   Removed scale-105. Now the div widens, and object-cover reveals more 
+                   of the image without the image itself zooming in.
                 */}
                 <img
                   src={member.image}
                   alt={member.name}
-                  className={`absolute inset-0 w-full h-full object-cover transition-all duration-1000 
-                    ${isActive ? 'grayscale-0 scale-105' : 'grayscale scale-100'}`}
+                  className={`absolute inset-0 w-full h-full object-cover object-top transition-all duration-1000 
+                    ${isActive ? 'grayscale-0' : 'grayscale'}`}
                 />
                 
-                {/* Orange Name Banner 
-                    Height: 89px
-                    Gap from bottom: 30px
-                */}
+                {/* Name Banner */}
                 <div 
                     className={`absolute left-0 w-full transition-all duration-500 ease-in-out bg-[#FF4D2A] text-white flex flex-col justify-center`}
                     style={{ 
@@ -141,7 +147,8 @@ export default function AboutTeams() {
                         gap: '16px',
                         transform: isActive ? 'translateY(0)' : 'translateY(150%)',
                         opacity: isActive ? 1 : 0,
-                        pointerEvents: 'none'
+                        pointerEvents: 'none',
+                        fontFamily: FONT_INTER
                     }}
                 >
                   <div className="flex flex-col">

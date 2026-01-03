@@ -31,15 +31,18 @@ const CustomCursor = () => {
 
     // --- Interaction Logic ---
 
-    // 1. Text Hover (Generic)
+    // 1. Text Hover
     const onTextEnter = () => {
       if (cursorVariant === 'contact') return; 
 
+      gsap.to(cursor, { scale: 1, duration: 0.3 }) 
       gsap.to(follower, {
-        width: baseSize * 10, 
-        height: baseSize * 10,
+        width: baseSize * 8, 
+        height: baseSize * 8,
         backgroundColor: "white",
-        mixBlendMode: "difference", // Keep difference for normal text
+        mixBlendMode: "difference", 
+        border: 'none',
+        backdropFilter: 'none',
         duration: 0.5,
         ease: "expo.out",
         overwrite: 'auto'
@@ -50,30 +53,34 @@ const CustomCursor = () => {
     const onImageEnter = () => {
       if (cursorVariant === 'contact') return;
 
+      gsap.to(cursor, { scale: 0, duration: 0.3 })
+
       gsap.to(follower, {
-        width: baseSize * 1.5,
-        height: baseSize * 1.5,
-        backgroundColor: "rgba(255, 255, 255, 0.15)",
-        backdropFilter: "blur(1px) saturate(180%)", 
-        border: "1px solid rgba(255, 255, 255, 0.4)",
-        mixBlendMode: "normal",
-        duration: 0.6,
-        ease: "expo.out",
+        width: 100, 
+        height: 100,
+        backgroundColor: "rgba(255, 255, 255, 0.1)", 
+        backdropFilter: "blur(5px)", 
+        border: "1px solid rgba(255, 255, 255, 0.2)", 
+        mixBlendMode: "normal", 
+        duration: 0.5,
+        ease: "power3.out",
         overwrite: 'auto'
       })
     }
 
-    // 3. Reset (Generic)
+    // 3. Reset
     const onLeave = () => {
       if (cursorVariant === 'contact') return;
+
+      gsap.to(cursor, { scale: 1, duration: 0.3 })
 
       gsap.to(follower, {
         width: baseSize,
         height: baseSize,
         backgroundColor: "white",
-        backdropFilter: "blur(0px)",
+        backdropFilter: "none",
         border: "none",
-        mixBlendMode: "difference", // Reset to difference
+        mixBlendMode: "difference", 
         duration: 0.5,
         ease: "expo.out",
         overwrite: 'auto'
@@ -82,8 +89,8 @@ const CustomCursor = () => {
 
     window.addEventListener("mousemove", handleMouseMove)
 
-    const textElements = document.querySelectorAll('p, h1, h2, h3, h4, span, li, a, button')
-    const imageElements = document.querySelectorAll('img, .project-image')
+    const textElements = document.querySelectorAll('p, h1, h2, h3, h4, span, li, a, button, input, textarea')
+    const imageElements = document.querySelectorAll('img, .project-image, .glass-cursor-trigger')
 
     textElements.forEach(el => {
       el.addEventListener('mouseenter', onTextEnter)
@@ -109,45 +116,63 @@ const CustomCursor = () => {
   }, [cursorVariant]) 
 
 
-  // [4] Variant Watcher
+  // [4] Variant Watcher (Contact Mode Logic)
   useEffect(() => {
     const follower = followerRef.current
     const text = textRef.current
+    const cursor = cursorRef.current 
     const baseSize = 32
 
     if (cursorVariant === 'contact') {
-      // === CONTACT MODE ===
+      
+      // Hide the dot in contact mode
+      gsap.to(cursor, { scale: 0, duration: 0.3 })
+
       gsap.to(follower, {
         width: baseSize * 5, 
         height: baseSize * 5,
-        backgroundColor: "#ffffff", // Pure White
-        mixBlendMode: "normal",     // IMPORTANT: No color inversion!
-        border: 'none',
-        duration: 0.4,
-        ease: "expo.out",
+        backgroundColor: "#FF4920", 
+        mixBlendMode: "normal",
+        // UPDATED: Added Black Border here
+        border: '2px solid #000000', 
+        duration: 0.7,
+        ease: "elastic.out(1, 0.75)",
         overwrite: true 
+      })
+
+      gsap.to(follower, {
+        scale: 1.2,
+        duration: 0.8,
+        repeat: -1, 
+        yoyo: true, 
+        ease: "sine.inOut",
+        delay: 0.2
       })
       
       gsap.to(text, {
         opacity: 1,
         scale: 1,
+        color: "#FFFFFF",
         duration: 0.3,
         delay: 0.1
       })
+
     } else {
-      // === NORMAL MODE ===
-      gsap.to(text, {
-        opacity: 0,
-        scale: 0,
-        duration: 0.2
-      })
+      gsap.killTweensOf(follower, "scale") 
+
+      // Bring dot back
+      gsap.to(cursor, { scale: 1, duration: 0.3 })
+
+      gsap.to(text, { opacity: 0, scale: 0, duration: 0.2 })
       
-      // Reset back to blend-mode difference
       gsap.to(follower, {
         width: baseSize,
         height: baseSize,
+        scale: 1,
         backgroundColor: "white",
-        mixBlendMode: "difference", // Go back to inverting colors
+        mixBlendMode: "difference", 
+        // UPDATED: Reset border to none
+        border: 'none',
         duration: 0.4,
         ease: "expo.out",
         overwrite: 'auto'
@@ -166,13 +191,12 @@ const CustomCursor = () => {
       
       <div 
         ref={followerRef}
-        // Removed 'mix-blend-difference' class here because we control it via GSAP now
         className="pointer-events-none fixed top-0 left-0 w-8 h-8 bg-white rounded-full z-[9999] flex items-center justify-center overflow-hidden"
         style={{ 
           transform: 'translate3d(-50%, -50%, 0)',
           backfaceVisibility: 'hidden',
           WebkitFontSmoothing: 'antialiased',
-          mixBlendMode: 'difference' // Default start state
+          mixBlendMode: 'difference'
         }}
       >
         <span 

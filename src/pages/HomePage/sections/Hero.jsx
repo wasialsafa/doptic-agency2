@@ -14,6 +14,7 @@ const Hero = () => {
     const bottomLeftRef = useRef(null)
     const badgeRef = useRef(null)
     const scrollIconRef = useRef(null)
+    const cursorRef = useRef(null) // <--- Add this
     
     const [displayedText, setDisplayedText] = useState('')
     const fullText = 'An agency defining style and digital culture.'
@@ -37,13 +38,13 @@ const Hero = () => {
 
             tlInitial.to(textObj, {
                 value: firstPart.length, 
-                duration: firstPart.length * 0.05,
+                duration: firstPart.length * 0.03,
                 onUpdate: () => setDisplayedText(fullText.slice(0, Math.floor(textObj.value))),
                 ease: 'none'
             })
             .to(textObj, {
                 value: fullText.length, 
-                duration: secondPart.length * 0.1,
+                duration: secondPart.length * 0.04,
                 onUpdate: () => setDisplayedText(fullText.slice(0, Math.floor(textObj.value))),
                 ease: 'power1.inOut',
             })
@@ -66,6 +67,15 @@ const Hero = () => {
                 ease: 'none',
                 repeat: -1
             })
+            // Add this inside useEffect, inside the gsap.context(() => { ... })
+
+            gsap.to(cursorRef.current, {
+                opacity: 0,
+                ease: "power2.inOut",
+                repeat: -1,
+                yoyo: true,
+                duration: 0.8 // Adjust speed of blinking here
+            })
 
             // =========================================
             // 2. Scroll Trigger Animation
@@ -78,7 +88,7 @@ const Hero = () => {
 
                 const innerRect = innerImageRef.current.getBoundingClientRect()
                 // Target Width: 1290px container means 150px total margin (75px each side)
-                const targetWidth = window.innerWidth - 150 
+                const targetWidth = window.innerWidth - 400
                 const targetScale = targetWidth / innerRect.width
 
                 const innerImageCenterY = innerRect.top + innerRect.height / 2
@@ -170,16 +180,16 @@ const Hero = () => {
             <div className="w-full max-w-[1290px] mx-auto px-5 lg:px-0 relative">
                 
                 {/* Scroll Icon: Z-Index 50 to stay above everything */}
-                <div 
+                {/* <div 
                     ref={scrollIconRef} 
                     className="absolute top-0 right-0 pointer-events-none will-change-transform z-50" 
                 >
                     <img src="/logos/award.svg" alt="Scroll down" className="w-16 h-16 md:w-20 md:h-20 lg:w-28 lg:h-28" />
-                </div>
+                </div> */}
 
                 {/* Top Row: Big Text - Z-Index 20 */}
                 <div ref={topTextRef} className="mb-12 lg:mb-[200px] will-change-transform relative z-20">
-                    <h1 className="text-[#0e0e0e] dark:text-[#e2e2e2] text-4xl md:text-6xl lg:text-[96px] xl:text-[96px]"
+                    <h1 className="text-[#0e0e0e] dark:text-[#e2e2e2] text-4xl md:text-6xl lg:text-[128px] xl:text-[128px]"
                         style={{ fontFamily: 'Inter Variable, sans-serif', fontWeight: 500, lineHeight: '120%', letterSpacing: '-0.04em' }}>
                         {displayedText.split(' ').map((word, index) => {
                             const isLastPart = word.includes('digital') || word.includes('culture')
@@ -187,14 +197,22 @@ const Hero = () => {
                             return (
                                 <span key={index}>
                                     {shouldBreak && <br className="hidden lg:block" />}
-                                    <span className={isLastPart ? 'font-serif italic' : ''}
-                                        style={isLastPart ? { fontFamily: 'Libre Caslon Text, serif', fontWeight: 400, fontSize: '0.86em', fontStyle: 'italic' } 
+                                    <span className={isLastPart ? 'font-serif italic lg:text-[104px] xl:text-[104px]' : ''}
+                                        style={isLastPart ? { fontFamily: 'Libre Caslon Text, serif', fontWeight: 400,  fontStyle: 'italic' } 
                                         : { fontFamily: 'Inter Variable, sans-serif', fontWeight: 500 }}>
                                         {word}{' '}
                                     </span>
                                 </span>
                             )
                         })}
+
+                        <span 
+                            ref={cursorRef} 
+                            className="inline-block ml-1 lg:ml-2 text-[#0e0e0e] dark:text-[#e2e2e2]" 
+                            style={{ fontSize: '0.8em', verticalAlign: '5%' }} // Makes it smaller and aligns it nicely
+                        >
+                            |
+                        </span>
                     </h1>
                 </div>
 
@@ -207,13 +225,22 @@ const Hero = () => {
                     {/* Bottom Left: Text & Button */}
                     {/* Z-Index 30: Higher than image so it scrolls OVER it */}
                     <div ref={bottomLeftRef} className="w-full lg:w-[520px] lg:min-w-[520px] will-change-transform z-30 relative">
-                        <p className="text-base md:text-xl text-gray-700 dark:text-[#e2e2e2b2] mb-8 lg:mb-[56px]" 
-                           style={{ fontFamily: 'Inter Variable, sans-serif', fontWeight: 400, lineHeight: '150%' }}>
+                        <p className="text-base md:text-xl text-[#0E0E0E]/70 dark:text-[#e2e2e2]/70 mb-8 lg:mb-[56px]" 
+                           style={{ fontFamily: 'Inter Variable, sans-serif', fontWeight: 400, lineHeight: '150%', fontSize: '18px' }}>
                             We create clean designs that turn visitors into paying clients. You
                             get a professional look that makes selling your services very easy.
                         </p>
                         <div>
-                            <MagneticButton className="bg-primary-orange text-white px-8 py-4 text-lg font-medium hover:bg-opacity-90 transition-all">
+                            <MagneticButton 
+                                className="bg-[#FF4920] text-white px-8 py-4 hover:bg-opacity-90 transition-all"
+                                style={{ 
+                                    fontFamily: 'Inter Variable, sans-serif', 
+                                    fontWeight: 500, 
+                                    fontSize: '20px', 
+                                    lineHeight: '150%',
+                                    letterSpacing: '0'
+                                }}
+                            >
                                 View Our Work
                             </MagneticButton>
                         </div>

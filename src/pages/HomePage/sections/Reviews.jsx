@@ -43,20 +43,28 @@ export const TestimonialSection = () => {
   const sectionRef = useRef(null);
   const trackRef = useRef(null);
 
-  useEffect(() => {
+useEffect(() => {
     const section = sectionRef.current;
     const track = trackRef.current;
 
     if (!section || !track) return;
 
-    // Use matchMedia to only apply the GSAP Pin/Scroll on Desktop (lg and up)
-    // On Mobile/Tablet, we will use native CSS scrolling (snap-scroll)
     let ctx = gsap.context(() => {
       ScrollTrigger.matchMedia({
         "(min-width: 1024px)": function () {
+          
+          // 1. CALCULATE STOP POINT (Center of Last Card)
           const getScrollAmount = () => {
-            let trackWidth = track.scrollWidth;
-            return -(trackWidth - window.innerWidth + 100);
+            const lastCard = track.lastElementChild;
+            if (!lastCard) return 0;
+
+            // Distance from left edge of track to center of last card
+            const lastCardCenter = lastCard.offsetLeft + (lastCard.offsetWidth / 2);
+            // Center of the screen
+            const windowCenter = window.innerWidth / 2;
+            
+            // Move left (negative) by the difference
+            return -(lastCardCenter - windowCenter);
           };
 
           const tween = gsap.to(track, {
@@ -67,10 +75,14 @@ export const TestimonialSection = () => {
           ScrollTrigger.create({
             trigger: section,
             start: "center center",
-            end: () => `+=${track.scrollWidth * 0.5}`, // Adjusted multiplier for smoother feel
+            // 2. CONTROL VELOCITY
+            // Lower multiplier = Faster Horizontal Scroll (High Velocity)
+            // Higher multiplier = Slower Horizontal Scroll
+            // 0.6 is a good balance for "Fast/Premium" feel
+            end: () => `+=${track.scrollWidth * 0.6}`, 
             pin: true,
             animation: tween,
-            scrub: 1,
+            scrub: 0.5, // Lower scrub = snappier/less floaty response
             invalidateOnRefresh: true,
           });
         },
