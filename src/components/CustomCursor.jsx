@@ -59,7 +59,7 @@ const CustomCursor = () => {
         width: 100, 
         height: 100,
         backgroundColor: "rgba(255, 255, 255, 0.1)", 
-        backdropFilter: "blur(5px)", 
+        backdropFilter: "blur(1px)", 
         border: "1px solid rgba(255, 255, 255, 0.2)", 
         mixBlendMode: "normal", 
         duration: 0.5,
