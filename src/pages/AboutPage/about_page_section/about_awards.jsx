@@ -2,10 +2,34 @@ import React, { useRef, useState, useEffect } from 'react';
 import { gsap } from 'gsap';
 
 const awards = [
-  { date: "08 Mar 2024", title: "Web Excellence", subtitle: "Pitti Uomo & Greenpeace", desc: "For pushing the boundaries of user interface design in the Fintech sector.", image: "https://picsum.photos/400/300?random=1" },
-  { date: "03 Feb 2025", title: "Awwwards Nominee", subtitle: "Site of the Day", desc: "Recognized for outstanding creativity and front-end development performance.", image: "https://picsum.photos/400/300?random=2" },
-  { date: "10 May 2025", title: "Global Agency Awards", subtitle: "Top B2B Agency", desc: "Honored for driving measurable growth and lead generation for enterprise clients.", image: "https://picsum.photos/400/300?random=3" },
-  { date: "22 Sep 2025", title: "The Drum Awards", subtitle: "Digital Innovation", desc: "Celebrated for our proprietary approach to headless CMS architecture.", image: "https://picsum.photos/400/300?random=4" }
+  { 
+    date: "08 Mar 2024", 
+    title: "Web Excellence", 
+    subtitle: "Pitti Uomo & Greenpeace", 
+    desc: "For pushing the boundaries of user interface design in the Fintech sector.", 
+    image: "/images/aboutpage/teamimage1.svg" 
+  },
+  { 
+    date: "03 Feb 2025", 
+    title: "Awwwards Nominee", 
+    subtitle: "Site of the Day", 
+    desc: "Recognized for outstanding creativity and front-end development performance.", 
+    image: "/images/aboutpage/teamimage2.svg" 
+  },
+  { 
+    date: "10 May 2025", 
+    title: "Global Agency Awards", 
+    subtitle: "Top B2B Agency", 
+    desc: "Honored for driving measurable growth and lead generation for enterprise clients.", 
+    image: "/images/aboutpage/teamimage3.svg" 
+  },
+  { 
+    date: "22 Sep 2025", 
+    title: "The Drum Awards", 
+    subtitle: "Digital Innovation", 
+    desc: "Celebrated for our proprietary approach to headless CMS architecture.", 
+    image: "/images/aboutpage/teamimage4.svg" 
+  }
 ];
 
 const AwardsSection = () => {
@@ -45,7 +69,7 @@ const AwardsSection = () => {
     }
   };
 
-  const handleMouseEnter = (img) => {
+  const handleMouseEnterItem = (img) => {
     // Only animate on desktop to prevent mobile glitches
     if (window.innerWidth < 1024) return; 
 
@@ -65,14 +89,16 @@ const AwardsSection = () => {
     });
   };
 
-  const handleMouseLeave = () => {
-    if (window.innerWidth < 1024) return;
+  // ✅ NEW: General hide function used by both Item Leave and Section Leave
+  const hideCursor = () => {
+    if (window.innerWidth < 1024 || !cursorLabelInnerRef.current) return;
 
     gsap.to(cursorLabelInnerRef.current, {
       scale: 0,
       opacity: 0,
       duration: 0.3,
-      ease: "power2.in"
+      ease: "power2.in",
+      overwrite: 'auto' // Important: Overwrite any pending "show" animations
     });
   };
 
@@ -81,6 +107,9 @@ const AwardsSection = () => {
       ref={containerRef}
       className="w-full bg-bg-light dark:bg-bg-dark relative overflow-hidden"
       onMouseMove={handleMouseMove}
+      // ✅ FIX: Added onMouseLeave to the SECTION itself.
+      // If you move the mouse out of the section quickly, this catches it and hides the image.
+      onMouseLeave={hideCursor} 
     >
       {/* FLOATING IMAGE CONTAINER - Hidden on Mobile via CSS */}
       <div 
@@ -130,8 +159,8 @@ const AwardsSection = () => {
           {awards.map((award, index) => (
             <div
               key={index}
-              onMouseEnter={() => handleMouseEnter(award.image)}
-              onMouseLeave={handleMouseLeave}
+              onMouseEnter={() => handleMouseEnterItem(award.image)}
+              onMouseLeave={hideCursor}
               // Flex-Col on Mobile, Flex-Row on Desktop
               className="group relative flex flex-col md:flex-row items-start md:items-center py-8 md:py-12 border-b border-black/10 dark:border-white/10 cursor-default"
             >

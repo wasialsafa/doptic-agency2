@@ -126,15 +126,11 @@ export default function AboutTeams() {
                   flex: 'none', 
                 }}
               >
-                {/* UPDATED IMAGE LOGIC:
-                   Removed scale-105. Now the div widens, and object-cover reveals more 
-                   of the image without the image itself zooming in.
-                */}
                 <img
                   src={member.image}
                   alt={member.name}
                   className={`absolute inset-0 w-full h-full object-cover object-top transition-all duration-1000 
-                    ${isActive ? 'grayscale-0' : 'grayscale'}`}
+                  ${isActive ? 'grayscale-0' : 'grayscale'}`}
                 />
                 
                 {/* Name Banner */}
@@ -143,17 +139,43 @@ export default function AboutTeams() {
                     style={{ 
                         bottom: '30px', 
                         height: '89px',
-                        padding: '30px 40px',
-                        gap: '16px',
+                        padding: '30px 40px', // 40px padding keeps inner width 440px (520 - 80)
+                        gap: '0',
                         transform: isActive ? 'translateY(0)' : 'translateY(150%)',
                         opacity: isActive ? 1 : 0,
                         pointerEvents: 'none',
                         fontFamily: FONT_INTER
                     }}
                 >
-                  <div className="flex flex-col">
-                    <p className="text-xl font-medium leading-none">{member.name}</p>
-                    <p className="text-[10px] uppercase tracking-widest mt-2 opacity-90">{member.role}</p>
+                  {/* Inner Container: Width 440px, Height 29px, Space Between */}
+                  <div className="w-full flex flex-row justify-between items-center h-[29px]">
+                    
+                    {/* Left Side: Name */}
+                    <p style={{
+                      fontFamily: 'Inter Variable, sans-serif',
+                      fontWeight: 500,
+                      fontStyle: 'normal',
+                      fontSize: '24px',
+                      lineHeight: '120%',
+                      letterSpacing: '-0.04em',
+                      textAlign: 'left'
+                    }}>
+                      {member.name}
+                    </p>
+
+                    {/* Right Side: Designation */}
+                    <p style={{
+                      fontFamily: 'Inter Variable, sans-serif',
+                      fontWeight: 400,
+                      fontStyle: 'normal',
+                      fontSize: '18px',
+                      lineHeight: '160%',
+                      letterSpacing: '0%',
+                      textAlign: 'right'
+                    }}>
+                      {member.role}
+                    </p>
+
                   </div>
                 </div>
               </div>
