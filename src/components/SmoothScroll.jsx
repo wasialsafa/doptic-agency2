@@ -15,7 +15,7 @@ const SmoothScroll = ({ children }) => {
       // SENSITIVITY: This controls how "fast" the scroll is.
       // 1 is default. 2 means one flick scrolls twice as much distance.
       // Try values between 1.5 and 2.5 to get that "1 scroll finishes page" feel.
-      wheelMultiplier: 2, 
+      wheelMultiplier: 3, 
       
       // Infinite scroll? (usually false)
       infinite: false,
