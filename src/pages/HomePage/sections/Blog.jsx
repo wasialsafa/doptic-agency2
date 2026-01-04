@@ -1,5 +1,9 @@
-import React from "react";
-// import MagneticButton from "../../../components/MagneticButton"; // Uncomment if using MagneticButton
+import React, { useEffect, useRef, useState } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+// Register ScrollTrigger
+gsap.registerPlugin(ScrollTrigger);
 
 const blogPosts = [
   {
@@ -18,23 +22,70 @@ const blogPosts = [
   },
 ];
 
+// --- ✨ ANIMATION CONFIGURATION ✨ ---
+const animBase = "relative w-fit after:block after:content-[''] after:absolute after:h-[1px] after:bg-current after:w-full after:scale-x-0 group-hover:after:scale-x-100 after:origin-left after:bottom-0 after:transition-transform after:duration-700 after:ease-out";
+
 export const BlogSection = () => {
+  const sectionRef = useRef(null);
+
+  // --- TYPEWRITER STATES ---
+  const [textPart1, setTextPart1] = useState(""); // For "Insights from the"
+  const [textPart2, setTextPart2] = useState(""); // For "studio"
+
+  const fullText1 = "Insights from the";
+  const fullText2 = "studio";
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      // Reset states initially
+      setTextPart1("");
+      setTextPart2("");
+
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top 60%", // Start typing when section is 60% into view
+        },
+      });
+
+      // Part 1: "Insights from the"
+      tl.to({ val: 0 }, {
+        val: fullText1.length,
+        duration: 1,
+        ease: "none",
+        onUpdate: function () {
+          setTextPart1(fullText1.slice(0, Math.ceil(this.targets()[0].val)));
+        },
+      });
+
+      // Part 2: "studio"
+      tl.to({ val: 0 }, {
+        val: fullText2.length,
+        duration: 0.5,
+        ease: "none",
+        onUpdate: function () {
+          setTextPart2(fullText2.slice(0, Math.ceil(this.targets()[0].val)));
+        },
+      });
+
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <section className="w-full flex justify-center bg-bg-light dark:bg-bg-dark transition-colors duration-300">
+    <section 
+      ref={sectionRef}
+      className="w-full flex justify-center bg-bg-light dark:bg-bg-dark transition-colors duration-300"
+    >
       <div
-        // CONVERTED PADDING/GAP TO RESPONSIVE CLASSES
-        // Mobile: py-16 px-6 gap-10
-        // Desktop (lg): Matches your original pixels (py-[120px] px-[75px] gap-[64px])
         className="w-full max-w-[1440px] flex flex-col items-start py-16 px-6 gap-12 md:px-10 lg:pt-[120px] lg:pb-[120px] lg:pl-[75px] lg:pr-[75px] lg:gap-[64px]"
       >
         {/* Header */}
         <header
-          // Switched to flex-col for mobile, restored flex-row for desktop
-          // Height is auto for mobile, fixed 214px for desktop
           className="w-full flex flex-col lg:flex-row justify-between items-start h-auto gap-8 lg:gap-0 lg:h-[214px]"
         >
           <div className="flex flex-col items-start gap-3 h-full justify-between w-full lg:w-auto">
-            {/* Title sizes adjusted for mobile (text-4xl) -> Tablet (5xl) -> Desktop (7xl) */}
             <h2 className="font-normal text-transparent text-4xl md:text-5xl lg:text-7xl leading-tight lg:leading-[72px]">
               <span
                 className="font-medium text-text-dark dark:text-text-light tracking-[-1px] lg:tracking-[-2.07px] lg:leading-[86.4px]"
@@ -43,7 +94,8 @@ export const BlogSection = () => {
                   fontWeight: 500,
                 }}
               >
-                Insights from the
+                {/* Typewriter Part 1 */}
+                {textPart1}
                 <br />
               </span>
               <span
@@ -54,8 +106,11 @@ export const BlogSection = () => {
                   fontStyle: "italic",
                 }}
               >
-                studio
+                {/* Typewriter Part 2 */}
+                {textPart2}
               </span>
+              {/* Blinking Cursor */}
+              <span className="animate-pulse text-text-dark dark:text-text-light">|</span>
             </h2>
 
             <p
@@ -92,19 +147,18 @@ export const BlogSection = () => {
 
         {/* Blog Grid */}
         <div
-          // Grid-cols-1 for mobile, grid-cols-2 for desktop
-          // Height auto for mobile, fixed 456px for desktop
           className="w-full grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-[30px] h-auto lg:h-[456px]"
         >
           {blogPosts.map((post, index) => (
             <div
               key={index}
-              className="flex flex-col items-start gap-6 lg:gap-[30px] w-full h-full"
+              // 'group' enables the hover state for children
+              className="group flex flex-col items-start gap-6 lg:gap-[30px] w-full h-full cursor-pointer"
             >
               {/* Image Area */}
               <div className="w-full h-[200px] lg:h-[240px] overflow-hidden">
                 <img
-                  className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                   alt={post.title}
                   src={post.image}
                 />
@@ -135,23 +189,25 @@ export const BlogSection = () => {
                 </div>
 
                 {/* Title & Desc */}
-                <div className="flex flex-col gap-3">
-                  {/* UPDATED TYPOGRAPHY: Responsive Text Size */}
+                <div className="flex flex-col gap-3 items-start">
+                  
+                  {/* --- TITLE (First to animate) --- */}
                   <h3
-                    className="text-text-dark dark:text-text-light line-clamp-2 text-[28px] md:text-[32px] lg:text-[40px]"
+                    className={`text-text-dark dark:text-text-light line-clamp-2 text-[28px] md:text-[32px] lg:text-[40px] ${animBase}`}
                     style={{
                       fontFamily: "Inter Variable, Inter, sans-serif",
-                      fontWeight: 500, // Medium
-                      // fontSize: '40px', // Moved to className for responsiveness
-                      lineHeight: "120%", // 120%
-                      letterSpacing: "-0.04em", // -4%
+                      fontWeight: 500, 
+                      lineHeight: "120%", 
+                      letterSpacing: "-0.04em", 
                     }}
                   >
                     {post.title}
                   </h3>
 
+                  {/* --- SUBTEXT (Staggered animation) --- */}
+                  {/* Added 'group-hover:after:delay-200' to wait 200ms before starting */}
                   <p
-                    className="font-normal text-gray-700 dark:text-text-secondary text-base lg:text-lg tracking-[0] leading-[26px] lg:leading-[28.8px] line-clamp-2"
+                    className={`font-normal text-gray-700 dark:text-text-secondary text-base lg:text-lg tracking-[0] leading-[26px] lg:leading-[28.8px] line-clamp-2 ${animBase} group-hover:after:delay-200`}
                     style={{
                       fontFamily: "Inter Variable, Inter, sans-serif",
                       fontWeight: 400,

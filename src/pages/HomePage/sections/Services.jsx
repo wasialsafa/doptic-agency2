@@ -5,8 +5,6 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 gsap.registerPlugin(ScrollTrigger)
 
 const Services = () => {
-  // REMOVED: const theme = 'light' (No longer needed)
-
   const sectionRef = useRef(null)
   const mainContentRef = useRef(null)
   const listWrapperRef = useRef(null)
@@ -34,10 +32,9 @@ const Services = () => {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // CHANGED: Use CSS Variables instead of hardcoded Hex codes
       const activeColor = "var(--active-color)"
       const inactiveColor = "var(--inactive-color)"
-      const activeBarColor = "#FF6B35"
+      const activeBarColor = "#FF6B35" 
       
       const slides = slidesRef.current
       const items = itemsRef.current
@@ -56,14 +53,22 @@ const Services = () => {
 
             const tl = gsap.timeline({
                 scrollTrigger: {
-                    trigger: mainContentRef.current, 
-                    start: "top top+=65", 
+                    // ✅ UPDATED TRIGGER: Triggers based on the Header text position
+                    trigger: headerRef.current, 
+                    
+                    // ✅ UPDATED START: Pins exactly when Header hits 40px from top of screen
+                    start: "top 40px", 
+                    
                     end: () => "+=" + (window.innerHeight * 3),
+                    
+                    // Pins the whole section (wrapper)
                     pin: sectionRef.current,
+                    
                     scrub: 0.4, 
                     invalidateOnRefresh: true,
                     onUpdate: (self) => {
-                        const progress = self.progress * (services.length - 1);
+                        // Focus logic (starts at 2nd item)
+                        const progress = (self.progress * (services.length - 1)) + 1;
                         
                         items.forEach((item, i) => {
                             if (!item) return;
@@ -74,17 +79,17 @@ const Services = () => {
                             const opacity = Math.max(0.5, 1 - (distance * 0.2));
                             const isActive = distance < 0.5;
 
-                            // --- TYPOGRAPHY ANIMATION ---
+                            // Typography
                             gsap.to(text, { 
                                 opacity: opacity, 
                                 fontSize: isActive ? "48px" : "40px",
                                 fontWeight: isActive ? 500 : 400,
-                                // CHANGED: Now uses the CSS variable which auto-switches
                                 color: isActive ? activeColor : inactiveColor,
                                 duration: 0.2,
                                 overwrite: 'auto'
                             });
                             
+                            // Bar Animation
                             gsap.to(bar, {
                                 opacity: opacity,
                                 height: isActive ? "1.5px" : "0.5px",
@@ -105,7 +110,6 @@ const Services = () => {
         },
 
         "(max-width: 1023px)": function() {
-            // Mobile Fallbacks - utilizing the same variables
             gsap.set(".service-text", { color: activeColor, fontWeight: 500, opacity: 1, fontSize: "24px" });
             gsap.set(".orange-bar", { backgroundColor: inactiveColor, opacity: 0.5, height: "1px" });
             gsap.set(slides, { clearProps: "all" });
@@ -116,18 +120,16 @@ const Services = () => {
     }, sectionRef)
 
     return () => ctx.revert()
-  }, [services.length, ITEM_HEIGHT]) // Removed 'theme' from dependency array
+  }, [services.length, ITEM_HEIGHT]) 
 
   return (
     <section
       ref={sectionRef}
       id="services"
-      // CHANGED: Added CSS Variable definitions in the className
-      // [--active-color:#0E0E0E] defines black for light mode
-      // dark:[--active-color:#FFFFFF] defines white for dark mode
       className="
         w-full min-h-screen relative overflow-hidden flex flex-col justify-center
         bg-bg-light dark:bg-bg-dark transition-colors duration-300
+        z-[1]
         [--active-color:#0E0E0E] dark:[--active-color:#FFFFFF]
         [--inactive-color:rgba(160,160,160,0.3)] dark:[--inactive-color:rgba(255,255,255,0.3)]
       "

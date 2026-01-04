@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -43,27 +43,31 @@ export const TestimonialSection = () => {
   const sectionRef = useRef(null);
   const trackRef = useRef(null);
 
-useEffect(() => {
+  // --- TYPEWRITER STATES ---
+  const [textPart1, setTextPart1] = useState("");
+  const [textPart2, setTextPart2] = useState("");
+  const [textPart3, setTextPart3] = useState("");
+
+  const fullText1 = "Why top entrepreneurs";
+  const fullText2 = "trust";
+  const fullText3 = " our agency.";
+
+  useEffect(() => {
     const section = sectionRef.current;
     const track = trackRef.current;
 
     if (!section || !track) return;
 
     let ctx = gsap.context(() => {
+      // 1. HORIZONTAL SCROLL LOGIC (Desktop Only)
       ScrollTrigger.matchMedia({
         "(min-width: 1024px)": function () {
-          
-          // 1. CALCULATE STOP POINT (Center of Last Card)
+          // CALCULATE STOP POINT (Center of Last Card)
           const getScrollAmount = () => {
             const lastCard = track.lastElementChild;
             if (!lastCard) return 0;
-
-            // Distance from left edge of track to center of last card
-            const lastCardCenter = lastCard.offsetLeft + (lastCard.offsetWidth / 2);
-            // Center of the screen
+            const lastCardCenter = lastCard.offsetLeft + lastCard.offsetWidth / 2;
             const windowCenter = window.innerWidth / 2;
-            
-            // Move left (negative) by the difference
             return -(lastCardCenter - windowCenter);
           };
 
@@ -75,18 +79,58 @@ useEffect(() => {
           ScrollTrigger.create({
             trigger: section,
             start: "center center",
-            // 2. CONTROL VELOCITY
-            // Lower multiplier = Faster Horizontal Scroll (High Velocity)
-            // Higher multiplier = Slower Horizontal Scroll
-            // 0.6 is a good balance for "Fast/Premium" feel
-            end: () => `+=${track.scrollWidth * 0.6}`, 
+            end: () => `+=${track.scrollWidth * 0.6}`,
             pin: true,
             animation: tween,
-            scrub: 0.5, // Lower scrub = snappier/less floaty response
+            scrub: 0.5,
             invalidateOnRefresh: true,
           });
         },
       });
+
+      // 2. TYPEWRITER ANIMATION (All Screens)
+      // Reset states initially
+      setTextPart1("");
+      setTextPart2("");
+      setTextPart3("");
+
+      const tlType = gsap.timeline({
+        scrollTrigger: {
+          trigger: section,
+          start: "top 60%", // Start typing when section is 60% into view
+        },
+      });
+
+      // Part 1: "Why top entrepreneurs"
+      tlType.to({ val: 0 }, {
+        val: fullText1.length,
+        duration: 1,
+        ease: "none",
+        onUpdate: function () {
+          setTextPart1(fullText1.slice(0, Math.ceil(this.targets()[0].val)));
+        },
+      });
+
+      // Part 2: "trust" (Italic part)
+      tlType.to({ val: 0 }, {
+        val: fullText2.length,
+        duration: 0.4,
+        ease: "none",
+        onUpdate: function () {
+          setTextPart2(fullText2.slice(0, Math.ceil(this.targets()[0].val)));
+        },
+      });
+
+      // Part 3: " our agency."
+      tlType.to({ val: 0 }, {
+        val: fullText3.length,
+        duration: 0.6,
+        ease: "none",
+        onUpdate: function () {
+          setTextPart3(fullText3.slice(0, Math.ceil(this.targets()[0].val)));
+        },
+      });
+
     }, sectionRef);
 
     return () => ctx.revert();
@@ -99,9 +143,6 @@ useEffect(() => {
     >
       {/* Main Container */}
       <div
-        // CONVERTED INLINE STYLES TO RESPONSIVE CLASSES
-        // Mobile: py-16 px-6 gap-12
-        // Desktop: Matches original pixels
         className="w-full max-w-[1440px] flex flex-col items-start bg-bg-light dark:bg-bg-dark transition-colors duration-300 relative py-16 px-6 gap-12 lg:pt-[120px] lg:pb-[120px] lg:pl-[75px] lg:pr-[75px] lg:gap-[64px]"
       >
         {/* Header */}
@@ -115,7 +156,8 @@ useEffect(() => {
                   fontWeight: 500,
                 }}
               >
-                Why top entrepreneurs
+                {/* Typewriter Part 1 */}
+                {textPart1}
                 <br />
               </span>
               <span
@@ -127,8 +169,12 @@ useEffect(() => {
                   fontVariant: "normal",
                 }}
               >
-                <em>trust</em> our agency.
+                {/* Typewriter Part 2 & 3 */}
+                <em>{textPart2}</em>
+                {textPart3}
               </span>
+              {/* Blinking Cursor */}
+              <span className="animate-pulse text-text-dark dark:text-text-light">|</span>
             </h2>
             <p
               className="w-fit text-gray-700 dark:text-text-secondary text-base md:text-lg leading-relaxed lg:leading-[28.8px]"
@@ -144,9 +190,6 @@ useEffect(() => {
         </header>
 
         {/* Scrollable Track Wrapper */}
-        {/* Mobile Behavior: overflow-x-auto (Native horizontal scroll)
-            Desktop Behavior: overflow-visible (GSAP controlled)
-        */}
         <div className="w-full overflow-x-auto lg:overflow-visible no-scrollbar">
           <div
             ref={trackRef}
@@ -155,10 +198,6 @@ useEffect(() => {
             {testimonials.map((testimonial, index) => (
               <div
                 key={index}
-                // RESPONSIVE CARD WIDTH:
-                // Mobile: min-w-[85vw] (Shows 85% of card to encourage scroll)
-                // Tablet: min-w-[400px]
-                // Desktop: min-w-[445px] (Original size)
                 className="flex flex-col min-w-[85vw] md:min-w-[400px] lg:min-w-[445px] snap-center items-start p-6 lg:p-[30px] bg-gray-100 dark:bg-gray-800 rounded-lg select-none transition-colors duration-300 h-auto lg:h-[463.89px]"
               >
                 <div className="flex flex-col justify-between w-full h-full gap-8 lg:gap-0">

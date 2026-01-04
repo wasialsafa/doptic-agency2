@@ -7,7 +7,7 @@ const SmoothScroll = ({ children }) => {
   useEffect(() => {
     const lenis = new Lenis({
       // DURATION: The "smoothness" (default is 1.2). Higher = smoother/floatier.
-      duration: 1.5, 
+      duration: 1.2, 
       
       // EASING: The curve of the scroll (easeOutQuart is standard premium feel)
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), 
@@ -15,7 +15,7 @@ const SmoothScroll = ({ children }) => {
       // SENSITIVITY: This controls how "fast" the scroll is.
       // 1 is default. 2 means one flick scrolls twice as much distance.
       // Try values between 1.5 and 2.5 to get that "1 scroll finishes page" feel.
-      wheelMultiplier: 3, 
+      wheelMultiplier: 2, 
       
       // Infinite scroll? (usually false)
       infinite: false,

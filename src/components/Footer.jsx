@@ -9,7 +9,8 @@ export const CallToActionSection = () => {
 
   const handleMouseEnter = () => {
     setCursorVariant("contact");
-    setCursorText("CONTACT US");
+    // Updated: Changed text casing and added the arrow symbol
+    setCursorText("Say hi ↗");
   };
 
   const handleMouseLeave = () => {
@@ -73,7 +74,7 @@ const companyLinks = [
   { label: "About", href: "/about" },
   { label: "Project", href: "/projects" },
   { label: "Service", href: "/services" },
-  { label: "Values", href: "/about" }, // Assuming values is on about page
+  { label: "Teams", href: "/team" }, // Assuming values is on about page
   { label: "Contact", href: "/contact01" }, // ✅ Goes to contact page
 ];
 
@@ -81,8 +82,7 @@ const supportLinks = [
   { label: "Style Guide", href: "#" },
   { label: "License", href: "#" },
   { label: "Changelog", href: "#" },
-  { label: "Link Nine", href: "#" },
-  { label: "Link Ten", href: "#" },
+  
 ];
 
 const socialLinks = [
@@ -102,6 +102,13 @@ const socialLinks = [
     href: "#"
   },
 ];
+
+// --- ✨ NEW ANIMATION CLASS ✨ ---
+// 1. relative/group: needed for positioning the line
+// 2. after:... : Creates the line
+// 3. scale-x-0 to scale-x-100: Animates width
+// 4. origin-left: Makes it grow from Left to Right
+const hoverAnimation = "relative w-fit group after:block after:content-[''] after:absolute after:h-[1px] after:bg-current after:w-full after:scale-x-0 hover:after:scale-x-100 after:transition after:duration-300 after:origin-left after:bottom-0";
 
 export const FooterSection = () => {
   return (
@@ -127,8 +134,9 @@ export const FooterSection = () => {
                 {companyLinks.map((link, index) => (
                   <li key={index} className="flex items-start px-0 py-2 self-stretch w-full">
                     <a 
-                      href={link.href} // ✅ Uses the real URL
-                      className="flex-1 font-normal text-gray-700 dark:text-text-secondary text-base tracking-[0] leading-[25.6px] hover:text-text-dark dark:text-text-light transition-colors"
+                      href={link.href}
+                      // Added hoverAnimation here and changed flex-1 to w-fit
+                      className={`font-normal text-gray-700 dark:text-text-secondary text-base tracking-[0] leading-[25.6px] hover:text-text-dark dark:text-text-light transition-colors ${hoverAnimation}`}
                       style={{ fontFamily: '"Inter Variable", sans-serif' }}
                     >
                       {link.label}
@@ -151,7 +159,8 @@ export const FooterSection = () => {
                   <li key={index} className="flex items-start px-0 py-2 self-stretch w-full">
                     <a 
                       href={link.href} 
-                      className="flex-1 font-normal text-gray-700 dark:text-text-secondary text-base tracking-[0] leading-[25.6px] hover:text-text-dark dark:text-text-light transition-colors"
+                      // Added hoverAnimation here and changed flex-1 to w-fit
+                      className={`font-normal text-gray-700 dark:text-text-secondary text-base tracking-[0] leading-[25.6px] hover:text-text-dark dark:text-text-light transition-colors ${hoverAnimation}`}
                       style={{ fontFamily: '"Inter Variable", sans-serif' }}
                     >
                       {link.label}
@@ -175,7 +184,8 @@ export const FooterSection = () => {
                     {link.icon && <img className="w-6 h-6" alt={link.label} src={link.icon} />}
                     <a 
                       href={link.href} 
-                      className="font-normal text-gray-700 dark:text-text-secondary text-base tracking-[0] leading-[25.6px] whitespace-nowrap hover:text-text-dark dark:text-text-light transition-colors"
+                      // Added hoverAnimation here
+                      className={`font-normal text-gray-700 dark:text-text-secondary text-base tracking-[0] leading-[25.6px] whitespace-nowrap hover:text-text-dark dark:text-text-light transition-colors ${hoverAnimation}`}
                       style={{ fontFamily: '"Inter Variable", sans-serif' }}
                     >
                       {link.label}
@@ -190,9 +200,10 @@ export const FooterSection = () => {
           <div className="w-full lg:w-[560px] lg:h-[77px] flex flex-col gap-6 lg:ml-auto items-start lg:items-end mt-10 lg:mt-0">
             <a
               href="mailto:hello@info.com"
-              className="font-medium text-text-dark dark:text-text-light 
+              // Added hoverAnimation here
+              className={`font-medium text-text-dark dark:text-text-light 
               text-4xl md:text-5xl lg:text-[64px] 
-              text-left lg:text-right tracking-[-1px] lg:tracking-[-2.56px] leading-tight lg:leading-[76.8px] hover:opacity-70 transition-opacity break-all md:break-normal"
+              text-left lg:text-right tracking-[-1px] lg:tracking-[-2.56px] leading-tight lg:leading-[76.8px] hover:opacity-70 transition-opacity break-all md:break-normal ${hoverAnimation}`}
               style={{ fontFamily: '"Inter Variable", sans-serif' }}
             >
               hello@info.com

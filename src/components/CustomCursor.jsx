@@ -152,7 +152,7 @@ const CustomCursor = () => {
       gsap.to(text, {
         opacity: 1,
         scale: 1,
-        color: "#FFFFFF",
+        color: "#000000",
         duration: 0.3,
         delay: 0.1
       })
@@ -201,7 +201,7 @@ const CustomCursor = () => {
       >
         <span 
             ref={textRef} 
-            className="text-black text-xs font-bold opacity-0 uppercase whitespace-nowrap"
+            className="text-black text-2xl font-bold opacity-0 uppercase whitespace-nowrap"
             style={{ 
               fontFamily: 'Inter Variable, sans-serif',
               letterSpacing: '0.05em'

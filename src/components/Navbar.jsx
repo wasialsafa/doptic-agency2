@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react'
+import { Link } from 'react-router-dom'
 import ThemeToggle from './ThemeToggle'
 import Button from './MagneticButton'
 import { gsap } from 'gsap'
@@ -62,13 +63,16 @@ const Navbar = ({ onMenuClick, menuOpen }) => {
           
           {/* Logo Section - Left Aligned to Grid */}
           <div className="flex items-center">
-            <img 
-              src={theme === 'dark' ? "/logos/doptic_logo_dark.svg" : "/logos/doptic_logo_light.svg"} 
-              alt="Doptic Logo"
-              /* Exact height from Figma: 40px or 32px? 
-                 Adjusting to a clean scale that matches your text */
-              className="w-auto h-[32px]" 
-            />
+            {/* Added Link to wrap the logo */}
+            <Link to="/">
+              <img 
+                src={theme === 'dark' ? "/logos/doptic_logo_dark.svg" : "/logos/doptic_logo_light.svg"} 
+                alt="Doptic Logo"
+                /* Exact height from Figma: 40px or 32px? 
+                   Adjusting to a clean scale that matches your text */
+                className="w-auto h-[32px] cursor-pointer" 
+              />
+            </Link>
           </div>
 
           {/* Controls - Right Aligned to Grid */}
