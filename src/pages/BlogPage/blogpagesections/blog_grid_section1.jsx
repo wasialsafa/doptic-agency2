@@ -15,6 +15,10 @@ const IMAGES = {
 const FONT_INTER = 'Inter Variable, sans-serif';
 const FONT_CASLON = 'Libre Caslon Text, serif';
 
+// --- ANIMATION CLASS ---
+// This class creates the underline that scales from 0 to 100% on hover
+const underlineAnim = "relative w-fit after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-full after:h-[1px] after:bg-current after:scale-x-0 after:origin-left after:transition-transform after:duration-500 after:ease-out group-hover:after:scale-x-100";
+
 const BlogGridSection1 = () => {
   const containerRef = useRef(null);
 
@@ -133,7 +137,10 @@ const BlogGridSection1 = () => {
                     <span className="bg-[#FDE2E4] text-[#1A1A1A] text-[10px] font-bold px-3 py-1  uppercase tracking-wider">Design</span>
                     <span className="text-[10px] font-medium opacity-40 uppercase tracking-widest">5 MIN READ</span>
                  </div>
-                 <h3 className="text-2xl md:text-[36px] font-semibold leading-tight dark:text-white">The psychology of color in 2026</h3>
+                 {/* Added underlineAnim class here */}
+                 <h3 className={`text-2xl md:text-[36px] font-semibold leading-tight dark:text-white ${underlineAnim}`}>
+                   The psychology of color in 2026
+                 </h3>
                  <p className="text-sm md:text-[16px] opacity-60 dark:text-gray-300">Discover how palette choices influence user trust and decision-making.</p>
               </div>
             </div>
@@ -155,7 +162,10 @@ const BlogGridSection1 = () => {
                       <span className="bg-[#E6F6F4] text-[#1A1A1A] text-[10px] font-bold px-3 py-1  uppercase tracking-wider">Product</span>
                       <span className="text-[10px] font-medium opacity-40 uppercase tracking-widest">3 MIN READ</span>
                     </div>
-                    <h3 className="text-xl md:text-[24px] font-semibold leading-snug mb-2 dark:text-white">Building scalable design systems</h3>
+                    {/* Added underlineAnim class here */}
+                    <h3 className={`text-xl md:text-[24px] font-semibold leading-snug mb-2 dark:text-white ${underlineAnim}`}>
+                      Building scalable design systems
+                    </h3>
                     <p className="text-sm md:text-[15px] opacity-60 line-clamp-2 dark:text-gray-300">Strategies for maintaining consistency across large engineering teams.</p>
                  </div>
               </div>
@@ -174,7 +184,10 @@ const BlogGridSection1 = () => {
                       <span className="bg-[#FFF4E5] text-[#1A1A1A] text-[10px] font-bold px-3 py-1  uppercase tracking-wider">Tech</span>
                       <span className="text-[10px] font-medium opacity-40 uppercase tracking-widest">7 MIN READ</span>
                     </div>
-                    <h3 className="text-xl md:text-[24px] font-semibold leading-snug mb-2 dark:text-white">The future of React Server Components</h3>
+                    {/* Added underlineAnim class here */}
+                    <h3 className={`text-xl md:text-[24px] font-semibold leading-snug mb-2 dark:text-white ${underlineAnim}`}>
+                      The future of React Server Components
+                    </h3>
                     <p className="text-sm md:text-[15px] opacity-60 line-clamp-2 dark:text-gray-300">How server-side rendering is changing the landscape of frontend development.</p>
                  </div>
               </div>
@@ -230,11 +243,12 @@ const BlogGridSection1 = () => {
                     </span>
                     <span className="text-[10px] font-medium opacity-40 uppercase tracking-widest">4 MIN READ</span>
                  </div>
-                 <h3 className="text-2xl md:text-[32px] font-semibold leading-tight dark:text-white">
+                 {/* Added underlineAnim class here */}
+                 <h3 className={`text-2xl md:text-[32px] font-semibold leading-tight dark:text-white ${underlineAnim}`}>
                     {idx % 2 === 0 ? 'Why minimalism is evolving fast' : 'The psychology of color in 2026'}
                  </h3>
                  <p className="text-sm md:text-[16px] opacity-60 mt-2 dark:text-gray-300">
-                    Exploring the shift toward maximalism in modern interface design.
+                   Exploring the shift toward maximalism in modern interface design.
                  </p>
               </div>
             ))}

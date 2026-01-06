@@ -124,7 +124,7 @@ export const FaqSection = () => {
       // Part 1: "Got Questions?"
       tl.to({ val: 0 }, {
         val: fullText1.length,
-        duration: 1,
+        duration: .4,
         ease: "none",
         onUpdate: function () {
           setTextPart1(fullText1.slice(0, Math.ceil(this.targets()[0].val)));
@@ -134,7 +134,7 @@ export const FaqSection = () => {
       // Part 2: "We've" (Starts immediately after)
       tl.to({ val: 0 }, {
         val: fullText2.length,
-        duration: 0.5,
+        duration: 0.2,
         ease: "none",
         onUpdate: function () {
           setTextPart2(fullText2.slice(0, Math.ceil(this.targets()[0].val)));
@@ -144,7 +144,7 @@ export const FaqSection = () => {
       // Part 3: "Got Answers" (The italic part)
       tl.to({ val: 0 }, {
         val: fullText3.length,
-        duration: 0.8,
+        duration: 0.2,
         ease: "none",
         onUpdate: function () {
           setTextPart3(fullText3.slice(0, Math.ceil(this.targets()[0].val)));

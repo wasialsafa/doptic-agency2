@@ -35,15 +35,24 @@ const Project03 = () => {
             </h2>
           </div>
 
-          {/* 2. Number "03" 
-              Mobile: Static, aligned left
-              Desktop (lg): Absolute, Left 329px, Bottom 460px
-          */}
-          <div 
-            className="relative lg:absolute flex items-center justify-start lg:justify-center font-bold text-black/[0.04] dark:text-white/[0.04] select-none z-0 leading-none lg:w-[161px] lg:h-[154px] lg:left-[329px] lg:bottom-[460px]"
+      
+          {/* 2. Number "03" */}
+        <div 
+          className="relative lg:absolute flex items-center justify-start lg:justify-center z-0 lg:w-[161px] lg:h-[154px] lg:left-[329px] lg:bottom-[460px]"
+        >
+          <span 
+            className="block text-[#0E0E0E1A] dark:text-[#E2E2E2]/10 select-none"
+            style={{ 
+                fontFamily: '"Inter Variable", sans-serif',
+                fontWeight: 800,          // ExtraBold
+                fontSize: '128px',        // Fixed size
+                lineHeight: '120%',       
+                letterSpacing: '-0.04em', // -4%
+            }}
           >
-             <span className="text-[120px] lg:text-[200px]">03</span>
-          </div>
+            03
+          </span>
+        </div>
 
           {/* 3. Image Wrapper & Text 
               Mobile: Fluid width, stacks vertically

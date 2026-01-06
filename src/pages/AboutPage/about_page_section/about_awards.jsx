@@ -77,14 +77,14 @@ const AwardsSection = () => {
     tl.to(cursorLabelInnerRef.current, {
       scale: 0.8,
       opacity: 0,
-      duration: 0.15,
+      duration: 0.05,
       overwrite: 'auto',
       onComplete: () => setActiveImage(img)
     })
     .to(cursorLabelInnerRef.current, {
       scale: 1,
       opacity: 1,
-      duration: 0.4,
+      duration: .2,
       ease: "back.out(1.7)"
     });
   };

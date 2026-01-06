@@ -283,13 +283,17 @@ const Projects = () => {
           style={{ zIndex: 20 }}
         >
           {/* Progress Bar */}
+          {/* Progress Bar */}
           <div className="w-full h-1 bg-gray-200 dark:bg-gray-800 rounded-full overflow-hidden">
             <div
               ref={progressBarRef}
-              className="h-full transition-all duration-100 ease-linear"
+              // CHANGED: Added background colors here for Light and Dark modes
+              // Light: bg-[rgba(14,14,14,0.4)] (Your original color)
+              // Dark:  dark:bg-[#E2E2E2]/40   (Your new request)
+              className="h-full transition-all duration-100 ease-linear bg-[rgba(14,14,14,0.4)] dark:bg-[#E2E2E2]/40"
               style={{
                 width: `${progress * 100}%`,
-                backgroundColor: 'rgba(14, 14, 14, 0.4)'
+                // Removed backgroundColor from here so className takes priority
               }}
             />
           </div>
@@ -304,11 +308,11 @@ const Projects = () => {
             </div>
 
             <MagneticButton
-              className="bg-bg-light dark:bg-bg-dark text-text-dark dark:text-text-light px-8 py-3 text-base font-medium hover:opacity-80 transition-all"
+              className="bg-bg-light dark:bg-bg-dark text-text-dark dark:text-text-light px-8 py-3 text-base font-medium hover:opacity-80 transition-all border border-[rgba(14,14,14,0.4)] dark:border-[#e2e2e2]"
               style={{
                 fontFamily: 'Inter Variable, Inter, sans-serif',
                 fontWeight: 500,
-                border: '1px solid rgba(14, 14, 14, 0.4)'
+                
               }}
             >
               View All Project

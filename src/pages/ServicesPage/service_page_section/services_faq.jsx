@@ -4,8 +4,15 @@ import {
   AccordionItem,
   AccordionTrigger as BaseAccordionTrigger,
 } from "@/components/ui/accordion";
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import * as AccordionPrimitive from "@radix-ui/react-accordion";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
+
+const FONT_INTER = 'Inter Variable, sans-serif';
+const FONT_CASLON = 'Libre Caslon Text, serif';
 
 // --- Custom Trigger Component ---
 const CustomAccordionTrigger = React.forwardRef(
@@ -84,27 +91,112 @@ const faqItems = [
 
 // --- Component Definition ---
 export const ServicesFaq = () => {
+  const sectionRef = useRef(null);
+  const itemsRef = useRef([]); // To store refs for accordion items
+
+  // Typewriter States
+  const [textPart1, setTextPart1] = useState("");
+  const [textPart2, setTextPart2] = useState("");
+  const [textPart3, setTextPart3] = useState("");
+
+  const fullText1 = "Got Questions?";
+  const fullText2 = "We've "; // Note the space
+  const fullText3 = "Got Answers";
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      // 1. Reset initial states
+      setTextPart1("");
+      setTextPart2("");
+      setTextPart3("");
+      // Hide accordion items initially
+      gsap.set(itemsRef.current, { opacity: 0, y: 20 });
+
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top 60%", // Starts when section is 60% into view
+        },
+      });
+
+      // --- TYPEWRITER ANIMATION SEQUENCE ---
+      
+      // Part 1: "Got Questions?"
+      tl.to({ val: 0 }, {
+        val: fullText1.length,
+        duration: .4,
+        ease: "none",
+        onUpdate: function () {
+          setTextPart1(fullText1.slice(0, Math.ceil(this.targets()[0].val)));
+        },
+      });
+
+      // Part 2: "We've" (Starts immediately after)
+      tl.to({ val: 0 }, {
+        val: fullText2.length,
+        duration: 0.2,
+        ease: "none",
+        onUpdate: function () {
+          setTextPart2(fullText2.slice(0, Math.ceil(this.targets()[0].val)));
+        },
+      });
+
+      // Part 3: "Got Answers" (The italic part)
+      tl.to({ val: 0 }, {
+        val: fullText3.length,
+        duration: 0.2,
+        ease: "none",
+        onUpdate: function () {
+          setTextPart3(fullText3.slice(0, Math.ceil(this.targets()[0].val)));
+        },
+      });
+
+      // --- STAGGERED REVEAL FOR OPTIONS ---
+      // This runs after the typewriter finishes
+      tl.to(itemsRef.current, {
+        opacity: 1,
+        y: 0,
+        duration: 0.6,
+        stagger: 0.15, // Delay between each item
+        ease: "power2.out",
+      }, "-=0.2"); // Overlap slightly with the end of typing
+
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <section className="w-full flex justify-center bg-bg-light dark:bg-bg-dark transition-colors duration-300">
+    <section ref={sectionRef} className="w-full flex justify-center bg-bg-light dark:bg-bg-dark transition-colors duration-300">
       <div
-        // CONVERTED INLINE STYLES TO RESPONSIVE CLASSES
-        // Mobile: py-16 px-6 gap-12
-        // Desktop: py-[120px] px-[75px] gap-[64px]
         className="w-full max-w-[1440px] flex flex-col items-start py-16 px-6 gap-12 md:px-10 lg:pt-[120px] lg:pb-[120px] lg:pl-[75px] lg:pr-[75px] lg:gap-[64px]"
       >
         <header className="w-full max-w-[768px] flex flex-col items-start gap-4 lg:gap-[12px]">
-          {/* RESPONSIVE TEXT SIZES: text-4xl -> text-5xl -> text-7xl */}
-          <h2 className="w-full [font-family:'Inter_Variable-Medium',Helvetica] font-normal text-transparent text-4xl md:text-5xl lg:text-7xl leading-tight lg:leading-[72px]">
+          {/* Main Headline */}
+          <h2
+            className="w-full font-normal text-transparent text-4xl md:text-5xl lg:text-7xl leading-tight lg:leading-[72px]"
+            style={{ fontFamily: FONT_INTER }}
+          >
             <span className="font-medium text-text-dark dark:text-text-light tracking-[-1px] lg:tracking-[-2.07px] lg:leading-[86.4px]">
-              Got Questions?
+              {textPart1}
               <br />
-              We&apos;ve{" "}
+              {textPart2}
             </span>
-            <span className="[font-family:'Libre_Caslon_Text',Helvetica] italic text-text-dark dark:text-text-light tracking-[-1px] lg:tracking-[-2.07px] lg:leading-[86.4px]">
-              Got Answers
+            <span
+              className="italic text-text-dark dark:text-text-light tracking-[-1px] lg:tracking-[-2.07px] lg:leading-[86.4px]"
+              style={{ fontFamily: FONT_CASLON }}
+            >
+              {textPart3}
             </span>
+            {/* Blinking Cursor (Optional visual flair) */}
+            <span className="animate-pulse text-text-dark dark:text-text-light">|</span>
           </h2>
-          <p className="w-full text-gray-700 dark:text-text-secondary text-base md:text-lg leading-relaxed lg:leading-[28.8px] [font-family:'Inter_Variable-Regular',Helvetica] font-normal tracking-[0]">
+
+          {/* Subheader Paragraph */}
+          <p
+            className="w-full text-gray-700 dark:text-text-secondary text-base md:text-lg leading-relaxed lg:leading-[28.8px] font-normal tracking-[0]"
+            style={{ fontFamily: FONT_INTER }}
+          >
             Getting started is made simple and transparent right from day one. We
             guide you through every step with us.
           </p>
@@ -116,23 +208,30 @@ export const ServicesFaq = () => {
           defaultValue="item-1"
           className="w-full max-w-[1290px] border-b border-gray-300 dark:border-gray-700"
         >
-          {faqItems.map((item) => (
+          {faqItems.map((item, index) => (
             <AccordionItem
               key={item.id}
               value={item.id}
-              // Reduced horizontal padding on mobile (px-2) to give text more room, restored to px-[30px] on desktop
+              // Store ref for staggered animation
+              ref={el => itemsRef.current[index] = el}
               className="border-gray-300 dark:border-gray-700 px-2 md:px-6 lg:px-[30px] border-t"
             >
               <CustomAccordionTrigger className="gap-4 lg:gap-6 hover:no-underline">
-                {/* RESPONSIVE QUESTION SIZE: text-xl -> text-2xl -> text-[32px] */}
-                <span className="flex-1 text-left [font-family:'Inter_Variable-Medium',Helvetica] font-medium text-text-dark dark:text-text-light text-xl md:text-2xl lg:text-[32px] tracking-[-0.5px] lg:tracking-[-1.28px] leading-snug lg:leading-[38.4px]">
+                {/* Question Text */}
+                <span
+                  className="flex-1 text-left font-medium text-text-dark dark:text-text-light text-xl md:text-2xl lg:text-[32px] tracking-[-0.5px] lg:tracking-[-1.28px] leading-snug lg:leading-[38.4px]"
+                  style={{ fontFamily: FONT_INTER }}
+                >
                   {item.question}
                 </span>
               </CustomAccordionTrigger>
 
               <AccordionContent className="pt-0 pb-6 lg:pb-[30px]">
-                {/* RESPONSIVE ANSWER SIZE: text-base -> text-lg -> text-xl */}
-                <p className="text-gray-700 dark:text-text-secondary text-base md:text-lg lg:text-xl leading-relaxed lg:leading-8 [font-family:'Inter_Variable-Regular',Helvetica] font-normal tracking-[0]">
+                {/* Answer Text */}
+                <p
+                  className="text-gray-700 dark:text-text-secondary text-base md:text-lg lg:text-xl leading-relaxed lg:leading-8 font-normal tracking-[0]"
+                  style={{ fontFamily: FONT_INTER }}
+                >
                   {item.answer}
                 </p>
               </AccordionContent>

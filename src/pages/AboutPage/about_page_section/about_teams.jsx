@@ -95,7 +95,7 @@ export default function AboutTeams() {
               lineHeight: '160%',
               maxWidth: '600px'
             }}>
-              We are strategists, designers, and engineers who refuse to settle for "good enough." 
+              We are strategists, designers, and engineers who refuse to settle for "good enough." Our diverse perspectives converge to create singular, powerful solutions. 
             </p>
           </div>
 

@@ -39,21 +39,22 @@ const Project05 = () => {
               Mobile: Static, smaller font
               Desktop (lg): Absolute, Left 112px, Bottom 460px
           */}
+          {/* 2. Number "05" */}
           <div 
-            className="relative lg:absolute flex items-center justify-start lg:justify-center font-bold text-black/[0.04] dark:text-white/[0.04] select-none z-0 leading-none lg:w-[158px] lg:h-[154px] lg:left-[112px] lg:bottom-[460px]"
+            className="relative lg:absolute flex items-center justify-start lg:justify-center z-0 lg:w-[158px] lg:h-[154px] lg:left-[112px] lg:bottom-[460px]"
           >
-                           <span 
-                className="block text-[#0e0e0e] dark:text-white leading-[120%] select-none"
-                style={{ 
-                    fontFamily: '"Inter Variable", sans-serif',
-                    fontWeight: 800, 
-                    fontSize: 'clamp(64px, 10vw, 128px)', 
-                    letterSpacing: '-0.04em',
-                    opacity: 0.3 
-                }}
-              >
-                05
-              </span>
+            <span 
+              className="block text-[#0E0E0E1A] dark:text-[#E2E2E2]/10 select-none"
+              style={{ 
+                  fontFamily: '"Inter Variable", sans-serif',
+                  fontWeight: 800,           // ExtraBold
+                  fontSize: '128px',         // Exact size requested
+                  lineHeight: '120%',        // Exact line height
+                  letterSpacing: '-0.04em',  // -4%
+              }}
+            >
+              05
+            </span>
           </div>
 
           {/* 3. Image 

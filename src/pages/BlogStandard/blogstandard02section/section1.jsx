@@ -13,6 +13,10 @@ const IMAGES = {
 const FONT_INTER = 'Inter Variable, sans-serif';
 const FONT_CASLON = 'Libre Caslon Text, serif';
 
+// --- ANIMATION CLASS ---
+// Scales underline from 0 to 100% on group hover
+const underlineAnim = "relative w-fit after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-full after:h-[1px] after:bg-current after:scale-x-0 after:origin-left after:transition-transform after:duration-500 after:ease-out group-hover:after:scale-x-100";
+
 const POSTS = [
   { id: 1, category: "Design", title: "The psychology of color in 2026", desc: "Discover how palette choices influence user trust and decision-making.", img: IMAGES.post1 },
   { id: 2, category: "Tech", title: "Why minimalism is evolving fast", desc: "Exploring the shift toward maximalism in modern interface design.", img: IMAGES.post2 },
@@ -189,7 +193,8 @@ const BlogPage = () => {
               </div>
 
               {/* Title & Desc */}
-              <h2 className="text-[28px] md:text-[48px] font-medium tracking-tight mb-2 leading-[1.1]">
+              {/* Added underlineAnim class here */}
+              <h2 className={`text-[28px] md:text-[48px] font-medium tracking-tight mb-2 leading-[1.1] ${underlineAnim}`}>
                 {post.title}
               </h2>
               {/* FIXED: Subtext opacity relies on parent text color (which is now white in dark mode) */}

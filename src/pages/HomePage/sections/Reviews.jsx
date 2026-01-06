@@ -104,7 +104,7 @@ export const TestimonialSection = () => {
       // Part 1: "Why top entrepreneurs"
       tlType.to({ val: 0 }, {
         val: fullText1.length,
-        duration: 1,
+        duration: .4,
         ease: "none",
         onUpdate: function () {
           setTextPart1(fullText1.slice(0, Math.ceil(this.targets()[0].val)));
@@ -114,7 +114,7 @@ export const TestimonialSection = () => {
       // Part 2: "trust" (Italic part)
       tlType.to({ val: 0 }, {
         val: fullText2.length,
-        duration: 0.4,
+        duration: 0.2,
         ease: "none",
         onUpdate: function () {
           setTextPart2(fullText2.slice(0, Math.ceil(this.targets()[0].val)));
@@ -124,7 +124,7 @@ export const TestimonialSection = () => {
       // Part 3: " our agency."
       tlType.to({ val: 0 }, {
         val: fullText3.length,
-        duration: 0.6,
+        duration: 0.2,
         ease: "none",
         onUpdate: function () {
           setTextPart3(fullText3.slice(0, Math.ceil(this.targets()[0].val)));

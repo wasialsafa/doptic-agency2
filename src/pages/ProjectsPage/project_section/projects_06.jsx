@@ -110,25 +110,26 @@ const Project06 = () => {
               />
             </div>
 
-            {/* NUMBER: 06 */}
+            {/* NUMBER: 06 - UPDATED POSITION & STYLE */}
             <div 
               ref={numberRef}
-              className="shrink-0 lg:absolute block mt-4 lg:mt-0"
+              className="hidden lg:flex absolute items-center justify-start z-0"
               style={{ 
-                  left: '800px', // 740px + 60px gap
-                  bottom: '460px', 
-                  width: '161px',
-                  zIndex: 0
+                // 740px (Image width) + 60px (Gap) = 800px from Left
+                left: '800px', 
+                // 460px from Bottom
+                bottom: '460px',
+                width: 'auto' 
               }}
             >
               <span 
-                className="block text-[#0e0e0e] dark:text-white leading-[120%] select-none"
+                className="block text-[#0E0E0E1A] dark:text-[#E2E2E2]/10 select-none"
                 style={{ 
                     fontFamily: '"Inter Variable", sans-serif',
-                    fontWeight: 800, 
-                    fontSize: 'clamp(64px, 10vw, 128px)', 
-                    letterSpacing: '-0.04em',
-                    opacity: 0.3 
+                    fontWeight: 800,           // ExtraBold
+                    fontSize: '128px',         // Fixed Size
+                    lineHeight: '120%',        // Line Height
+                    letterSpacing: '-0.04em',  // -4%
                 }}
               >
                 06
@@ -147,7 +148,7 @@ const Project06 = () => {
                     fontWeight: 400,
                     fontStyle: 'normal',
                     fontSize: '18px',
-                    lineHeight: '160%', // Matches 29px roughly (18 * 1.6 = 28.8)
+                    lineHeight: '160%', 
                     letterSpacing: '0%',
                     whiteSpace: 'nowrap',
                     overflow: 'hidden',

@@ -41,17 +41,28 @@ const Project04 = () => {
             Right: 40px from the edge.
             Size: 167px x 154px.
         */}
+{/* NUMBER 04 */}
         <div 
-          className="absolute flex items-center justify-center font-bold text-black/[0.08] dark:text-white/[0.08] select-none z-0 leading-none"
+          className="absolute flex items-center justify-center select-none z-0"
           style={{ 
             width: '167px',
             height: '154px',
-            right: '40px', // 40px gap from the right side of the screen/container
-            top: '280px',  // Aligned roughly with the top of the image
-            fontSize: '200px' 
+            right: '40px', // Keeps the specific Project 04 positioning
+            top: '280px',
           }}
         >
-          04
+          <span 
+            className="block text-[#0E0E0E1A] dark:text-[#E2E2E2]/10"
+            style={{ 
+                fontFamily: '"Inter Variable", sans-serif',
+                fontWeight: 800,          // ExtraBold
+                fontSize: '128px',        // Fixed size
+                lineHeight: '120%',       
+                letterSpacing: '-0.04em', // -4%
+            }}
+          >
+            04
+          </span>
         </div>
 
         {/* Main Content Div: 1290px x 878px with 24px Gap */}

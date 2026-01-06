@@ -1,7 +1,11 @@
 import React, { useEffect, useRef } from 'react';
 import { Check } from 'lucide-react';
 import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger'; // 1. Import ScrollTrigger
 import { useTheme } from '../../../context/ThemeContext';
+
+// 2. Register the plugin
+gsap.registerPlugin(ScrollTrigger);
 
 const PricingSection = () => {
   const { theme } = useTheme();
@@ -9,33 +13,77 @@ const PricingSection = () => {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Header Animation
-      gsap.from(".animate-header", {
-        y: 30,
-        opacity: 0,
-        duration: 0.8,
-        stagger: 0.2,
-        ease: "power3.out"
+      
+      // --- UPDATED ANIMATION WITH SCROLL TRIGGER ---
+      const tl = gsap.timeline({ 
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top 70%", // Animation starts when top of section hits 70% down the screen
+        },
+        defaults: { ease: "power2.out" } 
       });
+
+      // 1. Set Initial State
+      tl.set([".tw-label", ".tw-title", ".tw-desc"], {
+        clipPath: "polygon(0 0, 0% 0, 0% 100%, 0 100%)",
+        y: 20,
+        opacity: 0 
+      });
+
+      // 2. Animate "PRICING" Label
+      tl.to(".tw-label", {
+        clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)",
+        y: 0,
+        opacity: 1,
+        duration: 0.5,
+      });
+
+      // 3. Animate Main Title (Handwriting wipe)
+      tl.to(".tw-title", {
+        clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)",
+        y: 0,
+        opacity: 1,
+        duration: .75,
+        ease: "power1.inOut"
+      }, "-=0.2");
+
+      // 4. Animate Description
+      tl.to(".tw-desc", {
+        clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)",
+        y: 0,
+        opacity: 1,
+        duration: .75,
+      }, "-=0.5");
+
+      // --- EXISTING ANIMATIONS (Also using ScrollTrigger via GSAP default behavior for .from) ---
 
       // Pricing Card Animation
       gsap.from(".animate-card", {
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top 60%",
+        },
         x: -50,
         opacity: 0,
         duration: 1,
-        delay: 0.4,
+        delay: 1.2, 
         ease: "power3.out"
       });
 
       // Features Animation
       gsap.from(".animate-feature", {
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top 60%",
+        },
         x: 30,
         opacity: 0,
         duration: 0.8,
         stagger: 0.15,
-        delay: 0.6,
+        delay: 1.5, 
         ease: "power3.out"
       });
+
     }, sectionRef);
 
     return () => ctx.revert();
@@ -50,22 +98,22 @@ const PricingSection = () => {
       {/* Container with 120px top gap and 75px side gaps */}
       <div className="max-w-[1440px] mx-auto pt-[120px] pb-[120px] px-5 md:px-[75px] flex flex-col items-center">
         
-        {/* Top Header Div: Width 850px, Height 244px, Gap 12px */}
-        <div className="flex flex-col items-start gap-[12px] w-full max-w-[850px] lg:h-[244px] shrink-0 animate-header mr-auto">
-          <div className="font-medium text-[#0e0e0e] dark:text-text-light text-[14px] tracking-[2px] leading-[20px] uppercase opacity-60">
+        {/* Top Header Div */}
+        <div className="flex flex-col items-start gap-[12px] w-full max-w-[850px] lg:h-[244px] shrink-0 mr-auto">
+          <div className="tw-label font-medium text-[#0e0e0e] dark:text-text-light text-[14px] tracking-[2px] leading-[20px] uppercase opacity-60">
             PRICING
           </div>
 
-          <h2 className="text-[#0e0e0e] dark:text-white text-[36px] md:text-[52px] lg:text-[72px] font-medium leading-[120%] tracking-[-0.04em] font-['Inter_Variable']">
+          <h2 className="tw-title text-[#0e0e0e] dark:text-white text-[36px] md:text-[52px] lg:text-[72px] font-medium leading-[120%] tracking-[-0.04em] font-['Inter_Variable']">
             Simple, Transparent Pricing <br />
             <span className="font-serif italic font-normal" style={{ fontFamily: '"Libre Caslon Text", serif' }}>
               Plan
             </span>
           </h2>
           
-          <p className="text-gray-500 dark:text-gray-400 max-w-[650px] mt-2 text-[18px] leading-[160%]">
+          <p className="tw-desc text-gray-500 dark:text-gray-400 w-full max-w-[850px] mt-2 text-[18px] leading-[160%]">
             A pricing plan is a business strategy for setting product/service costs, 
-            balancing profitability with market competitiveness by considering costs, 
+            balancing profitability with <br /> market competitiveness by considering costs, 
             customer value, and competitor pricing.
           </p>
         </div>
@@ -103,7 +151,6 @@ const PricingSection = () => {
               </ul>
             </div>
 
-            {/* RESTORED BUTTON STYLE */}
             <button className="w-full bg-[#ff4d29] hover:bg-[#e64525] text-white font-bold py-4 transition-colors rounded-sm mb-4">
               Get Started Today
             </button>
@@ -144,7 +191,6 @@ const PricingSection = () => {
                 ))}
             </div>
 
-            {/* RESTORED LOWER BUTTON STYLE */}
             <button className="animate-feature mt-8 w-full border border-solid border-[#0e0e0e66] dark:border-gray-500 hover:bg-[#0e0e0e0d] dark:hover:bg-gray-800 transition-colors bg-transparent dark:text-text-light py-4 font-semibold rounded-sm">
               Contact us for Custom Scopes
             </button>

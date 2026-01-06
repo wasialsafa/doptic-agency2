@@ -48,69 +48,71 @@ const Navbar = ({ onMenuClick, menuOpen }) => {
   }, [menuOpen])
 
   return (
-    <nav
-      ref={navRef}
-      /* Fixed to top, full width background stretches forever */
-      className="fixed top-0 left-0 right-0 z-[100] bg-transparent backdrop-blur-sm w-full"
-    >
-      {/* The Container: 
-          - max-w-[1440px]: Keeps it from growing past Figma size
-          - mx-auto: Centers it so whitespace grows on 26" monitors
-          - px-[75px]: Matches your Figma left/right gap exactly
-      */}
-      <div className="w-full max-w-[1440px] h-[80px] mx-auto px-[75px]">
-        <div className="flex justify-between items-center h-full">
-          
-          {/* Logo Section - Left Aligned to Grid */}
-          <div className="flex items-center">
-            {/* Added Link to wrap the logo */}
-            <Link to="/">
-              <img 
-                src={theme === 'dark' ? "/logos/doptic_logo_dark.svg" : "/logos/doptic_logo_light.svg"} 
-                alt="Doptic Logo"
-                /* Exact height from Figma: 40px or 32px? 
-                   Adjusting to a clean scale that matches your text */
-                className="w-auto h-[32px] cursor-pointer" 
-              />
-            </Link>
-          </div>
-
-          {/* Controls - Right Aligned to Grid */}
-          <div className="flex items-center gap-[20px]">
-            <ThemeToggle />
+    <>
+      {/* --- 1. Top Navbar (Original) --- */}
+      <nav
+        ref={navRef}
+        className="fixed top-0 left-0 right-0 z-[100] bg-transparent backdrop-blur-sm w-full"
+      >
+        <div className="w-full max-w-[1440px] h-[80px] mx-auto px-[75px]">
+          <div className="flex justify-between items-center h-full">
             
-            <div className="hidden lg:block">
-              <Button
-                text="Menu"
-                
-                fill_background_color="#ff4920"
-                onClick={onMenuClick}
-                magnetic={true}
-              />
+            {/* Logo Section */}
+            <div className="flex items-center">
+              <Link to="/">
+                <img 
+                  src={theme === 'dark' ? "/logos/doptic_logo_dark.svg" : "/logos/doptic_logo_light.svg"} 
+                  alt="Doptic Logo"
+                  className="w-auto h-[32px] cursor-pointer" 
+                />
+              </Link>
             </div>
 
-            <button 
-              onClick={onMenuClick}
-              className="group flex flex-col items-center justify-center w-8 h-8 gap-[6px] cursor-pointer z-[110]"
-              aria-label="Toggle menu"
-            >
-              <div 
-                ref={line1Ref}
-                className={`w-7 h-[2px] transition-colors duration-300 ${
-                    theme === 'dark' ? 'bg-white' : 'bg-black'
-                }`}
-              />
-              <div 
-                ref={line2Ref}
-                className={`w-7 h-[2px] transition-colors duration-300 ${
-                    theme === 'dark' ? 'bg-white' : 'bg-black'
-                }`}
-              />
-            </button>
+            {/* Controls (ThemeToggle removed from here) */}
+            <div className="flex items-center gap-[20px]">
+              {/* <ThemeToggle />  <-- Removed from here */}
+              
+              <div className="hidden lg:block">
+                <Button
+                  text="Menu"
+                  fill_background_color="#ff4920"
+                  onClick={onMenuClick}
+                  magnetic={true}
+                />
+              </div>
+
+              <button 
+                onClick={onMenuClick}
+                className="group flex flex-col items-center justify-center w-8 h-8 gap-[6px] cursor-pointer z-[110]"
+                aria-label="Toggle menu"
+              >
+                <div 
+                  ref={line1Ref}
+                  className={`w-7 h-[2px] transition-colors duration-300 ${
+                      theme === 'dark' ? 'bg-white' : 'bg-black'
+                  }`}
+                />
+                <div 
+                  ref={line2Ref}
+                  className={`w-7 h-[2px] transition-colors duration-300 ${
+                      theme === 'dark' ? 'bg-white' : 'bg-black'
+                  }`}
+                />
+              </button>
+            </div>
           </div>
         </div>
+      </nav>
+
+      {/* --- 2. Floating Theme Toggle (Bottom Right) --- */}
+      {/* - fixed: Keeps it stuck to the viewport 
+          - bottom-8 / right-8: Distance from edges
+          - z-[110]: Ensures it sits on top of other content
+      */}
+      <div className="fixed bottom-8 right-8 z-[110]">
+        <ThemeToggle />
       </div>
-    </nav>
+    </>
   )
 }
 

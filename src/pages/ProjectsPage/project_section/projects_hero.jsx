@@ -150,11 +150,15 @@ const LandingPage = () => {
               style={{ width: '132px' }}
             >
               <span 
-                className="block font-bold text-[#0e0e0e] dark:text-white leading-none"
+                // Color #0E0E0E1A is applied here. 
+                // Added dark:text-[#E2E2E2]/10 to maintain the watermark effect in dark mode.
+                className="block text-[#0E0E0E1A] dark:text-[#E2E2E2]/10"
                 style={{ 
                     fontFamily: '"Inter Variable", sans-serif',
-                    fontSize: '154px',
-                    opacity: 0.3 
+                    fontWeight: 800,          // font-weight: 800 (ExtraBold)
+                    fontSize: '128px',        // font-size: 128px
+                    lineHeight: '120%',       // line-height: 120%
+                    letterSpacing: '-0.04em', // letter-spacing: -4%
                 }}
               >
                 01

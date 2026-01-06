@@ -23,6 +23,7 @@ const blogPosts = [
 ];
 
 // --- ✨ ANIMATION CONFIGURATION ✨ ---
+// This class creates the underline animation
 const animBase = "relative w-fit after:block after:content-[''] after:absolute after:h-[1px] after:bg-current after:w-full after:scale-x-0 group-hover:after:scale-x-100 after:origin-left after:bottom-0 after:transition-transform after:duration-700 after:ease-out";
 
 export const BlogSection = () => {
@@ -51,7 +52,7 @@ export const BlogSection = () => {
       // Part 1: "Insights from the"
       tl.to({ val: 0 }, {
         val: fullText1.length,
-        duration: 1,
+        duration: .4,
         ease: "none",
         onUpdate: function () {
           setTextPart1(fullText1.slice(0, Math.ceil(this.targets()[0].val)));
@@ -61,7 +62,7 @@ export const BlogSection = () => {
       // Part 2: "studio"
       tl.to({ val: 0 }, {
         val: fullText2.length,
-        duration: 0.5,
+        duration: 0.2,
         ease: "none",
         onUpdate: function () {
           setTextPart2(fullText2.slice(0, Math.ceil(this.targets()[0].val)));
@@ -191,7 +192,7 @@ export const BlogSection = () => {
                 {/* Title & Desc */}
                 <div className="flex flex-col gap-3 items-start">
                   
-                  {/* --- TITLE (First to animate) --- */}
+                  {/* --- TITLE (Has Underline Animation) --- */}
                   <h3
                     className={`text-text-dark dark:text-text-light line-clamp-2 text-[28px] md:text-[32px] lg:text-[40px] ${animBase}`}
                     style={{
@@ -204,10 +205,9 @@ export const BlogSection = () => {
                     {post.title}
                   </h3>
 
-                  {/* --- SUBTEXT (Staggered animation) --- */}
-                  {/* Added 'group-hover:after:delay-200' to wait 200ms before starting */}
+                  {/* --- SUBTEXT (No Animation) --- */}
                   <p
-                    className={`font-normal text-gray-700 dark:text-text-secondary text-base lg:text-lg tracking-[0] leading-[26px] lg:leading-[28.8px] line-clamp-2 ${animBase} group-hover:after:delay-200`}
+                    className="font-normal text-gray-700 dark:text-text-secondary text-base lg:text-lg tracking-[0] leading-[26px] lg:leading-[28.8px] line-clamp-2"
                     style={{
                       fontFamily: "Inter Variable, Inter, sans-serif",
                       fontWeight: 400,

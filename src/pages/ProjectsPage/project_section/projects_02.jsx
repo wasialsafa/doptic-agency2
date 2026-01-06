@@ -125,21 +125,26 @@ const Project02 = () => {
 
           {/* RIGHT COLUMN: Number */}
           {/* Gap is handled by parent gap-[60px] */}
-          <div 
-            ref={numberRef}
-            className="shrink-0 hidden lg:block"
-          >
-            <span 
-              className="block font-bold text-[#0e0e0e] dark:text-white leading-none select-none"
-              style={{ 
-                  fontFamily: '"Inter Variable", sans-serif',
-                  fontSize: '154px', // Consistent with Project 01
-                  opacity: 0.3 
-              }}
+            <div 
+              ref={numberRef}
+              className="shrink-0 hidden lg:block"
+              style={{ width: '132px' }}
             >
-              02
-            </span>
-          </div>
+              <span 
+                // Color #0E0E0E1A is applied here. 
+                // Added dark:text-[#E2E2E2]/10 to maintain the watermark effect in dark mode.
+                className="block text-[#0E0E0E1A] dark:text-[#E2E2E2]/10"
+                style={{ 
+                    fontFamily: '"Inter Variable", sans-serif',
+                    fontWeight: 800,          // font-weight: 800 (ExtraBold)
+                    fontSize: '128px',        // font-size: 128px
+                    lineHeight: '120%',       // line-height: 120%
+                    letterSpacing: '-0.04em', // letter-spacing: -4%
+                }}
+              >
+                02
+              </span>
+            </div>
 
           {/* Mobile Number (Visible only on small screens) */}
           <div className="lg:hidden block self-end">
