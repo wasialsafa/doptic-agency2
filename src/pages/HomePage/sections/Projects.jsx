@@ -5,6 +5,11 @@ import MagneticButton from '../../../components/MagneticButton'
 
 gsap.registerPlugin(ScrollTrigger)
 
+// --- COLOR CONSTANTS ---
+const textMain = "text-[#0e0e0e] dark:text-[#e2e2e2]";
+const textSub = "text-[#0E0E0EB2] dark:text-[#E2E2E2]/70"; // B2 is approx 70% opacity
+const borderSub = "border-[#0E0E0EB2] dark:border-[#E2E2E2]/70";
+
 // === HELPER COMPONENT FOR TYPEWRITER EFFECT ===
 const SplitText = ({ text, className, style }) => {
   if (!text) return null;
@@ -186,19 +191,15 @@ const Projects = () => {
                     paddingRight: '75px',
                 }}
               >
-                {/* UPDATED: Main Content Wrapper Height 
-                   Was: lg:h-[640px] (which contained image height logic)
-                   Now: Matches the new image height logic.
-                */}
+                
                 <div className="w-full h-auto lg:h-[640px] flex flex-col-reverse lg:flex-row gap-10 lg:gap-[80px]">
                   
                   {/* Left Side (Text) */}
-                  {/* UPDATED: Height to 640px to match image */}
                   <div 
                     className="w-full lg:w-[605px] h-auto lg:h-[640px] flex flex-col justify-center lg:justify-start gap-8 lg:gap-0 relative z-20 overflow-visible"
                   >
                     <span
-                      className="text-sm uppercase tracking-wider text-text-dark dark:text-text-light block"
+                      className={`text-sm uppercase tracking-wider ${textMain} block`}
                       style={{ fontFamily: 'Inter Variable, Inter, sans-serif', fontWeight: 500 }}
                     >
                       {project.label}
@@ -210,7 +211,7 @@ const Projects = () => {
                         style={{ width: '700px', height: '187px' }}
                     >
                       <h2
-                        className="text-[96px] md:text-[64px] xl:text-[96px] font-medium text-text-dark dark:text-text-light leading-[100%] whitespace-nowrap"
+                        className={`text-[96px] md:text-[64px] xl:text-[96px] font-medium ${textMain} leading-[100%] whitespace-nowrap`}
                         style={{
                           fontFamily: 'Inter Variable, sans-serif',
                           fontWeight: 500,
@@ -241,7 +242,7 @@ const Projects = () => {
                     {/* DESCRIPTION CONTAINER */}
                     <div className="w-full lg:w-[605px] lg:mt-[50px]">
                       <p
-                        className="text-base md:text-lg text-gray-700 dark:text-text-secondary w-full"
+                        className={`text-base md:text-lg ${textSub} w-full`}
                         style={{
                           fontFamily: 'Inter Variable, Inter, sans-serif',
                           fontWeight: 400,
@@ -254,7 +255,6 @@ const Projects = () => {
                   </div>
 
                   {/* Right Side (Image) */}
-                  {/* UPDATED: Height increased from 533px to 640px */}
                   <div className="w-full lg:w-[605px] h-[300px] md:h-[400px] lg:h-[640px] overflow-hidden rounded-lg lg:rounded-none relative z-10">
                     <img
                       src={project.image}
@@ -270,30 +270,24 @@ const Projects = () => {
           
           {/* Mobile Button */}
           <div className="flex lg:hidden w-full justify-center pb-16 px-6">
-             <button className="w-full py-4 border border-gray-400 dark:border-gray-600 text-text-dark dark:text-text-light uppercase tracking-wider font-medium">
+             <button className={`w-full py-4 border ${borderSub} ${textMain} uppercase tracking-wider font-medium`}>
                 View All Projects
              </button>
           </div>
         </div>
 
         {/* Bottom Bar (Desktop Only) */}
-        {/* UPDATED: Changed bottom-[240px] to bottom-[120px] to adjust for taller image */}
         <div 
           className="hidden lg:flex absolute left-1/2 -translate-x-1/2 bottom-[120px] w-full max-w-[1290px] h-[76px] flex-col justify-end gap-[20px] px-[20px] md:px-0"
           style={{ zIndex: 20 }}
         >
           {/* Progress Bar */}
-          {/* Progress Bar */}
           <div className="w-full h-1 bg-gray-200 dark:bg-gray-800 rounded-full overflow-hidden">
             <div
               ref={progressBarRef}
-              // CHANGED: Added background colors here for Light and Dark modes
-              // Light: bg-[rgba(14,14,14,0.4)] (Your original color)
-              // Dark:  dark:bg-[#E2E2E2]/40   (Your new request)
               className="h-full transition-all duration-100 ease-linear bg-[rgba(14,14,14,0.4)] dark:bg-[#E2E2E2]/40"
               style={{
                 width: `${progress * 100}%`,
-                // Removed backgroundColor from here so className takes priority
               }}
             />
           </div>
@@ -301,14 +295,14 @@ const Projects = () => {
           {/* Counter + Button */}
           <div className="flex items-center justify-between w-full">
             <div
-              className="text-2xl font-medium text-text-dark dark:text-text-light"
+              className={`text-2xl font-medium ${textMain}`}
               style={{ fontFamily: 'Inter Variable, Inter, sans-serif', fontWeight: 500 }}
             >
               {String(currentSlide).padStart(2, '0')}/{String(projects.length).padStart(2, '0')}
             </div>
 
             <MagneticButton
-              className="bg-bg-light dark:bg-bg-dark text-text-dark dark:text-text-light px-8 py-3 text-base font-medium hover:opacity-80 transition-all border border-[rgba(14,14,14,0.4)] dark:border-[#e2e2e2]"
+              className={`bg-bg-light dark:bg-bg-dark ${textMain} px-8 py-3 text-base font-medium hover:opacity-80 transition-all border border-[rgba(14,14,14,0.4)] dark:border-[#e2e2e2]`}
               style={{
                 fontFamily: 'Inter Variable, Inter, sans-serif',
                 fontWeight: 500,

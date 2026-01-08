@@ -25,6 +25,10 @@ const blogPosts = [
 // --- ✨ ANIMATION CONFIGURATION ✨ ---
 const animBase = "relative w-fit after:block after:content-[''] after:absolute after:h-[1px] after:bg-current after:w-full after:scale-x-0 group-hover:after:scale-x-100 after:origin-left after:bottom-0 after:transition-transform after:duration-700 after:ease-out";
 
+// --- COLOR CONSTANTS ---
+const textMain = "text-[#0e0e0e] dark:text-[#e2e2e2]";
+const textSub = "text-[#0E0E0EB2] dark:text-[#E2E2E2]/70"; // B2 is approx 70% in Hex
+
 export const BlogSection = () => {
   const sectionRef = useRef(null);
 
@@ -32,7 +36,6 @@ export const BlogSection = () => {
   const [textPart1, setTextPart1] = useState(""); // For "Insights from the"
   const [textPart2, setTextPart2] = useState(""); // For "studio"
   
-  // NEW: State to control cursor visibility
   const [showCursor, setShowCursor] = useState(true);
 
   const fullText1 = "Insights from the";
@@ -43,14 +46,13 @@ export const BlogSection = () => {
       // Reset states initially
       setTextPart1("");
       setTextPart2("");
-      setShowCursor(true); // Ensure cursor is visible when animation starts
+      setShowCursor(true); 
 
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: sectionRef.current,
-          start: "top 60%", // Start typing when section is 60% into view
+          start: "top 60%", 
         },
-        // NEW: Hide cursor when timeline completes
         onComplete: () => setShowCursor(false),
       });
 
@@ -94,7 +96,7 @@ export const BlogSection = () => {
           <div className="flex flex-col items-start gap-3 h-full justify-between w-full lg:w-auto">
             <h2 className="font-normal text-transparent text-4xl md:text-5xl lg:text-7xl leading-tight lg:leading-[72px]">
               <span
-                className="font-medium text-text-dark dark:text-text-light tracking-[-1px] lg:tracking-[-2.07px] lg:leading-[86.4px]"
+                className={`font-medium ${textMain} tracking-[-1px] lg:tracking-[-2.07px] lg:leading-[86.4px]`}
                 style={{
                   fontFamily: "Inter Variable, Inter, sans-serif",
                   fontWeight: 500,
@@ -105,7 +107,7 @@ export const BlogSection = () => {
                 <br />
               </span>
               <span
-                className="italic text-text-dark dark:text-text-light tracking-[-1px] lg:tracking-[-2.07px] lg:leading-[86.4px]"
+                className={`italic ${textMain} tracking-[-1px] lg:tracking-[-2.07px] lg:leading-[86.4px]`}
                 style={{
                   fontFamily: "Libre Caslon Text, serif",
                   fontWeight: 400,
@@ -118,12 +120,12 @@ export const BlogSection = () => {
               
               {/* Blinking Cursor - Only shows while typing */}
               {showCursor && (
-                <span className="animate-pulse text-text-dark dark:text-text-light">|</span>
+                <span className={`animate-pulse ${textMain}`}>|</span>
               )}
             </h2>
 
             <p
-              className="font-normal text-gray-700 dark:text-text-secondary text-base md:text-lg tracking-[0] leading-[24px] lg:leading-[28.8px] max-w-md lg:max-w-none"
+              className={`font-normal ${textSub} text-base md:text-lg tracking-[0] leading-[24px] lg:leading-[28.8px] max-w-md lg:max-w-none`}
               style={{
                 fontFamily: "Inter Variable, Inter, sans-serif",
                 fontWeight: 400,
@@ -139,7 +141,7 @@ export const BlogSection = () => {
             className="h-auto inline-flex items-center justify-center gap-2 px-6 py-3 border border-[#0E0E0E]/40 dark:border-[#E2E2E2]/40 bg-bg-light dark:bg-bg-dark hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
           >
             <span
-              className="font-medium text-text-dark dark:text-text-light text-lg lg:text-xl tracking-[0] leading-[30px] whitespace-nowrap"
+              className={`font-medium ${textMain} text-lg lg:text-xl tracking-[0] leading-[30px] whitespace-nowrap`}
               style={{
                 fontFamily: "Inter Variable, Inter, sans-serif",
                 fontWeight: 500,
@@ -176,7 +178,7 @@ export const BlogSection = () => {
                 <div className="flex items-center justify-between w-full">
                   <span className="inline-flex items-start px-3 py-1 bg-[#ff49201a] rounded-full border border-solid border-[#ff492033]">
                     <span
-                      className="text-text-dark dark:text-text-light text-sm leading-[16.8px] font-normal"
+                      className={`${textMain} text-sm leading-[16.8px] font-normal`}
                       style={{
                         fontFamily: "Inter Variable, Inter, sans-serif",
                       }}
@@ -185,7 +187,7 @@ export const BlogSection = () => {
                     </span>
                   </span>
                   <span
-                    className="text-text-dark dark:text-text-light text-sm leading-[22.4px] font-normal"
+                    className={`${textMain} text-sm leading-[22.4px] font-normal`}
                     style={{
                       fontFamily: "Inter Variable, Inter, sans-serif",
                     }}
@@ -199,7 +201,7 @@ export const BlogSection = () => {
                   
                   {/* --- TITLE (Has Underline Animation) --- */}
                   <h3
-                    className={`text-text-dark dark:text-text-light line-clamp-2 text-[28px] md:text-[32px] lg:text-[40px] ${animBase}`}
+                    className={`${textMain} line-clamp-2 text-[28px] md:text-[32px] lg:text-[40px] ${animBase}`}
                     style={{
                       fontFamily: "Inter Variable, Inter, sans-serif",
                       fontWeight: 500, 
@@ -212,7 +214,7 @@ export const BlogSection = () => {
 
                   {/* --- SUBTEXT (No Animation) --- */}
                   <p
-                    className="font-normal text-gray-700 dark:text-text-secondary text-base lg:text-lg tracking-[0] leading-[26px] lg:leading-[28.8px] line-clamp-2"
+                    className={`font-normal ${textSub} text-base lg:text-lg tracking-[0] leading-[26px] lg:leading-[28.8px] line-clamp-2`}
                     style={{
                       fontFamily: "Inter Variable, Inter, sans-serif",
                       fontWeight: 400,

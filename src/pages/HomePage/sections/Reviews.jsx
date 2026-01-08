@@ -4,6 +4,10 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
+// --- COLOR CONSTANTS ---
+const textMain = "text-[#0e0e0e] dark:text-[#e2e2e2]";
+const textSub = "text-[#0E0E0EB2] dark:text-[#E2E2E2]/70"; // B2 is approx 70% opacity
+
 const testimonials = [
   {
     stars: "https://c.animaapp.com/mj6xytezddxCqE/img/stars.svg",
@@ -48,7 +52,6 @@ export const TestimonialSection = () => {
   const [textPart2, setTextPart2] = useState("");
   const [textPart3, setTextPart3] = useState("");
   
-  // NEW: State to control cursor visibility
   const [showCursor, setShowCursor] = useState(true);
 
   const fullText1 = "Why top entrepreneurs";
@@ -65,7 +68,6 @@ export const TestimonialSection = () => {
       // 1. HORIZONTAL SCROLL LOGIC (Desktop Only)
       ScrollTrigger.matchMedia({
         "(min-width: 1024px)": function () {
-          // CALCULATE STOP POINT (Center of Last Card)
           const getScrollAmount = () => {
             const lastCard = track.lastElementChild;
             if (!lastCard) return 0;
@@ -92,18 +94,16 @@ export const TestimonialSection = () => {
       });
 
       // 2. TYPEWRITER ANIMATION (All Screens)
-      // Reset states initially
       setTextPart1("");
       setTextPart2("");
       setTextPart3("");
-      setShowCursor(true); // Show cursor at start
+      setShowCursor(true); 
 
       const tlType = gsap.timeline({
         scrollTrigger: {
           trigger: section,
-          start: "top 60%", // Start typing when section is 60% into view
+          start: "top 60%", 
         },
-        // NEW: Hide cursor when timeline completes
         onComplete: () => setShowCursor(false),
       });
 
@@ -117,7 +117,7 @@ export const TestimonialSection = () => {
         },
       });
 
-      // Part 2: "trust" (Italic part)
+      // Part 2: "trust"
       tlType.to({ val: 0 }, {
         val: fullText2.length,
         duration: 0.2,
@@ -156,7 +156,7 @@ export const TestimonialSection = () => {
           <div className="flex flex-col items-start justify-center gap-4 lg:gap-3.5 w-full">
             <h2 className="font-normal text-4xl md:text-5xl lg:text-[72px] leading-tight lg:leading-[120%] tracking-tight lg:tracking-[-0.04em]">
               <span
-                className="font-medium text-text-dark dark:text-text-light"
+                className={`font-medium ${textMain}`}
                 style={{
                   fontFamily: "Inter Variable, Inter, sans-serif",
                   fontWeight: 500,
@@ -167,7 +167,7 @@ export const TestimonialSection = () => {
                 <br />
               </span>
               <span
-                className="text-text-dark dark:text-text-light"
+                className={textMain}
                 style={{
                   fontFamily: "Libre Caslon Text, serif",
                   fontWeight: 400,
@@ -180,13 +180,13 @@ export const TestimonialSection = () => {
                 {textPart3}
               </span>
               
-              {/* Blinking Cursor - Only renders if showCursor is true */}
+              {/* Blinking Cursor */}
               {showCursor && (
-                <span className="animate-pulse text-text-dark dark:text-text-light">|</span>
+                <span className={`animate-pulse ${textMain}`}>|</span>
               )}
             </h2>
             <p
-              className="w-fit text-gray-700 dark:text-text-secondary text-base md:text-lg leading-relaxed lg:leading-[28.8px]"
+              className={`w-fit ${textSub} text-base md:text-lg leading-relaxed lg:leading-[28.8px]`}
               style={{
                 fontFamily: "Inter Variable, Inter, sans-serif",
                 fontWeight: 400,
@@ -207,7 +207,6 @@ export const TestimonialSection = () => {
             {testimonials.map((testimonial, index) => (
               <div
                 key={index}
-                // UPDATED: bg-[#F0F0F0] for light mode, dark:bg-[#090909] for dark mode
                 className="flex flex-col min-w-[85vw] md:min-w-[400px] lg:min-w-[445px] snap-center items-start p-6 lg:p-[30px] bg-[#F0F0F0] dark:bg-[#090909] rounded-lg select-none transition-colors duration-300 h-auto lg:h-[463.89px]"
               >
                 <div className="flex flex-col justify-between w-full h-full gap-8 lg:gap-0">
@@ -220,7 +219,7 @@ export const TestimonialSection = () => {
                       draggable="false"
                     />
                     <p
-                      className="text-text-dark dark:text-text-light text-lg lg:text-xl tracking-[0] leading-relaxed lg:leading-8"
+                      className={`${textMain} text-lg lg:text-xl tracking-[0] leading-relaxed lg:leading-8`}
                       style={{
                         fontFamily: "Inter Variable, Inter, sans-serif",
                         fontWeight: 400,
@@ -242,7 +241,7 @@ export const TestimonialSection = () => {
                     </div>
                     <div className="inline-flex flex-col items-start gap-0.5">
                       <h3
-                        className="text-text-dark dark:text-text-light text-xl lg:text-2xl tracking-tight lg:tracking-[-0.96px] leading-tight lg:leading-[28.8px]"
+                        className={`${textMain} text-xl lg:text-2xl tracking-tight lg:tracking-[-0.96px] leading-tight lg:leading-[28.8px]`}
                         style={{
                           fontFamily: "Inter Variable, Inter, sans-serif",
                           fontWeight: 500,
@@ -251,7 +250,7 @@ export const TestimonialSection = () => {
                         {testimonial.name}
                       </h3>
                       <p
-                        className="text-gray-700 dark:text-text-secondary text-sm lg:text-base leading-snug lg:leading-[25.6px]"
+                        className={`${textSub} text-sm lg:text-base leading-snug lg:leading-[25.6px]`}
                         style={{
                           fontFamily: "Inter Variable, Inter, sans-serif",
                           fontWeight: 400,

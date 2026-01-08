@@ -4,6 +4,10 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
 gsap.registerPlugin(ScrollTrigger)
 
+// --- COLOR CONSTANTS ---
+const textMain = "text-[#0e0e0e] dark:text-[#e2e2e2]";
+const textSub = "text-[#0E0E0EB2] dark:text-[#E2E2E2]/70"; // B2 is approx 70% opacity
+
 const Services = () => {
   const sectionRef = useRef(null)
   const mainContentRef = useRef(null)
@@ -32,6 +36,7 @@ const Services = () => {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
+      // Grab CSS variables defined in the section below
       const activeColor = "var(--active-color)"
       const inactiveColor = "var(--inactive-color)"
       const activeBarColor = "#FF6B35" 
@@ -53,21 +58,13 @@ const Services = () => {
 
             const tl = gsap.timeline({
                 scrollTrigger: {
-                    // ✅ UPDATED TRIGGER: Triggers based on the Header text position
                     trigger: headerRef.current, 
-                    
-                    // ✅ UPDATED START: Pins exactly when Header hits 40px from top of screen
                     start: "top 40px", 
-                    
                     end: () => "+=" + (window.innerHeight * 3),
-                    
-                    // Pins the whole section (wrapper)
                     pin: sectionRef.current,
-                    
                     scrub: 0.4, 
                     invalidateOnRefresh: true,
                     onUpdate: (self) => {
-                        // Focus logic (starts at 2nd item)
                         const progress = (self.progress * (services.length - 1)) + 1;
                         
                         items.forEach((item, i) => {
@@ -79,7 +76,7 @@ const Services = () => {
                             const opacity = Math.max(0.5, 1 - (distance * 0.2));
                             const isActive = distance < 0.5;
 
-                            // Typography
+                            // Typography Animation
                             gsap.to(text, { 
                                 opacity: opacity, 
                                 fontSize: isActive ? "48px" : "40px",
@@ -110,6 +107,7 @@ const Services = () => {
         },
 
         "(max-width: 1023px)": function() {
+            // Mobile Reset
             gsap.set(".service-text", { color: activeColor, fontWeight: 500, opacity: 1, fontSize: "24px" });
             gsap.set(".orange-bar", { backgroundColor: inactiveColor, opacity: 0.5, height: "1px" });
             gsap.set(slides, { clearProps: "all" });
@@ -130,7 +128,8 @@ const Services = () => {
         w-full min-h-screen relative overflow-hidden flex flex-col justify-center
         bg-bg-light dark:bg-bg-dark transition-colors duration-300
         z-[1]
-        [--active-color:#0E0E0E] dark:[--active-color:#FFFFFF]
+        /* CSS Variables for GSAP to read correct hex codes */
+        [--active-color:#0E0E0E] dark:[--active-color:#E2E2E2]
         [--inactive-color:rgba(160,160,160,0.3)] dark:[--inactive-color:rgba(255,255,255,0.3)]
       "
     >
@@ -138,10 +137,10 @@ const Services = () => {
         
         {/* HEADER */}
         <div ref={headerRef} className="flex flex-col items-start gap-[12px] w-full lg:max-w-[1290px] shrink-0 mb-8 md:mb-10 lg:mb-[64px] z-20 relative">
-          <div className="font-medium text-[#0e0e0e] dark:text-gray-200 text-[12px] md:text-[14px] tracking-[2px] uppercase opacity-60">
+          <div className={`font-medium ${textSub} text-[12px] md:text-[14px] tracking-[2px] uppercase`}>
             SERVICE
           </div>
-          <h2 className="text-[#0e0e0e] dark:text-white w-full lg:w-[1290px] font-medium">
+          <h2 className={`${textMain} w-full lg:w-[1290px] font-medium`}>
             <span className="block text-[32px] md:text-5xl lg:text-[72px] leading-[120%] tracking-[-0.04em] font-medium" style={{ fontFamily: "'Inter Variable', sans-serif" }}>
               We make your{" "}
               <span className="italic font-normal" style={{ fontFamily: "'Libre Caslon Text', serif" }}>complex ideas</span>{" "}
@@ -163,6 +162,7 @@ const Services = () => {
                   className="flex flex-col w-full relative justify-center py-3 md:py-4 lg:py-0"
                   style={{ height: typeof window !== 'undefined' && window.innerWidth >= 1024 ? `${ITEM_HEIGHT}px` : 'auto' }} 
                 >
+                  {/* The text color here is handled by GSAP using the CSS variables above */}
                   <div 
                     className="service-text transition-all duration-300 whitespace-nowrap cursor-pointer origin-left text-2xl md:text-4xl lg:text-[40px]"
                     style={{ 
@@ -189,7 +189,7 @@ const Services = () => {
               ))}
             </div>
             <div className="w-full flex justify-start lg:justify-end">
-              <button className="w-full lg:w-[210px] h-[48px] md:h-[54px] px-[24px] py-[12px] flex items-center justify-center gap-[8px] border border-[#0e0e0e66] dark:border-gray-500 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-all rounded-md lg:rounded-none">
+              <button className={`w-full lg:w-[210px] h-[48px] md:h-[54px] px-[24px] py-[12px] flex items-center justify-center gap-[8px] border border-[#0e0e0e66] dark:border-[#e2e2e266] ${textMain} hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-all rounded-md lg:rounded-none`}>
                   <span className="whitespace-nowrap font-medium text-[14px] md:text-[16px]">View All Services</span>
               </button>
             </div>
