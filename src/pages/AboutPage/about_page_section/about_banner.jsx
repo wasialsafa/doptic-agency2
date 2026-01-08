@@ -4,6 +4,10 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
 gsap.registerPlugin(ScrollTrigger)
 
+// --- COLOR CONSTANTS ---
+const textMain = "text-[#0e0e0e] dark:text-[#e2e2e2]";
+const textSub = "text-[#0E0E0EB2] dark:text-[#E2E2E2]/70"; // B2 is approx 70% opacity
+
 const AboutBanner = () => {
     const aboutRef = useRef(null)
     const statementRef = useRef(null)
@@ -144,13 +148,11 @@ const AboutBanner = () => {
                ========================================= */}
             <div className="relative z-10 w-full max-w-[1290px] mx-auto px-5 lg:px-0 flex flex-col items-center">
                 
-                {/* HEADLINE CONTAINER
-                   Fixed: w-full lg:max-w-[1070px] ensures strict width constraint
-                */}
+                {/* HEADLINE CONTAINER */}
                 <div className="w-full lg:max-w-[1200px] text-center mb-[30px] md:mb-[50px] px-4 mx-auto">
                     <h2
                         ref={statementRef}
-                        className="text-[36px] md:text-[52px] lg:text-[71px] font-medium leading-[1.2] tracking-[-0.04em] text-text-dark dark:text-text-light"
+                        className={`text-[36px] md:text-[52px] lg:text-[71px] font-medium leading-[1.2] tracking-[-0.04em] ${textMain}`}
                         style={{ fontFamily: FONT_INTER }}
                     >
                         {/* Part 1: Normal Text */}
@@ -180,13 +182,13 @@ const AboutBanner = () => {
                     <div className="
                         relative 
                         w-full 
-                        max-w-[260px]      
+                        max-w-[260px]       
                         sm:max-w-[320px]   
                         md:max-w-[380px]   
                         lg:max-w-[410px]   
                         aspect-[410/520] 
                         overflow-hidden 
-                       
+                         
                         mx-auto 
                         bg-gray-200"
                     >
@@ -218,6 +220,5 @@ const AboutBanner = () => {
         </section>
     )
 }
-
 
 export default AboutBanner

@@ -18,6 +18,10 @@ const teamMembers = [
 const FONT_INTER = 'Inter Variable, sans-serif';
 const FONT_CASLON = 'Libre Caslon Text, serif'
 
+// --- COLOR CONSTANTS ---
+const textMain = "text-[#0e0e0e] dark:text-[#e2e2e2]";
+const textSub = "text-[#0E0E0EB2] dark:text-[#E2E2E2]/70"; // B2 is approx 70% opacity
+
 export default function AboutTeams() {
   const containerRef = useRef(null);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -69,7 +73,7 @@ export default function AboutTeams() {
         {/* Header Section */}
         <div className="header-content flex flex-col md:flex-row justify-between items-start mb-[64px] pb-12 w-full min-h-[243px]">
           <div className="max-w-[800px]">
-            <h1 className="text-[#1A1A1A] dark:text-white" style={{
+            <h1 className={textMain} style={{
               fontFamily: FONT_INTER,
               fontWeight: 500,
               fontSize: 'clamp(36px, 5vw, 72px)',
@@ -78,7 +82,7 @@ export default function AboutTeams() {
             }}>
               The Creative Minds
             </h1>
-            <h2 className="text-[#1A1A1A] dark:text-white" style={{
+            <h2 className={textMain} style={{
               fontFamily: FONT_CASLON, 
               fontWeight: 400,
               fontStyle: 'italic',
@@ -89,7 +93,7 @@ export default function AboutTeams() {
               Behind the Magic
             </h2>
             
-            <p className="mt-8 text-zinc-600 dark:text-zinc-400" style={{
+            <p className={`mt-8 ${textSub}`} style={{
               fontFamily: FONT_INTER,
               fontWeight: 400,
               fontSize: '18px',
@@ -102,7 +106,7 @@ export default function AboutTeams() {
 
           {/* UPDATED BUTTON */}
           <button 
-            className="mt-8 md:mt-0 flex items-center justify-center border border-[#0E0E0E66] dark:border-zinc-600 hover:bg-[#FF4D2A] hover:border-[#FF4D2A] hover:text-white transition-all duration-300 dark:text-white"
+            className={`mt-8 md:mt-0 flex items-center justify-center border border-[#0e0e0e66] dark:border-[#e2e2e266] ${textMain} hover:bg-[#FF4D2A] hover:border-[#FF4D2A] hover:text-white transition-all duration-300`}
             style={{ 
               fontFamily: FONT_INTER,
               fontWeight: 500,
@@ -145,7 +149,7 @@ export default function AboutTeams() {
                   ${isActive ? 'grayscale-0' : 'grayscale'}`}
                 />
                 
-                {/* Name Banner */}
+                {/* Name Banner - Text stays white on Orange Background */}
                 <div 
                     className={`absolute left-0 w-full transition-all duration-500 ease-in-out bg-[#FF4D2A] text-white flex flex-col justify-center`}
                     style={{ 
