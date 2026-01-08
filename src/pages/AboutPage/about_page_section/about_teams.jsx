@@ -16,6 +16,7 @@ const teamMembers = [
 ]
 
 const FONT_INTER = 'Inter Variable, sans-serif';
+const FONT_CASLON = 'Libre Caslon Text, serif'
 
 export default function AboutTeams() {
   const containerRef = useRef(null);
@@ -66,7 +67,7 @@ export default function AboutTeams() {
       <div className="max-w-[1440px] mx-auto px-[20px] md:px-[75px]">
         
         {/* Header Section */}
-        <div className="header-content flex flex-col md:flex-row justify-between items-start mb-[64px] border-b border-zinc-300 dark:border-zinc-700 pb-12 w-full min-h-[243px]">
+        <div className="header-content flex flex-col md:flex-row justify-between items-start mb-[64px] pb-12 w-full min-h-[243px]">
           <div className="max-w-[800px]">
             <h1 className="text-[#1A1A1A] dark:text-white" style={{
               fontFamily: FONT_INTER,
@@ -78,7 +79,7 @@ export default function AboutTeams() {
               The Creative Minds
             </h1>
             <h2 className="text-[#1A1A1A] dark:text-white" style={{
-              fontFamily: FONT_INTER, 
+              fontFamily: FONT_CASLON, 
               fontWeight: 400,
               fontStyle: 'italic',
               fontSize: 'clamp(36px, 5vw, 72px)',
@@ -93,15 +94,26 @@ export default function AboutTeams() {
               fontWeight: 400,
               fontSize: '18px',
               lineHeight: '160%',
-              maxWidth: '600px'
+              maxWidth: '100%'
             }}>
               We are strategists, designers, and engineers who refuse to settle for "good enough." Our diverse perspectives converge to create singular, powerful solutions. 
             </p>
           </div>
 
+          {/* UPDATED BUTTON */}
           <button 
-            className="mt-8 md:mt-0 px-8 py-3 border border-zinc-400 dark:border-zinc-600 text-sm uppercase tracking-widest hover:bg-[#FF4D2A] hover:border-[#FF4D2A] hover:text-white transition-all duration-300 dark:text-white"
-            style={{ fontFamily: FONT_INTER }}
+            className="mt-8 md:mt-0 flex items-center justify-center border border-[#0E0E0E66] dark:border-zinc-600 hover:bg-[#FF4D2A] hover:border-[#FF4D2A] hover:text-white transition-all duration-300 dark:text-white"
+            style={{ 
+              fontFamily: FONT_INTER,
+              fontWeight: 500,
+              fontSize: '20px',
+              lineHeight: '150%',
+              letterSpacing: '0%',
+              width: '123px',
+              height: '54px',
+              padding: '12px 24px',
+              gap: '8px'
+            }}
           >
             View All
           </button>
@@ -139,7 +151,7 @@ export default function AboutTeams() {
                     style={{ 
                         bottom: '30px', 
                         height: '89px',
-                        padding: '30px 40px', // 40px padding keeps inner width 440px (520 - 80)
+                        padding: '30px 40px', 
                         gap: '0',
                         transform: isActive ? 'translateY(0)' : 'translateY(150%)',
                         opacity: isActive ? 1 : 0,
@@ -147,7 +159,6 @@ export default function AboutTeams() {
                         fontFamily: FONT_INTER
                     }}
                 >
-                  {/* Inner Container: Width 440px, Height 29px, Space Between */}
                   <div className="w-full flex flex-row justify-between items-center h-[29px]">
                     
                     {/* Left Side: Name */}

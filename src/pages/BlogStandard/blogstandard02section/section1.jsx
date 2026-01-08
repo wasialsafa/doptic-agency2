@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -13,8 +13,11 @@ const IMAGES = {
 const FONT_INTER = 'Inter Variable, sans-serif';
 const FONT_CASLON = 'Libre Caslon Text, serif';
 
+// --- TYPOGRAPHY & COLORS ---
+const textMain = "text-[#0e0e0e] dark:text-[#e2e2e2]";
+const textSub = "text-[#0e0e0e]/70 dark:text-[#e2e2e2]/70";
+
 // --- ANIMATION CLASS ---
-// Scales underline from 0 to 100% on group hover
 const underlineAnim = "relative w-fit after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-full after:h-[1px] after:bg-current after:scale-x-0 after:origin-left after:transition-transform after:duration-500 after:ease-out group-hover:after:scale-x-100";
 
 const POSTS = [
@@ -29,6 +32,7 @@ const POSTS = [
 const BlogPage = () => {
   const containerRef = useRef(null);
   const marqueeRef = useRef(null);
+  const [activeCategory, setActiveCategory] = useState('View all');
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -72,34 +76,23 @@ const BlogPage = () => {
   }, []);
 
   // --- STYLES ---
-  
-  // FIXED: Added dark:text-white to the wrapper so all text defaults to white in dark mode
   const layoutWrapper = "max-w-[1440px] mx-auto px-5 md:px-[75px] pt-[80px] md:pt-[120px] pb-[120px]";
   const contentWidth = "max-w-[1290px] mx-auto";
 
-  // FIXED: Updated button styles for Dark Mode
-  // - Border: dark:border-white/20
-  // - Hover: dark:hover:bg-white dark:hover:text-black
-  const navButtonStyle = `
-    w-full md:w-[258px] 
-    h-[46px] 
-    px-[16px] py-[8px] 
-    flex items-center justify-center 
-    border border-black/20 dark:border-white/20 
-    rounded-[4px] 
-    bg-transparent 
-    text-[12px] font-bold uppercase tracking-widest 
-    hover:bg-black hover:text-white 
-    dark:hover:bg-white dark:hover:text-black
-    transition-all
-    whitespace-nowrap
-  `;
+  const categoryTypography = {
+    fontFamily: "'Inter Variable', sans-serif",
+    fontWeight: 500,      
+    fontSize: '20px',
+    lineHeight: '150%',
+    letterSpacing: '0%',
+  };
+
+  const categories = ['View all', 'Category one', 'Category two', 'Category three', 'Category four'];
 
   return (
     <div 
       ref={containerRef}
-      // FIXED: text-[#1A1A1A] switches to dark:text-white
-      className="bg-bg-light dark:bg-bg-dark min-h-screen text-[#1A1A1A] dark:text-white w-full overflow-hidden transition-colors duration-300" 
+      className="bg-bg-light dark:bg-bg-dark min-h-screen w-full overflow-hidden transition-colors duration-300" 
       style={{ fontFamily: FONT_INTER }}
     >
       
@@ -107,7 +100,7 @@ const BlogPage = () => {
       <header className={`${layoutWrapper} pb-0 mb-10 md:mb-[64px]`}>
         <div className="flex flex-col items-start md:items-end hero-animate">
           <h1 
-            className="font-medium text-left md:text-right w-full"
+            className={`font-medium text-left md:text-right w-full ${textMain}`}
             style={{ fontFamily: FONT_INTER }}
           >
             <span className="block text-5xl md:text-7xl lg:text-[128px] leading-[1.1] tracking-tighter">
@@ -122,7 +115,7 @@ const BlogPage = () => {
           </h1>
           
           <div className="w-full flex justify-start md:justify-end mt-6 md:mt-8">
-            <p className="font-normal text-base md:text-[18px] leading-[160%] text-left md:text-right max-w-[740px] opacity-70">
+            <p className={`font-normal text-base md:text-[18px] leading-[160%] text-left md:text-right max-w-[740px] ${textSub}`}>
               We're a group of creative thinkers, developers, and designers dedicated to turning your vision into impactful digital reality.
             </p>
           </div>
@@ -131,27 +124,43 @@ const BlogPage = () => {
 
       {/* --- NAVIGATION BAR --- */}
       <nav className={`${layoutWrapper} !pt-0 !pb-10 hero-animate`}>
-        <div className={`${contentWidth} flex flex-wrap md:flex-nowrap justify-between items-center gap-[8px]`}>
+        {/* GAP 0: Buttons sit flush against each other */}
+        <div className={`${contentWidth} flex flex-wrap md:flex-nowrap items-center gap-0`}>
           
-          {/* Button 1: View All (Active State) */}
-          {/* FIXED: Inverts colors in dark mode (White bg, Black text) */}
-          <button className={`${navButtonStyle} bg-black text-gray dark:bg-white dark:text-black`}>
-            View all
-          </button>
-          
-          {/* Category Buttons */}
-          {['Category one', 'Category two', 'Category three', 'Category four'].map((cat) => (
-            <button key={cat} className={`${navButtonStyle} opacity-40 hover:opacity-100`}>
-              {cat}
-            </button>
-          ))}
+          {categories.map((cat) => {
+            const isActive = activeCategory === cat;
+            return (
+              <button 
+                key={cat}
+                onClick={() => setActiveCategory(cat)}
+                className={`
+                  w-full md:w-[258px] h-[46px] 
+                  px-[16px] py-[8px] 
+                  flex shrink-0 items-center justify-center 
+                  bg-transparent whitespace-nowrap transition-all duration-300
+                  ${textMain}
+                  border
+                  /* LOGIC UPDATE:
+                     - Active: Border Visible (Full Opacity), Text 100% Opacity
+                     - Inactive: Border Transparent (Invisible), Text 70% Opacity
+                  */
+                  ${isActive 
+                    ? 'border-[#0E0E0E]/10 dark:border-[#e2e2e2]/10 opacity-100 z-10' 
+                    : 'border-transparent opacity-100 hover:opacity-100'
+                  }
+                `}
+                style={categoryTypography}
+              >
+                {cat}
+              </button>
+            );
+          })}
           
         </div>
       </nav>
 
       {/* --- AWARDS ANIMATION --- */}
-      {/* FIXED: Added dark:bg-white dark:text-black so the strip inverts in dark mode */}
-      <div className="w-full overflow-hidden bg-black text-white dark:bg-white dark:text-black py-4 mb-[64px] hero-animate opacity-0">
+      <div className="w-full overflow-hidden bg-[#0E0E0E] text-white dark:bg-[#e2e2e2] dark:text-[#0E0E0E] py-4 mb-[64px] hero-animate opacity-0">
         <div ref={marqueeRef} className="flex whitespace-nowrap w-fit">
           {[...Array(2)].map((_, i) => (
             <div key={i} className="flex items-center gap-12 px-6">
@@ -183,22 +192,19 @@ const BlogPage = () => {
 
               {/* Meta */}
               <div className="flex justify-between items-center mb-2 md:mb-4">
-                {/* FIXED: Tag background changes in dark mode */}
-                <span className="bg-[#FDE2E4] dark:bg-[#4A2025] dark:text-[#FDE2E4] text-[10px] md:text-[12px] font-bold px-3 py-1 rounded-sm uppercase tracking-wide">
+                <span className={`bg-[#FDE2E4] text-[#0e0e0e] text-[10px] md:text-[12px] font-bold px-3 py-1 rounded-sm uppercase tracking-wide`}>
                   {post.category}
                 </span>
-                <span className="text-[10px] md:text-[12px] font-medium opacity-40 uppercase tracking-widest">
+                <span className={`text-[10px] md:text-[12px] font-medium uppercase tracking-widest ${textSub}`}>
                   5 min read
                 </span>
               </div>
 
               {/* Title & Desc */}
-              {/* Added underlineAnim class here */}
-              <h2 className={`text-[28px] md:text-[48px] font-medium tracking-tight mb-2 leading-[1.1] ${underlineAnim}`}>
+              <h2 className={`text-[28px] md:text-[48px] font-medium tracking-tight mb-2 leading-[1.1] ${textMain} ${underlineAnim}`}>
                 {post.title}
               </h2>
-              {/* FIXED: Subtext opacity relies on parent text color (which is now white in dark mode) */}
-              <p className="text-[16px] md:text-[18px] opacity-60 max-w-2xl">
+              <p className={`text-[16px] md:text-[18px] max-w-2xl ${textSub}`}>
                 {post.desc}
               </p>
             </article>

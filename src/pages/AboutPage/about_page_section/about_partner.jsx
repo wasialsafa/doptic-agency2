@@ -74,7 +74,7 @@ const AboutPartners = () => {
         
         // Animate chars inside this specific element
         gsap.to(textElement.querySelectorAll('.reveal-char'), {
-          color: "#0e0e0e", // Target color (dark) - adjusted via CSS for dark mode usually, or set explicitly here
+          color: "var(--target-color)", // Uses the CSS variable defined in the section
           opacity: 1,
           stagger: 0.02,
           scrollTrigger: {
@@ -92,7 +92,11 @@ const AboutPartners = () => {
   }, []);
 
   return (
-    <section ref={containerRef} className="w-full bg-bg-light dark:bg-bg-dark transition-colors duration-300 font-['Inter_Variable'] overflow-x-hidden">
+    <section 
+      ref={containerRef} 
+      // UPDATED: Dark mode target color is now 70% opacity white (rgba(255,255,255,0.7))
+      className="w-full bg-bg-light dark:bg-bg-dark transition-colors duration-300 font-['Inter_Variable'] overflow-x-hidden [--target-color:#0e0e0e] dark:[--target-color:rgba(255,255,255,0.7)]"
+    >
       
       {/* --- CAROUSEL --- */}
       <div className="py-12 border-y border-gray-200 dark:border-gray-800">
@@ -103,14 +107,11 @@ const AboutPartners = () => {
                Creative Partners
              </h3>
              
-             {/* UPDATED: Added Mask Image styles for fade effect on left/right edges 
-                transparent -> black (visible) -> transparent 
-             */}
              <div 
                 className="relative flex-1 overflow-hidden"
                 style={{ 
-                    maskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)',
-                    WebkitMaskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)'
+                  maskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)',
+                  WebkitMaskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)'
                 }}
              >
                 <div ref={scrollRef} className="flex items-center gap-12 w-max">
@@ -143,7 +144,8 @@ const AboutPartners = () => {
             
             {/* Text Block 1 */}
             <div 
-              className="reveal-text w-full max-w-[850px] text-[24px] md:text-[32px] font-normal leading-[120%] tracking-[-4%] text-gray-300 dark:text-gray-700"
+              // UPDATED: Start color in dark mode is white/10 (10% opacity)
+              className="reveal-text w-full max-w-[850px] text-[24px] md:text-[32px] font-normal leading-[120%] tracking-[-4%] text-[#0e0e0e]/10 dark:text-[white]/10"
               style={{ fontFamily: FONT_INTER }}
             >
               We are a collective of strategists, designers, and engineers who refuse to settle for "good enough." We treat every project as an opportunity to push boundaries, delivering work that is visually striking and technically flawless.
@@ -154,7 +156,8 @@ const AboutPartners = () => {
 
             {/* Text Block 2 */}
             <div 
-              className="reveal-text w-full max-w-[850px] text-[24px] md:text-[32px] font-normal leading-[120%] tracking-[-4%] text-gray-300 dark:text-gray-700"
+              // UPDATED: Start color in dark mode is white/10 (10% opacity)
+              className="reveal-text w-full max-w-[850px] text-[24px] md:text-[32px] font-normal leading-[120%] tracking-[-4%] text-[#0e0e0e]/10 dark:text-white/10"
               style={{ fontFamily: FONT_INTER }}
             >
               From initial brainstorming to final code, our diverse perspectives converge to create singular, powerful solutions that turn ambitious concepts into reality.
@@ -164,13 +167,12 @@ const AboutPartners = () => {
             <div className="h-[40px] w-full"></div>
 
             {/* Stats Grid */}
-            <div className="w-full max-w-[850px] min-h-[193px] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12 border-t border-gray-200 pt-8">
+            <div className="w-full max-w-[850px] min-h-[193px] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
               {[
                 { label: "Established for", value: 1, suffix: "0", unit: "Years" },
                 { label: "Work across", value: 1, suffix: "6", unit: "Countries" },
                 { label: "Over", value: 9, suffix: "0", unit: "Projects" }
               ].map((stat, i) => (
-                /* UPDATED: Added fontFamily style to the stats container wrapper */
                 <div key={i} className="flex flex-col min-w-max" style={{ fontFamily: FONT_INTER }}>
                   <span className="text-[12px] md:text-sm uppercase tracking-widest text-gray-500 mb-4">{stat.label}</span>
                   <div className="flex items-baseline text-[80px] md:text-[128px] font-medium leading-[1] tracking-[-4%] text-[#0e0e0e] dark:text-white">

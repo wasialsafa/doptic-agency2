@@ -186,7 +186,7 @@ const AboutBanner = () => {
                         lg:max-w-[410px]   
                         aspect-[410/520] 
                         overflow-hidden 
-                        shadow-2xl 
+                       
                         mx-auto 
                         bg-gray-200"
                     >

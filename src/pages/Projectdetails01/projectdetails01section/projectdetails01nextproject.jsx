@@ -95,7 +95,7 @@ const NextProjectPage = () => {
             {/* "Next Project" Title */}
             <h1 className="leading-[120%] tracking-[-0.04em] flex flex-wrap items-baseline gap-2 lg:gap-3 m-0 p-0">
               <span 
-                className="font-medium"
+                className="font-medium text-[#0e0e0e] dark:text-[#e2e2e2]"
                 style={{ 
                   fontFamily: '"Inter", sans-serif', 
                   fontWeight: 500,
@@ -106,7 +106,7 @@ const NextProjectPage = () => {
                 Next
               </span>
               <span 
-                className="italic font-normal"
+                className="italic font-normal text-[#0e0e0e] dark:text-[#e2e2e2]"
                 style={{ 
                   fontFamily: '"Libre Caslon Text", serif', 
                   fontSize: 'clamp(48px, 6vw, 72px)' 
@@ -118,7 +118,8 @@ const NextProjectPage = () => {
 
             {/* Subtext */}
             <p 
-              className="text-gray-600 m-0 p-0"
+              // UPDATED: Light #0E0E0EB2 / Dark #E2E2E2 (70%)
+              className="text-[#0E0E0EB2] dark:text-[#E2E2E2]/70 m-0 p-0"
               style={{
                 maxWidth: '768px',
                 fontFamily: '"Inter", sans-serif',
@@ -134,8 +135,14 @@ const NextProjectPage = () => {
           {/* Right: View All Button */}
           <div className="pt-6 md:pt-4 self-start md:self-auto">
              <button 
-               className="px-6 py-3 border border-gray-400 text-sm font-medium hover:bg-black hover:text-white transition-colors duration-300"
-               style={{ fontFamily: '"Inter", sans-serif' }}
+               className="px-6 py-3 border border-gray-400 dark:border-gray-600 dark:text-[#e2e2e2] hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors duration-300"
+               style={{ 
+                 fontFamily: '"Inter Variable", sans-serif',
+                 fontWeight: 500,
+                 fontSize: '20px',
+                 lineHeight: '150%',
+                 letterSpacing: '0%'
+               }}
              >
                View All
              </button>
@@ -155,7 +162,8 @@ const NextProjectPage = () => {
           {/* TITLES (Aligned Right) */}
           <div className="flex flex-col items-end mb-8 lg:mb-4">
             <h2 
-              className="anim-title text-right text-[#0e0e0e]"
+              // UPDATED: Light #0e0e0e / Dark #e2e2e2
+              className="anim-title text-right text-[#0e0e0e] dark:text-[#e2e2e2]"
               style={{ 
                 fontFamily: '"Inter", sans-serif', 
                 fontWeight: 500,
@@ -168,7 +176,8 @@ const NextProjectPage = () => {
             </h2>
             
             <h3 
-              className="anim-title text-right text-[#0e0e0e]"
+              // UPDATED: Light #0e0e0e / Dark #e2e2e2
+              className="anim-title text-right text-[#0e0e0e] dark:text-[#e2e2e2]"
               style={{ 
                 fontFamily: '"Italiana", serif', 
                 fontWeight: 400,
@@ -183,7 +192,6 @@ const NextProjectPage = () => {
           </div>
 
           {/* IMAGE & NUMBER ROW */}
-          {/* Stacks vertically on small screens, row on Large */}
           <div className="w-full flex flex-col lg:flex-row items-start">
             
             {/* Left Column: Image + Caption */}
@@ -192,9 +200,7 @@ const NextProjectPage = () => {
               <div 
                 className="overflow-hidden bg-black w-full"
                 style={{
-                  // Max width ensures it stops at 1043px on desktop
                   maxWidth: '1043px', 
-                  // Aspect ratio keeps shape on mobile, fixed height on desktop
                   height: 'auto',
                   aspectRatio: '1043/640'
                 }}
@@ -209,10 +215,15 @@ const NextProjectPage = () => {
 
               {/* Bottom Caption */}
               <p 
-                className="anim-caption text-gray-600 lg:whitespace-nowrap"
+                // UPDATED: Light #0E0E0EB2 / Dark #E2E2E2 (70%)
+                className="anim-caption text-[#0E0E0EB2] dark:text-[#E2E2E2]/70 lg:whitespace-nowrap"
                 style={{
-                  fontFamily: '"Inter", sans-serif',
-                  fontSize: '16px',
+                  fontFamily: '"Inter Variable", sans-serif',
+                  fontWeight: 400,
+                  fontSize: '18px',
+                  fontStyle: 'normal',
+                  lineHeight: '160%',
+                  letterSpacing: '0%',
                   maxWidth: '600px'
                 }}
               >
@@ -220,7 +231,7 @@ const NextProjectPage = () => {
               </p>
             </div>
 
-            {/* Spacer Gap (60px) - Hidden on mobile, visible on Large */}
+            {/* Spacer Gap */}
             <div className="hidden lg:block" style={{ width: '60px', flexShrink: 0 }} />
 
             {/* Right Column: Number 02 */}
@@ -228,13 +239,13 @@ const NextProjectPage = () => {
               className="anim-number flex items-start justify-start pt-8 lg:pt-4"
               style={{
                 width: '159px',
-                // Height auto on mobile to avoid cutoff
                 height: 'auto', 
                 minHeight: '154px'
               }}
             >
               <span 
-                className="font-bold leading-none text-[#D1D1D1]"
+                // UPDATED: Consistent watermark color (Light 10% / Dark 10%)
+                className="font-bold leading-none text-[#0E0E0E1A] dark:text-[#E2E2E2]/10"
                 style={{
                   fontFamily: '"Inter", sans-serif',
                   fontSize: 'clamp(80px, 10vw, 120px)',

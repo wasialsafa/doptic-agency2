@@ -30,7 +30,7 @@ const AboutHero = () => {
           - Mobile: height auto to prevent squishing
           - Desktop: Fixed aspect ratio (1290/738) as requested
         */}
-        <div className="w-full max-w-[1290px] overflow-hidden  shadow-sm">
+        <div className="w-full max-w-[1290px] overflow-hidden ">
           <img
             src="/images/aboutpage/AboutPageHeroImage.svg"
             alt="Team members collaborating"

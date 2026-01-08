@@ -119,7 +119,7 @@ const AwardsSection = () => {
       >
         <div 
           ref={cursorLabelInnerRef}
-          className="relative overflow-hidden shadow-2xl origin-center scale-0 opacity-0"
+          className="relative overflow-hidden  origin-center scale-0 opacity-0"
           style={{ width: '200px', height: '200px' }} 
         >
           <img

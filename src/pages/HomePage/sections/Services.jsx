@@ -181,7 +181,7 @@ const Services = () => {
 
           {/* RIGHT: Images + Button */}
           <div className="w-full lg:w-[520px] shrink-0 relative flex flex-col gap-6 md:gap-10 lg:gap-[56px]" style={{ height: typeof window !== 'undefined' && window.innerWidth >= 1024 ? `${IMAGE_HEIGHT + 56 + 54}px` : 'auto' }}>
-            <div className="w-full lg:w-[520px] relative overflow-hidden shadow-2xl bg-white dark:bg-gray-800 shrink-0 h-[220px] md:h-[350px] lg:h-[517px] rounded-lg lg:rounded-none">
+            <div className="w-full lg:w-[520px] relative overflow-hidden  bg-white dark:bg-gray-800 shrink-0 h-[220px] md:h-[350px] lg:h-[517px] rounded-lg lg:rounded-none">
                {services.map((service, i) => (
                 <div key={i} ref={(el) => (slidesRef.current[i] = el)} className="absolute top-0 left-0 w-full h-full bg-cover bg-center">
                   <img src={service.image} alt={service.name} className="w-full h-full object-cover" />

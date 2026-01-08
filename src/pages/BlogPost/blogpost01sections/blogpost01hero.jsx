@@ -5,6 +5,10 @@ import { Link, Linkedin, X, Facebook } from 'lucide-react';
 const FONT_INTER = 'Inter Variable, sans-serif';
 const FONT_CASLON = 'Libre Caslon Text, serif';
 
+// --- COLOR CLASSES ---
+const textMain = "text-[#0e0e0e] dark:text-[#e2e2e2]";
+const textSub = "text-[#0e0e0e]/70 dark:text-[#e2e2e2]/70";
+
 const BlogPostHero = () => {
   const containerRef = useRef(null);
   const titleRef = useRef(null);
@@ -44,7 +48,7 @@ const BlogPostHero = () => {
   }, []);
 
   return (
-    <div className="bg-bg-light dark:bg-bg-dark min-h-screen w-full text-[#1A1A1A] dark:text-white">
+    <div className="bg-bg-light dark:bg-bg-dark min-h-screen w-full transition-colors duration-300">
       
       {/* MAIN CONTAINER 
         Width: 1440px (max), Padding: 120px top/bottom, 75px sides
@@ -54,13 +58,11 @@ const BlogPostHero = () => {
         className="max-w-[1440px] mx-auto pt-[120px] pb-[120px] px-5 md:px-[64px] flex flex-col"
       >
         
-        {/* --- 1. TEXT SECTION (FIXED) --- 
-            Combined into one H1 to allow "color" to sit next to "psychology of"
-        */}
+        {/* --- 1. TEXT SECTION --- */}
         <header className="mb-12 md:mb-[56px] max-w-[1312px]">
           <h1 
             ref={titleRef}
-            className="flex flex-wrap items-baseline gap-x-4 md:gap-x-6 leading-[1.2] tracking-[-0.04em]"
+            className={`flex flex-wrap items-baseline gap-x-4 md:gap-x-6 leading-[1.2] tracking-[-0.04em] ${textMain}`}
           >
             {/* LINE 1: The psychology of (Inter) + color (Caslon) */}
             <div className="flex flex-wrap items-baseline gap-x-4 md:gap-x-6 w-full">
@@ -104,10 +106,10 @@ const BlogPostHero = () => {
               />
             </div>
             <div className="flex flex-col justify-center gap-[3px]">
-              <span className="font-bold text-lg leading-none" style={{ fontFamily: FONT_INTER }}>
+              <span className={`font-bold text-lg leading-none ${textMain}`} style={{ fontFamily: FONT_INTER }}>
                 Bessie Cooper
               </span>
-              <span className="text-sm opacity-60 leading-none" style={{ fontFamily: FONT_INTER }}>
+              <span className={`text-sm leading-none ${textSub}`} style={{ fontFamily: FONT_INTER }}>
                 11 Jan 2022 • 5 min read
               </span>
             </div>
@@ -118,7 +120,8 @@ const BlogPostHero = () => {
             {[Link, Linkedin, X, Facebook].map((Icon, i) => (
               <button 
                 key={i}
-                className="w-[32px] h-[32px] rounded-[64px] p-[4px] border border-black/10 dark:border-white/20 flex items-center justify-center hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors"
+                // UPDATED: Border uses 10% opacity colors (#0e0e0e1a / #e2e2e21a) and main text color for icon
+                className={`w-[32px] h-[32px] rounded-[64px] p-[4px] border border-[#0e0e0e1a] dark:border-[#e2e2e21a] flex items-center justify-center ${textMain} hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors`}
               >
                 <Icon size={14} strokeWidth={2} />
               </button>

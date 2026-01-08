@@ -80,7 +80,8 @@ const LandingPage = () => {
       
       {/* SECTION 1: TOP HEADER */}
       <section 
-        className="w-full max-w-[1440px] px-6 lg:px-[75px] py-20 lg:py-[120px] flex justify-end border-b border-black/5 dark:border-white/5 box-border"
+        // REMOVED: border-b border-black/5 dark:border-white/5
+        className="w-full max-w-[1440px] px-6 lg:px-[75px] py-20 lg:py-[120px] flex justify-end box-border"
       >
         <div 
           ref={headerRef}
@@ -150,15 +151,13 @@ const LandingPage = () => {
               style={{ width: '132px' }}
             >
               <span 
-                // Color #0E0E0E1A is applied here. 
-                // Added dark:text-[#E2E2E2]/10 to maintain the watermark effect in dark mode.
                 className="block text-[#0E0E0E1A] dark:text-[#E2E2E2]/10"
                 style={{ 
                     fontFamily: '"Inter Variable", sans-serif',
-                    fontWeight: 800,          // font-weight: 800 (ExtraBold)
-                    fontSize: '128px',        // font-size: 128px
-                    lineHeight: '120%',       // line-height: 120%
-                    letterSpacing: '-0.04em', // letter-spacing: -4%
+                    fontWeight: 800,          
+                    fontSize: '128px',        
+                    lineHeight: '120%',       
+                    letterSpacing: '-0.04em', 
                 }}
               >
                 01
@@ -188,7 +187,8 @@ const LandingPage = () => {
                 {/* DESCRIPTION TEXT */}
                 <div ref={descRef} className="w-full flex justify-end">
                     <p 
-                        className="text-[#0e0e0e]/70 dark:text-text-light/60 text-[14px] md:text-[16px] leading-relaxed font-light"
+                        // UPDATED: Added specific hex color and removed whiteSpace: nowrap style below
+                        className="text-[#0E0E0E]/70 dark:text-[#e2e2e2]/70 text-[14px] md:text-[16px] leading-relaxed font-light"
                         style={{
                             fontFamily: '"Inter Variable", sans-serif',
                             fontWeight: 400,
@@ -197,7 +197,7 @@ const LandingPage = () => {
                             lineHeight: '160%',
                             letterSpacing: '0%',
                             textAlign: 'right',
-                            whiteSpace: 'nowrap' // Forces text to stay on one line
+                            // Removed whiteSpace: 'nowrap' to allow wrapping on mobile
                         }}
                     >
                         We transformed a local label into a global brand. Our strategic design increased conversion rates and customer loyalty instantly.

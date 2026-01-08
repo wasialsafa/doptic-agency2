@@ -40,13 +40,13 @@ export const CallToActionSection = () => {
           className="w-fit font-normal text-transparent text-5xl md:text-7xl lg:text-9xl text-center leading-tight md:leading-[128px] relative mt-[-1.00px] translate-y-[-1rem] animate-fade-in opacity-1 [--animation-delay:200ms]"
           style={{ fontFamily: '"Inter Variable", sans-serif' }}
         >
-          <span className="font-medium text-text-dark dark:text-text-light tracking-tighter md:tracking-[-6.55px] leading-tight md:leading-[153.6px]">
+          <span className="font-medium text-text-dark  tracking-tighter md:tracking-[-6.55px] leading-tight md:leading-[153.6px]">
             GOT AN IDEA?
             <br />
           </span>
 
           <span 
-            className="italic text-text-dark dark:text-text-light tracking-tighter md:tracking-[-6.55px] leading-tight md:leading-[153.6px]"
+            className="italic text-text-dark  tracking-tighter md:tracking-[-6.55px] leading-tight md:leading-[153.6px]"
             style={{ fontFamily: '"Libre Caslon Text", serif' }}
           >
             LET&#39;S TALK
@@ -54,7 +54,7 @@ export const CallToActionSection = () => {
         </h2>
 
         <p 
-          className="text-text-dark dark:text-text-light text-base md:text-lg text-center leading-[28.8px] relative font-normal tracking-[0] max-w-full translate-y-[-1rem] animate-fade-in opacity-1 [--animation-delay:400ms]"
+          className="text-text-dark  text-base md:text-lg text-center leading-[28.8px] relative font-normal tracking-[0] max-w-full translate-y-[-1rem] animate-fade-in opacity-1 [--animation-delay:400ms]"
           style={{ fontFamily: '"Inter Variable", sans-serif' }}
         >
           We craft design experiences that leave a lasting impression bold,
@@ -181,7 +181,14 @@ export const FooterSection = () => {
               <ul className="flex flex-col items-start self-stretch w-full">
                 {socialLinks.map((link, index) => (
                   <li key={index} className="flex items-center gap-3 px-0 py-2 self-stretch w-full">
-                    {link.icon && <img className="w-6 h-6" alt={link.label} src={link.icon} />}
+                    {/* UPDATED: Removed bg/rounded. Added dark:invert to turn black logos white */}
+                    {link.icon && (
+                      <img 
+                        className="w-6 h-6 dark:invert" 
+                        alt={link.label} 
+                        src={link.icon} 
+                      />
+                    )}
                     <a 
                       href={link.href} 
                       // Added hoverAnimation here

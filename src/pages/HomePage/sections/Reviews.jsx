@@ -47,6 +47,9 @@ export const TestimonialSection = () => {
   const [textPart1, setTextPart1] = useState("");
   const [textPart2, setTextPart2] = useState("");
   const [textPart3, setTextPart3] = useState("");
+  
+  // NEW: State to control cursor visibility
+  const [showCursor, setShowCursor] = useState(true);
 
   const fullText1 = "Why top entrepreneurs";
   const fullText2 = "trust";
@@ -93,18 +96,21 @@ export const TestimonialSection = () => {
       setTextPart1("");
       setTextPart2("");
       setTextPart3("");
+      setShowCursor(true); // Show cursor at start
 
       const tlType = gsap.timeline({
         scrollTrigger: {
           trigger: section,
           start: "top 60%", // Start typing when section is 60% into view
         },
+        // NEW: Hide cursor when timeline completes
+        onComplete: () => setShowCursor(false),
       });
 
       // Part 1: "Why top entrepreneurs"
       tlType.to({ val: 0 }, {
         val: fullText1.length,
-        duration: .4,
+        duration: 0.4,
         ease: "none",
         onUpdate: function () {
           setTextPart1(fullText1.slice(0, Math.ceil(this.targets()[0].val)));
@@ -173,8 +179,11 @@ export const TestimonialSection = () => {
                 <em>{textPart2}</em>
                 {textPart3}
               </span>
-              {/* Blinking Cursor */}
-              <span className="animate-pulse text-text-dark dark:text-text-light">|</span>
+              
+              {/* Blinking Cursor - Only renders if showCursor is true */}
+              {showCursor && (
+                <span className="animate-pulse text-text-dark dark:text-text-light">|</span>
+              )}
             </h2>
             <p
               className="w-fit text-gray-700 dark:text-text-secondary text-base md:text-lg leading-relaxed lg:leading-[28.8px]"
@@ -198,7 +207,8 @@ export const TestimonialSection = () => {
             {testimonials.map((testimonial, index) => (
               <div
                 key={index}
-                className="flex flex-col min-w-[85vw] md:min-w-[400px] lg:min-w-[445px] snap-center items-start p-6 lg:p-[30px] bg-gray-100 dark:bg-gray-800 rounded-lg select-none transition-colors duration-300 h-auto lg:h-[463.89px]"
+                // UPDATED: bg-[#F0F0F0] for light mode, dark:bg-[#090909] for dark mode
+                className="flex flex-col min-w-[85vw] md:min-w-[400px] lg:min-w-[445px] snap-center items-start p-6 lg:p-[30px] bg-[#F0F0F0] dark:bg-[#090909] rounded-lg select-none transition-colors duration-300 h-auto lg:h-[463.89px]"
               >
                 <div className="flex flex-col justify-between w-full h-full gap-8 lg:gap-0">
                   {/* Top: Stars & Quote */}

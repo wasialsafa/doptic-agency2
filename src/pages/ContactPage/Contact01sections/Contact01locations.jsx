@@ -15,6 +15,14 @@ let DefaultIcon = L.icon({
 });
 L.Marker.prototype.options.icon = DefaultIcon;
 
+// --- Constants ---
+const FONT_INTER = 'Inter Variable, sans-serif';
+const FONT_CASLON = 'Libre Caslon Text, serif';
+
+// --- Color Classes ---
+const textMain = "text-[#0e0e0e] dark:text-[#e2e2e2]";
+const textSub = "text-[#0E0E0EB2] dark:text-[#E2E2E2]/70";
+
 // Helper to animate map
 const MapUpdater = ({ center, zoom }) => {
   const map = useMap();
@@ -50,47 +58,44 @@ const OfficeLocations = () => {
   const activeLocation = locations.find(l => l.id === activeId);
 
   return (
-    <div className="bg-bg-light dark:bg-bg-dark min-h-screen flex justify-center w-full">
-      <style>
-        {`
-          @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Libre+Caslon+Text:ital,wght@0,400;1,400&display=swap');
-        `}
-      </style>
-
+    <div 
+      className="bg-bg-light dark:bg-bg-dark min-h-screen flex justify-center w-full transition-colors duration-300"
+      style={{ fontFamily: FONT_INTER }}
+    >
+      
       {/* Main Container - Responsive */}
-      <div 
-        className="relative box-border w-full mx-auto flex flex-col"
-        // On mobile: fluid width & padding. On Large (lg): strict fixed width & padding.
-        style={{}} 
-      >
+      <div className="relative box-border w-full mx-auto flex flex-col">
         <div className="w-full lg:max-w-[1440px] mx-auto px-6 py-12 lg:py-[120px] lg:px-[75px]">
           
           {/* Header */}
-          <div 
-            className="flex flex-col justify-between w-full lg:w-[768px] h-auto lg:h-[156px] mb-10 lg:mb-[80px] gap-4 lg:gap-3"
-          >
+          <div className="flex flex-col justify-between w-full lg:w-[768px] h-auto lg:h-[156px] mb-10 lg:mb-[80px] gap-4 lg:gap-3">
             <h1 className="flex flex-wrap items-baseline gap-2 lg:gap-3 m-0">
-              <span className="font-['Inter'] font-semibold text-4xl lg:text-[64px] leading-tight tracking-tight text-black">
+              <span 
+                className={`font-weight-[500] text-4xl lg:text-[72px] leading-tight tracking-tight ${textMain}`}
+                style={{ fontFamily: FONT_INTER }}
+              >
                 Our office
               </span>
-              <span className="font-['Libre_Caslon_Text'] italic font-normal text-4xl lg:text-[64px] leading-tight text-black">
+              <span 
+                className={`italic font-weight-[400] text-4xl lg:text-[72px] leading-tight ${textMain}`}
+                style={{ fontFamily: FONT_CASLON }}
+              >
                 Locations
               </span>
             </h1>
-            <p className="font-['Inter'] text-sm lg:text-base text-gray-600 leading-relaxed max-w-xl m-0">
+            <p 
+              className={`text-sm lg:text-base leading-relaxed max-w-xl m-0 ${textSub}`}
+              style={{ fontFamily: FONT_INTER }}
+            >
               Getting started is made simple and transparent right from day one. We guide you through every step with us.
             </p>
           </div>
 
           {/* Content Area - Flex Column on Mobile, Row on Desktop */}
-          <div 
-            className="flex flex-col-reverse lg:flex-row w-full lg:w-[1290px] h-auto lg:h-[369px] gap-8 lg:gap-[64px]"
-          >
+          <div className="flex flex-col-reverse lg:flex-row w-full lg:w-[1290px] h-auto lg:h-[369px] gap-8 lg:gap-[72px]">
             
             {/* LEFT COLUMN: Locations List */}
-            <div 
-              className="flex flex-col justify-between w-full lg:w-[500px] h-auto lg:h-full gap-4 lg:gap-0"
-            >
+            <div className="flex flex-col justify-between w-full lg:w-[500px] h-auto lg:h-full gap-4 lg:gap-0">
               {locations.map((loc) => {
                 const isActive = activeId === loc.id;
                 
@@ -107,18 +112,24 @@ const OfficeLocations = () => {
                     style={{
                       borderColor: isActive ? '#FF4422' : 'transparent',
                       opacity: isActive ? 1 : 0.3,
-                      // On mobile we might want a background to distinguish items
-                      backgroundColor: isActive ? 'rgba(0,0,0,0.02)' : 'transparent'
+                      // Optional: subtle hover effect if desired, currently transparent
+                      backgroundColor: 'transparent'
                     }}
                   >
-                    <h3 className={`
-                      font-['Inter'] text-xl lg:text-[32px] tracking-tight mb-1 m-0
-                      ${isActive ? 'text-black font-medium' : 'text-gray-500'}
-                    `}>
+                    <h3 
+                      className={`text-xl lg:text-[32px] tracking-tight mb-1 m-0 ${textMain}`}
+                      style={{ 
+                        fontFamily: FONT_INTER,
+                        fontWeight: isActive ? 600 : 400 
+                      }}
+                    >
                       {loc.city}
                     </h3>
                     
-                    <p className="font-['Inter'] text-gray-600 text-sm lg:text-base m-0 truncate">
+                    <p 
+                      className={`text-sm lg:text-base m-0 truncate ${textSub}`}
+                      style={{ fontFamily: FONT_INTER }}
+                    >
                       {loc.address}
                     </p>
                   </div>
@@ -127,10 +138,7 @@ const OfficeLocations = () => {
             </div>
 
             {/* RIGHT COLUMN: Map */}
-            {/* On mobile: Fixed height. On Desktop: Fixed width & height */}
-            <div 
-              className="w-full h-[300px] lg:w-[726px] lg:h-[369px] rounded-lg lg:rounded-none overflow-hidden"
-            >
+            <div className="w-full h-[300px] lg:w-[726px] lg:h-[369px] rounded-lg lg:rounded-none overflow-hidden bg-gray-200 dark:bg-gray-800">
               <MapContainer 
                 center={activeLocation.coords} 
                 zoom={13} 

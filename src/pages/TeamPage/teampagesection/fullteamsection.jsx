@@ -154,12 +154,12 @@ export default function TeamSection() {
       ref={containerRef}
       className="w-full bg-bg-light dark:bg-bg-dark min-h-screen transition-colors duration-300 flex justify-center overflow-hidden font-['Inter_Variable']"
     >
-      <div className="w-full max-w-[1440px] px-[75px] py-[200px] flex flex-col items-start">
+      <div className="w-full max-w-[1440px] px-[75px] pt-[200px] pb-[120px] flex flex-col items-start">
         
-        {/* Header Section - Removed opacity-0 invisible class, let GSAP handle children */}
+        {/* Header Section */}
         <header className="header-content w-full max-w-[1290px] mb-[64px]">
-          <h1 className="text-black dark:text-white mb-[24px] flex items-baseline flex-wrap gap-4">
-            {/* Added class 'tw-title-1' */}
+          {/* UPDATED: Title Color */}
+          <h1 className="text-[#0e0e0e] dark:text-[#e2e2e2] mb-[24px] flex items-baseline flex-wrap gap-4">
             <span 
               className="tw-title-1 font-medium"
               style={{
@@ -168,13 +168,12 @@ export default function TeamSection() {
                 fontSize: '128px',
                 lineHeight: '120%',
                 letterSpacing: '-0.04em',
-                display: 'inline-block' // Needed for transform
+                display: 'inline-block' 
               }}
             >
               Our talented
             </span>
             
-            {/* Added class 'tw-title-2' */}
             <span 
               className="tw-title-2"
               style={{
@@ -184,16 +183,16 @@ export default function TeamSection() {
                 fontSize: '104px',
                 lineHeight: '120%',
                 letterSpacing: '-0.04em',
-                display: 'inline-block' // Needed for transform
+                display: 'inline-block' 
               }}
             >
               team
             </span>
           </h1>
 
-          {/* Added class 'tw-desc' */}
+          {/* UPDATED: Subtext Color & Removed inline color */}
           <p 
-            className="tw-desc whitespace-nowrap dark:text-white/70"
+            className="tw-desc whitespace-nowrap text-[#0E0E0EB2] dark:text-[#E2E2E2]/70"
             style={{
                 fontFamily: "'Inter Variable', sans-serif",
                 fontWeight: 400,
@@ -201,7 +200,6 @@ export default function TeamSection() {
                 fontSize: '18px',
                 lineHeight: '160%',
                 letterSpacing: '0%',
-                color: 'rgba(14, 14, 14, 0.7)'
             }}
           >
             A multidisciplinary team of strategists, designers, and developers obsessed with quality.
@@ -232,7 +230,7 @@ export default function TeamSection() {
                     ${isActive ? 'scale-105' : 'scale-100'}`}
                   />
                   
-                  {/* Banner */}
+                  {/* Banner (Text stays white as it's on orange bg) */}
                   <div 
                     className="absolute left-0 w-full bg-[#FF4D2A] text-white flex flex-col justify-center transition-all duration-500 ease-in-out z-10"
                     style={{ 
@@ -245,7 +243,7 @@ export default function TeamSection() {
                       pointerEvents: 'none'
                     }}
                   >
-                     <div className="w-full flex flex-row justify-between items-center h-[29px]">
+                      <div className="w-full flex flex-row justify-between items-center h-[29px]">
                         <p style={{
                           fontFamily: 'Inter Variable, sans-serif',
                           fontWeight: 500,
@@ -268,7 +266,7 @@ export default function TeamSection() {
                         }}>
                           {member.role}
                         </p>
-                     </div>
+                      </div>
                   </div>
                 </div>
               );
@@ -304,7 +302,7 @@ export default function TeamSection() {
                     ${isActive ? 'scale-105' : 'scale-100'}`}
                   />
                   
-                  {/* Banner */}
+                  {/* Banner (Text stays white as it's on orange bg) */}
                   <div 
                     className="absolute left-0 w-full bg-[#FF4D2A] text-white flex flex-col justify-center transition-all duration-500 ease-in-out z-10"
                     style={{ 
@@ -317,7 +315,7 @@ export default function TeamSection() {
                       pointerEvents: 'none'
                     }}
                   >
-                     <div className="w-full flex flex-row justify-between items-center h-[29px]">
+                      <div className="w-full flex flex-row justify-between items-center h-[29px]">
                         <p style={{
                           fontFamily: 'Inter Variable, sans-serif',
                           fontWeight: 500,
@@ -340,7 +338,7 @@ export default function TeamSection() {
                         }}>
                           {member.role}
                         </p>
-                     </div>
+                      </div>
                   </div>
                 </div>
               );
@@ -350,7 +348,8 @@ export default function TeamSection() {
 
         {/* Footer CTA Section */}
         <div className="footer-content max-w-xl w-full opacity-0 invisible">
-          <h2 className="text-black dark:text-white mb-[24px]">
+          {/* UPDATED: Main Text Color */}
+          <h2 className="text-[#0e0e0e] dark:text-[#e2e2e2] mb-[24px]">
             <span 
               style={{
                 fontFamily: "'Inter Variable', sans-serif",
@@ -378,8 +377,9 @@ export default function TeamSection() {
             </span>
           </h2>
 
+          {/* UPDATED: Subtext Color & Removed inline color */}
           <p 
-            className="mb-[40px] dark:text-white/70"
+            className="mb-[40px] text-[#0E0E0EB2] dark:text-[#E2E2E2]/70"
             style={{
               fontFamily: "'Inter Variable', sans-serif",
               fontWeight: 400,
@@ -387,14 +387,13 @@ export default function TeamSection() {
               fontSize: '18px',
               lineHeight: '160%',
               letterSpacing: '0%',
-              color: 'rgba(14, 14, 14, 0.7)' 
             }}
           >
             We are always looking for exceptional talent. If you live in Figma and dream in code, we want to hear from you.
           </p>
           
           <button 
-            className="px-10 py-4 border border-gray-300 dark:border-gray-800 text-black dark:text-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-all duration-300"
+            className="px-10 py-4 border border-[#0E0E0E]/40 dark:border-[#e2e2e2]/40 dark:border-gray-800 text-[#0e0e0e] dark:text-[#e2e2e2] hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-all duration-300"
             style={{
               fontFamily: "'Inter Variable', sans-serif",
               fontWeight: 500,

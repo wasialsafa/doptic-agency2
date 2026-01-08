@@ -132,12 +132,9 @@ const ImpactSection = () => {
   }, []);
 
   return (
-    <section className="w-full bg-bg-light dark:bg-bg-dark flex justify-center">
+    <section className="w-full bg-bg-light dark:bg-bg-dark flex justify-center transition-colors duration-300">
       
-      {/* Page Container:
-        Width: 1440px
-        Padding: Top 60px, Right 75px, Bottom 60px, Left 75px 
-      */}
+      {/* Page Container */}
       <div 
         ref={sectionRef}
         className="w-full max-w-[1440px] px-[75px] py-[60px]"
@@ -150,13 +147,21 @@ const ImpactSection = () => {
           <div>
             <h2 
               ref={titleRef} 
-              className="text-[42px] md:text-[54px] lg:text-[64px] font-medium tracking-tight leading-none mb-4"
+              className="text-[42px] md:text-[54px] lg:text-[64px] font-medium tracking-tight leading-none mb-4 text-[#0e0e0e] dark:text-[#e2e2e2]"
             >
               The Impact
             </h2>
             <p 
               ref={subTitleRef} 
-              className="text-sm md:text-base text-gray-600 w-full leading-relaxed"
+              className="w-full text-[#0E0E0E]/70 dark:text-[#E2E2E2]/70"
+              style={{
+                fontFamily: '"Inter Variable", sans-serif',
+                fontWeight: 400,
+                fontSize: '18px',
+                fontStyle: 'normal',
+                lineHeight: '160%',
+                letterSpacing: '0%'
+              }}
             >
               The new platform launched in time for their Fall Collection. The results were immediate.
             </p>
@@ -171,7 +176,7 @@ const ImpactSection = () => {
                 src="/images/projectspage/projectdetails01/impactimage1.svg" 
                 alt="Basketball Player"
                 direction="anim-top"
-                className="w-full h-full rounded-sm"
+                className="w-full h-full rounded-sm shadow-2xl"
               />
             </div>
 
@@ -184,7 +189,7 @@ const ImpactSection = () => {
                   src="/images/projectspage/projectdetails01/impactimage2.svg" 
                   alt="Fashion Model Pink Hair"
                   direction="anim-left"
-                  className="w-full h-full rounded-sm"
+                  className="w-full h-full rounded-sm shadow-2xl"
                 />
               </div>
 
@@ -194,7 +199,7 @@ const ImpactSection = () => {
                   src="/images/projectspage/projectdetails01/impactimage3.svg" 
                   alt="Man in Coat"
                   direction="anim-right"
-                  className="w-full h-full rounded-sm"
+                  className="w-full h-full rounded-sm shadow-2xl"
                 />
               </div>
 

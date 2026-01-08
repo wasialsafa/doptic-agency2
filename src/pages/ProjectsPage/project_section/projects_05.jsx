@@ -79,7 +79,7 @@ const Project05 = () => {
             className="relative w-full lg:absolute lg:bottom-[20px] lg:left-0 lg:w-[1290px]"
           >
             <p 
-              className="text-[#0e0e0e] dark:text-text-light text-left lg:text-right"
+              className="text-[#0E0E0E]/70 dark:text-[#e2e2e2]/70 text-left lg:text-right"
               style={{
                 fontFamily: '"Inter Variable", sans-serif',
                 fontWeight: 400,

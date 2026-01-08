@@ -101,7 +101,7 @@ const Project06 = () => {
             {/* IMAGE: Left Side | 740px */}
             <div 
               ref={imageRef}
-              className="w-full lg:w-[740px] h-auto lg:h-[614px] overflow-hidden rounded-[4px] shadow-2xl z-10 relative"
+              className="w-full lg:w-[740px] h-auto lg:h-[614px] overflow-hidden rounded-[4px]  z-10 relative"
             >
               <img 
                 src="/images/projectspage/projectimage1.svg" 
@@ -142,7 +142,7 @@ const Project06 = () => {
               className="w-full lg:w-[1290px] mt-6 flex justify-start"
             > 
               <p 
-                className="text-[#0e0e0e] dark:text-text-light w-full"
+                className="text-[#0E0E0E]/70 dark:text-[#e2e2e2]/70 w-full"
                 style={{
                     fontFamily: '"Inter Variable", sans-serif',
                     fontWeight: 400,
@@ -150,7 +150,6 @@ const Project06 = () => {
                     fontSize: '18px',
                     lineHeight: '160%', 
                     letterSpacing: '0%',
-                    whiteSpace: 'nowrap',
                     overflow: 'hidden',
                     textOverflow: 'ellipsis',
                     textAlign: 'left'

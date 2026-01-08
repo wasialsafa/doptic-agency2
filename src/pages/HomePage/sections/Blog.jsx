@@ -23,7 +23,6 @@ const blogPosts = [
 ];
 
 // --- ✨ ANIMATION CONFIGURATION ✨ ---
-// This class creates the underline animation
 const animBase = "relative w-fit after:block after:content-[''] after:absolute after:h-[1px] after:bg-current after:w-full after:scale-x-0 group-hover:after:scale-x-100 after:origin-left after:bottom-0 after:transition-transform after:duration-700 after:ease-out";
 
 export const BlogSection = () => {
@@ -32,6 +31,9 @@ export const BlogSection = () => {
   // --- TYPEWRITER STATES ---
   const [textPart1, setTextPart1] = useState(""); // For "Insights from the"
   const [textPart2, setTextPart2] = useState(""); // For "studio"
+  
+  // NEW: State to control cursor visibility
+  const [showCursor, setShowCursor] = useState(true);
 
   const fullText1 = "Insights from the";
   const fullText2 = "studio";
@@ -41,18 +43,21 @@ export const BlogSection = () => {
       // Reset states initially
       setTextPart1("");
       setTextPart2("");
+      setShowCursor(true); // Ensure cursor is visible when animation starts
 
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: sectionRef.current,
           start: "top 60%", // Start typing when section is 60% into view
         },
+        // NEW: Hide cursor when timeline completes
+        onComplete: () => setShowCursor(false),
       });
 
       // Part 1: "Insights from the"
       tl.to({ val: 0 }, {
         val: fullText1.length,
-        duration: .4,
+        duration: 0.4,
         ease: "none",
         onUpdate: function () {
           setTextPart1(fullText1.slice(0, Math.ceil(this.targets()[0].val)));
@@ -110,8 +115,11 @@ export const BlogSection = () => {
                 {/* Typewriter Part 2 */}
                 {textPart2}
               </span>
-              {/* Blinking Cursor */}
-              <span className="animate-pulse text-text-dark dark:text-text-light">|</span>
+              
+              {/* Blinking Cursor - Only shows while typing */}
+              {showCursor && (
+                <span className="animate-pulse text-text-dark dark:text-text-light">|</span>
+              )}
             </h2>
 
             <p
@@ -127,22 +135,19 @@ export const BlogSection = () => {
           </div>
 
           <div className="h-full flex flex-col justify-start pb-0 lg:pb-[160px]">
-            <button
-              className="h-auto inline-flex items-center justify-center gap-2 px-6 py-3 border border-solid bg-bg-light dark:bg-bg-dark hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+          <button
+            className="h-auto inline-flex items-center justify-center gap-2 px-6 py-3 border border-[#0E0E0E]/40 dark:border-[#E2E2E2]/40 bg-bg-light dark:bg-bg-dark hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+          >
+            <span
+              className="font-medium text-text-dark dark:text-text-light text-lg lg:text-xl tracking-[0] leading-[30px] whitespace-nowrap"
               style={{
-                borderColor: "rgba(14, 14, 14, 0.4)",
+                fontFamily: "Inter Variable, Inter, sans-serif",
+                fontWeight: 500,
               }}
             >
-              <span
-                className="font-medium text-text-dark dark:text-text-light text-lg lg:text-xl tracking-[0] leading-[30px] whitespace-nowrap"
-                style={{
-                  fontFamily: "Inter Variable, Inter, sans-serif",
-                  fontWeight: 500,
-                }}
-              >
-                View All
-              </span>
-            </button>
+              View All
+            </span>
+          </button>
           </div>
         </header>
 
