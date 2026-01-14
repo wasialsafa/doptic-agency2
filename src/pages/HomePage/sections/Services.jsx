@@ -127,7 +127,7 @@ const Services = () => {
       className="
         w-full min-h-screen relative overflow-hidden flex flex-col justify-center
         bg-bg-light dark:bg-bg-dark transition-colors duration-300
-        z-[1]
+        z-[1] -mb-[1px] pb-[1px]
         /* CSS Variables for GSAP to read correct hex codes */
         [--active-color:#0E0E0E] dark:[--active-color:#E2E2E2]
         [--inactive-color:rgba(160,160,160,0.3)] dark:[--inactive-color:rgba(255,255,255,0.3)]

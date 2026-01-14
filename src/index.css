@@ -22,7 +22,7 @@
     --text-inverse: #ffffff;
 
     /* Background Colors */
-    --bg-primary: #ffffff;
+    --bg-primary: #e2e2e2;
     --bg-secondary: #f0f0f0;
     --bg-muted: #e2e2e2;
     --bg-overlay-light: #0e0e0e19;
@@ -224,6 +224,10 @@
 }
 
 @layer utilities {
+
+  .pin-spacer {
+  background-color: var(--bg-primary) !important;
+}
   /* Custom Text Utility */
   .text-italic-serif {
     @apply font-serif italic;
