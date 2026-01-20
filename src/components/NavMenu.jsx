@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react"
-import { useNavigate } from "react-router-dom"
+// REMOVED: import { useNavigate } from "react-router-dom" -> No longer needed for hard reload
 import gsap from "gsap"
 import { useTheme } from '../context/ThemeContext'
 
@@ -8,7 +8,7 @@ const FONT_INTER = '"Inter Variable", sans-serif'
 
 export default function NavMenu({ isOpen, onClose }) {
   const { theme } = useTheme()
-  const navigate = useNavigate()
+  // const navigate = useNavigate() -> Removed
   
   // Set default to null so only main texts are visible initially
   const [activeMenuKey, setActiveMenuKey] = useState(null)
@@ -75,8 +75,8 @@ export default function NavMenu({ isOpen, onClose }) {
       ]
     },
     "Contact Us": { 
-      path: "/contact01", // UPDATED: Direct path to contact01
-      subs: [] // UPDATED: Removed sub-options as requested
+      path: "/contact01",
+      subs: [] 
     }
   }
   const navItems = Object.keys(navData)
@@ -93,7 +93,6 @@ export default function NavMenu({ isOpen, onClose }) {
       width: 165,             
       height: 1,              
       opacity: 1,
-      // Logic for Line Color based on Theme
       background: theme === 'dark' ? "#E2E2E2" : "#0E0E0E",  
       duration: 0.4,
       ease: "expo.out"
@@ -103,10 +102,8 @@ export default function NavMenu({ isOpen, onClose }) {
   // --- ANIMATION LOGIC ---
   useEffect(() => {
     if (isOpen) {
-      // 1. Panel Slide Down
       gsap.to(menuContainerRef.current, { y: "0%", duration: 0.8, ease: "expo.inOut" })
       
-      // 2. Text Stagger/Reveal Animation
       gsap.fromTo(
         ".menu-item-reveal", 
         { y: 50, opacity: 0 },
@@ -121,7 +118,6 @@ export default function NavMenu({ isOpen, onClose }) {
       );
 
     } else {
-      // Close Panel
       gsap.to(menuContainerRef.current, { y: "-100%", duration: 0.8, ease: "expo.inOut" })
       setIsLocked(false)
       setActiveSubImage(null)
@@ -149,11 +145,17 @@ export default function NavMenu({ isOpen, onClose }) {
     }
   }
 
+  // --- UPDATED NAVIGATION LOGIC ---
   const handleSubLinkClick = (path) => {
     if (!path) return;
+    
+    // Close the menu animation first
     onClose()
+
+    // Wait for the close animation to (mostly) finish, then force reload
     setTimeout(() => { 
-      navigate(path);
+      // Force hard browser reload to fix white screen/GSAP issues
+      window.location.href = path; 
     }, 750)
   }
 
@@ -192,22 +194,18 @@ export default function NavMenu({ isOpen, onClose }) {
           <div 
             ref={lineRef}
             className="absolute origin-left pointer-events-none opacity-0 hidden lg:block"
-            // Default background color updated in moveLine logic, but initial style for safety:
             style={{ width: '0px', height: '1px', backgroundColor: theme === 'dark' ? '#E2E2E2' : '#0E0E0E' }} 
           />
 
           <nav className="flex flex-col gap-4 lg:gap-[24px] w-full">
             {navItems.map((name) => {
                 
-                // --- COLOR LOGIC ---
                 const isSelected = activeMenuKey === name;
                 let textColor;
 
                 if (theme === 'dark') {
-                    // Dark Mode Logic
                     textColor = isSelected ? '#E2E2E2' : '#E2E2E266';
                 } else {
-                    // Light Mode Logic
                     textColor = isSelected ? '#0E0E0E' : '#0E0E0E66';
                 }
 
@@ -225,7 +223,7 @@ export default function NavMenu({ isOpen, onClose }) {
                         fontSize: '24px',
                         lineHeight: '120%',
                         letterSpacing: '-0.04em',
-                        color: textColor, // Applied dynamic color
+                        color: textColor, 
                         paddingLeft: isSelected ? '20px' : '0px'
                       }}
                     >
