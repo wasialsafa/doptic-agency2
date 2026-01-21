@@ -5,7 +5,8 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 gsap.registerPlugin(ScrollTrigger);
 
 // 1. Reusable Tilt Component
-const TiltImage = ({ src, alt, className, direction }) => {
+// UPDATED: Changed background to 'bg-transparent' to ensure perfect match with parent section
+const TiltImage = ({ src, alt, className }) => {
   const containerRef = useRef(null);
   const imageRef = useRef(null);
 
@@ -21,11 +22,12 @@ const TiltImage = ({ src, alt, className, direction }) => {
       const y = (e.clientY - top) / height - 0.5;
 
       gsap.to(image, {
-        rotationY: x * 10, 
-        rotationX: -y * 10,
+        rotationY: x * 20, 
+        rotationX: -y * 20,
         transformPerspective: 1000,
-        ease: "power2.out",
-        duration: 0.5,
+        transformOrigin: "center",
+        ease: "power1.out",
+        duration: 0.4,
       });
     };
 
@@ -33,8 +35,8 @@ const TiltImage = ({ src, alt, className, direction }) => {
       gsap.to(image, {
         rotationY: 0,
         rotationX: 0,
-        ease: "power2.out",
-        duration: 0.5,
+        ease: "power3.out",
+        duration: 1,
       });
     };
 
@@ -48,12 +50,16 @@ const TiltImage = ({ src, alt, className, direction }) => {
   }, []);
 
   return (
-    <div ref={containerRef} className={`overflow-hidden relative ${className}`}>
+    <div 
+      ref={containerRef} 
+      // CHANGED: bg-transparent ensures the page background shows through the tilt gaps
+      className={`overflow-hidden relative perspective-[1000px] bg-transparent ${className}`}
+    >
       <img
         ref={imageRef}
         src={src}
         alt={alt}
-        className={`w-full h-full object-cover transition-transform will-change-transform ${direction}`} 
+        className="w-full h-full object-cover will-change-transform" 
       />
     </div>
   );
@@ -68,7 +74,9 @@ const ImpactSection = () => {
   useEffect(() => {
     const ctx = gsap.context(() => {
       
-      // Text Reveal Animations
+      // --- ENTRANCE ANIMATIONS ---
+
+      // Text Animations
       gsap.from(titleRef.current, {
         y: 50,
         opacity: 0,
@@ -146,13 +154,14 @@ const ImpactSection = () => {
           {/* Header Text Section */}
           <div>
             <h2 
-              ref={titleRef} 
+              ref={titleRef}
               className="text-[42px] md:text-[54px] lg:text-[64px] font-medium tracking-tight leading-none mb-4 text-[#0e0e0e] dark:text-[#e2e2e2]"
+              style={{ fontFamily: '"Inter Variable", sans-serif' }}
             >
               The Impact
             </h2>
             <p 
-              ref={subTitleRef} 
+              ref={subTitleRef}
               className="w-full text-[#0E0E0E]/70 dark:text-[#E2E2E2]/70"
               style={{
                 fontFamily: '"Inter Variable", sans-serif',
@@ -167,39 +176,36 @@ const ImpactSection = () => {
             </p>
           </div>
 
-          {/* Images Section Wrapper with 32px vertical gap */}
+          {/* Images Section Wrapper */}
           <div className="flex flex-col gap-[32px]">
             
-            {/* Top Image (Full Width: 1290px, Height: 640px) */}
+            {/* Top Image */}
             <div className="w-full h-[640px]">
               <TiltImage 
                 src="/images/projectspage/projectdetails01/impactimage1.svg" 
                 alt="Basketball Player"
-                direction="anim-top"
-                className="w-full h-full rounded-sm shadow-2xl"
+                className="anim-top w-full h-full rounded-sm shadow-2xl"
               />
             </div>
 
-            {/* Bottom Row (Two Columns, Gap 32px) */}
+            {/* Bottom Row */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-[32px] grid-container">
               
-              {/* Left Image (Height: 640px) */}
+              {/* Left Image */}
               <div className="h-[640px]">
                 <TiltImage 
                   src="/images/projectspage/projectdetails01/impactimage2.svg" 
                   alt="Fashion Model Pink Hair"
-                  direction="anim-left"
-                  className="w-full h-full rounded-sm shadow-2xl"
+                  className="anim-left w-full h-full rounded-sm shadow-2xl"
                 />
               </div>
 
-              {/* Right Image (Height: 640px) */}
+              {/* Right Image */}
               <div className="h-[640px]">
                 <TiltImage 
                   src="/images/projectspage/projectdetails01/impactimage3.svg" 
                   alt="Man in Coat"
-                  direction="anim-right"
-                  className="w-full h-full rounded-sm shadow-2xl"
+                  className="anim-right w-full h-full rounded-sm shadow-2xl"
                 />
               </div>
 

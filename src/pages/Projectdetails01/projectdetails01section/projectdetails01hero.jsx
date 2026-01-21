@@ -1,5 +1,43 @@
 import React, { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
+
+// --- 1. Typewriter Component ---
+const TypewriterText = ({ text, as: Tag = 'span', className, style, delay = 0 }) => {
+  const elRef = useRef(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      const chars = elRef.current.querySelectorAll("span");
+      gsap.fromTo(chars, 
+        { opacity: 0 },
+        {
+          opacity: 1,
+          duration: 0.08,   // Speed of typing
+          stagger: 0.04,    // Delay between characters
+          delay: delay,
+          ease: "none",
+          // We trigger this immediately as part of the page load, 
+          // or we can use ScrollTrigger if you prefer it to type when scrolled to.
+          // Since it's a Hero section, we usually want it to start shortly after load.
+        }
+      );
+    }, elRef);
+    return () => ctx.revert();
+  }, [delay]);
+
+  return (
+    <Tag ref={elRef} className={className} style={style} aria-label={text}>
+      {text.split("").map((char, i) => (
+        <span key={i} className="inline-block opacity-0">
+          {char === " " ? "\u00A0" : char}
+        </span>
+      ))}
+    </Tag>
+  );
+};
 
 const ProjectDetails01Hero = () => {
   const containerRef = useRef(null);
@@ -7,8 +45,8 @@ const ProjectDetails01Hero = () => {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Initial state
-      gsap.set([".reveal-text", ".reveal-meta"], { opacity: 0, y: 20 });
+      // Initial state for non-typewriter elements
+      gsap.set([".reveal-text-body", ".reveal-meta"], { opacity: 0, y: 20 });
       gsap.set(imageRef.current, { scale: 1.1, clipPath: 'inset(100% 0% 0% 0%)' });
 
       const tl = gsap.timeline({ defaults: { ease: "power4.out", duration: 1.2 } });
@@ -18,11 +56,13 @@ const ProjectDetails01Hero = () => {
         scale: 1, 
         duration: 1.5 
       })
-      .to(".reveal-text", { 
+      // Animate Body Text (Title is handled by Typewriter internally now)
+      .to(".reveal-text-body", { 
         opacity: 1, 
         y: 0, 
         stagger: 0.1 
       }, "-=0.8")
+      // Animate Meta Data
       .to(".reveal-meta", { 
         opacity: 1, 
         y: 0, 
@@ -54,40 +94,39 @@ const ProjectDetails01Hero = () => {
         
         {/* Left Column: Title & Description */}
         <div className="lg:col-span-7">
-          {/* UPDATED: Added text color classes here */}
           <h1 className="mb-4 text-[#0e0e0e] dark:text-[#e2e2e2]">
-            <span 
-              className="reveal-text block"
+            {/* 1. Typewriter for "Redefining Urban" */}
+            <TypewriterText 
+              text="Redefining Urban"
+              className="block"
+              delay={0.5} // Wait slightly for image to start revealing
               style={{
                 fontFamily: '"Inter Variable", sans-serif',
                 fontWeight: 500,
-                fontStyle: 'normal', 
                 fontSize: 'clamp(42px, 6vw, 96px)',
                 lineHeight: '120%',
                 letterSpacing: '-0.04em',
               }}
-            >
-              Redefining Urban{" "}
-              <span 
-                className="reveal-text block" 
-                style={{
-                  fontFamily: "'Italiana', serif",
-                  fontWeight: 400,
-                  fontSize: 'clamp(48px, 5vw, 64px)', 
-                  lineHeight: '120%',
-                  letterSpacing: '-0.02em',
-                  fontStyle: 'normal',
-                  marginTop: '-5px' 
-                }}
-              >
-                Fashion
-              </span>
-            </span>
+            />
+            
+            {/* 1. Typewriter for "Fashion" */}
+            <TypewriterText 
+              text="Fashion"
+              className="block"
+              delay={1.2} // Start after first line finishes
+              style={{
+                fontFamily: "'Italiana', serif",
+                fontWeight: 400,
+                fontSize: 'clamp(48px, 5vw, 64px)', 
+                lineHeight: '120%',
+                letterSpacing: '-0.02em',
+                marginTop: '-5px' 
+              }}
+            />
           </h1>
           
-          {/* Subtext */}
-          {/* UPDATED: Removed text-gray-600, added specific hex colors */}
-          <p className="reveal-text mt-6 lg:mt-8 text-[#0E0E0EB2] dark:text-[#E2E2E2]/70"
+          {/* Subtext (Renamed class to reveal-text-body to separate from title) */}
+          <p className="reveal-text-body mt-6 lg:mt-8 text-[#0E0E0EB2] dark:text-[#E2E2E2]/70"
              style={{
                maxWidth: '746px',
                fontSize: '18px',
@@ -100,7 +139,7 @@ const ProjectDetails01Hero = () => {
             increased conversion rates and customer loyalty instantly.
           </p>
 
-          <div className="reveal-text flex flex-wrap gap-3 mt-8 lg:mt-10">
+          <div className="reveal-text-body flex flex-wrap gap-3 mt-8 lg:mt-10">
             {['Production', 'London', 'Fashion'].map((tag) => (
               <span 
                 key={tag} 
@@ -108,10 +147,8 @@ const ProjectDetails01Hero = () => {
                 style={{
                   fontFamily: '"Inter Variable", sans-serif',
                   fontWeight: 400,
-                  fontStyle: 'normal',
                   fontSize: '14px',
                   lineHeight: '120%',
-                  letterSpacing: '0%'
                 }}
               >
                 {tag}
@@ -125,7 +162,6 @@ const ProjectDetails01Hero = () => {
           
           {/* Client */}
           <div className="reveal-meta">
-            {/* UPDATED: Big Text Color */}
             <h4 
               className="mb-1 text-[#0e0e0e] dark:text-[#e2e2e2]"
               style={{
@@ -145,7 +181,6 @@ const ProjectDetails01Hero = () => {
                 fontWeight: 400,
                 fontSize: '18px',
                 lineHeight: '160%',
-                letterSpacing: '0%'
               }}
             >
               Apex Apparel Co.
@@ -154,7 +189,6 @@ const ProjectDetails01Hero = () => {
 
           {/* Date */}
           <div className="reveal-meta">
-            {/* UPDATED: Big Text Color */}
             <h4 
               className="mb-1 text-[#0e0e0e] dark:text-[#e2e2e2]"
               style={{
@@ -174,7 +208,6 @@ const ProjectDetails01Hero = () => {
                 fontWeight: 400,
                 fontSize: '18px',
                 lineHeight: '160%',
-                letterSpacing: '0%'
               }}
             >
               March 2025
@@ -183,7 +216,6 @@ const ProjectDetails01Hero = () => {
 
           {/* Role */}
           <div className="reveal-meta">
-            {/* UPDATED: Big Text Color */}
             <h4 
               className="mb-1 text-[#0e0e0e] dark:text-[#e2e2e2]"
               style={{
@@ -203,16 +235,14 @@ const ProjectDetails01Hero = () => {
                 fontWeight: 400,
                 fontSize: '18px',
                 lineHeight: '160%',
-                letterSpacing: '0%'
               }}
             >
               End-to-End Product
             </p>
           </div>
 
-          {/* Website */}
+          {/* Website (UPDATED) */}
           <div className="reveal-meta">
-            {/* UPDATED: Big Text Color */}
             <h4 
               className="mb-1 text-[#0e0e0e] dark:text-[#e2e2e2]"
               style={{
@@ -225,18 +255,21 @@ const ProjectDetails01Hero = () => {
             >
               Website
             </h4>
-            <p 
-              className="text-[#0E0E0EB2] dark:text-[#E2E2E2]/70 underline cursor-pointer hover:text-black dark:hover:text-white transition-colors"
+            <a 
+              href="https://www.doptic.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              // Removed 'underline', added 'no-underline' explicit just in case
+              className="text-[#0E0E0EB2] dark:text-[#E2E2E2]/70 no-underline cursor-pointer hover:text-black dark:hover:text-white transition-colors"
               style={{
                 fontFamily: '"Inter Variable", sans-serif',
                 fontWeight: 400,
                 fontSize: '18px',
                 lineHeight: '160%',
-                letterSpacing: '0%'
               }}
             >
-              apex-drop.shop
-            </p>
+              www.Doptic.com
+            </a>
           </div>
 
         </div>

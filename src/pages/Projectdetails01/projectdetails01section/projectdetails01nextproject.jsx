@@ -4,28 +4,93 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
+// --- 1. Reusable Typewriter Component ---
+const TypewriterText = ({ text, as: Tag = 'span', className, style, delay = 0 }) => {
+  const elRef = useRef(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      const chars = elRef.current.querySelectorAll("span");
+      gsap.fromTo(chars, 
+        { opacity: 0 },
+        {
+          opacity: 1,
+          duration: 0.1,    // Typing speed
+          stagger: 0.05,    // Delay between chars
+          delay: delay,
+          ease: "none",
+          scrollTrigger: {
+            trigger: elRef.current,
+            start: "top 85%",
+          }
+        }
+      );
+    }, elRef);
+    return () => ctx.revert();
+  }, [delay]);
+
+  return (
+    <Tag ref={elRef} className={className} style={style} aria-label={text}>
+      {text.split("").map((char, i) => (
+        <span key={i} className="inline-block opacity-0">
+          {char === " " ? "\u00A0" : char}
+        </span>
+      ))}
+    </Tag>
+  );
+};
+
 const NextProjectPage = () => {
   const containerRef = useRef(null);
   const headerRef = useRef(null);
   const contentRef = useRef(null);
-  const imageRef = useRef(null);
+  
+  // Tilt Refs
+  const imageContainerRef = useRef(null); // The wrapper (handles entrance)
+  const imageRef = useRef(null);          // The image (handles tilt)
+
+  // --- 2. 3D Tilt Logic ---
+  const handleMouseMove = (e) => {
+    const { left, top, width, height } = imageContainerRef.current.getBoundingClientRect();
+    const x = (e.clientX - left) / width - 0.5;
+    const y = (e.clientY - top) / height - 0.5;
+
+    gsap.to(imageRef.current, {
+      rotationY: x * 20, 
+      rotationX: -y * 20,
+      transformPerspective: 1000,
+      transformOrigin: "center",
+      duration: 0.4,
+      ease: "power1.out"
+    });
+  };
+
+  const handleMouseLeave = () => {
+    gsap.to(imageRef.current, {
+      rotationY: 0,
+      rotationX: 0,
+      duration: 1,
+      ease: "power3.out"
+    });
+  };
 
   useEffect(() => {
     const ctx = gsap.context(() => {
       
-      // 1. Header Animation
-      gsap.from(headerRef.current, {
+      // 1. Header Animation (Only fading in the subtext/button now, titles handle themselves)
+      gsap.from(".header-fade", {
         opacity: 0,
-        y: 30,
+        y: 20,
         duration: 1,
+        stagger: 0.2,
         ease: "power3.out",
         scrollTrigger: {
-          trigger: containerRef.current,
+          trigger: headerRef.current,
           start: "top 80%",
         }
       });
 
-      // 2. Main Content Stagger
+      // 2. Main Content Timeline
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: contentRef.current,
@@ -33,19 +98,14 @@ const NextProjectPage = () => {
         }
       });
 
-      tl.from(".anim-title", {
-        y: 60,
-        opacity: 0,
-        duration: 1,
-        stagger: 0.15,
-        ease: "power3.out"
-      })
-      .from(imageRef.current, {
+      // Note: Removed ".anim-title" from timeline as Typewriter handles it now.
+      
+      tl.from(imageContainerRef.current, {
         scale: 1.05,
         opacity: 0,
         duration: 1.2,
         ease: "power3.out"
-      }, "-=0.6")
+      })
       .from(".anim-number", {
         x: 20,
         opacity: 0,
@@ -72,7 +132,6 @@ const NextProjectPage = () => {
         ref={containerRef}
         className="w-full max-w-[1440px] relative overflow-hidden font-sans text-[#0e0e0e] px-5 lg:px-0"
         style={{
-          // Responsive padding: 60px on mobile, 120px on desktop
           paddingTop: 'clamp(60px, 10vw, 120px)',
           paddingBottom: 'clamp(60px, 10vw, 120px)',
         }}
@@ -83,7 +142,6 @@ const NextProjectPage = () => {
           ref={headerRef} 
           className="mx-auto flex flex-col md:flex-row justify-between items-start"
           style={{
-            // Max-width keeps desktop size, w-full allows shrinking
             maxWidth: '1290px',
             width: '100%',
             marginBottom: '64px'
@@ -92,34 +150,31 @@ const NextProjectPage = () => {
           {/* Left: Title & Subtext Group */}
           <div className="flex flex-col gap-[20px] lg:gap-[32px]">
             
-            {/* "Next Project" Title */}
+            {/* "Next Project" Title with Typewriter */}
             <h1 className="leading-[120%] tracking-[-0.04em] flex flex-wrap items-baseline gap-2 lg:gap-3 m-0 p-0">
-              <span 
+              <TypewriterText 
+                text="Next"
                 className="font-medium text-[#0e0e0e] dark:text-[#e2e2e2]"
                 style={{ 
                   fontFamily: '"Inter", sans-serif', 
                   fontWeight: 500,
-                  // Responsive font size
                   fontSize: 'clamp(48px, 6vw, 72px)' 
                 }}
-              >
-                Next
-              </span>
-              <span 
+              />
+              <TypewriterText 
+                text="Project"
+                delay={0.4}
                 className="italic font-normal text-[#0e0e0e] dark:text-[#e2e2e2]"
                 style={{ 
                   fontFamily: '"Libre Caslon Text", serif', 
                   fontSize: 'clamp(48px, 6vw, 72px)' 
                 }}
-              >
-                Project
-              </span>
+              />
             </h1>
 
             {/* Subtext */}
             <p 
-              // UPDATED: Light #0E0E0EB2 / Dark #E2E2E2 (70%)
-              className="text-[#0E0E0EB2] dark:text-[#E2E2E2]/70 m-0 p-0"
+              className="header-fade text-[#0E0E0EB2] dark:text-[#E2E2E2]/70 m-0 p-0"
               style={{
                 maxWidth: '768px',
                 fontFamily: '"Inter", sans-serif',
@@ -133,7 +188,7 @@ const NextProjectPage = () => {
           </div>
 
           {/* Right: View All Button */}
-          <div className="pt-6 md:pt-4 self-start md:self-auto">
+          <div className="header-fade pt-6 md:pt-4 self-start md:self-auto">
              <button 
                className="px-6 py-3 border border-gray-400 dark:border-gray-600 dark:text-[#e2e2e2] hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors duration-300"
                style={{ 
@@ -159,36 +214,33 @@ const NextProjectPage = () => {
           }}
         >
           
-          {/* TITLES (Aligned Right) */}
+          {/* TITLES (Aligned Right) with Typewriter */}
           <div className="flex flex-col items-end mb-8 lg:mb-4">
-            <h2 
-              // UPDATED: Light #0e0e0e / Dark #e2e2e2
-              className="anim-title text-right text-[#0e0e0e] dark:text-[#e2e2e2]"
+            <TypewriterText 
+              text="Scaling Enterprise"
+              className="text-right text-[#0e0e0e] dark:text-[#e2e2e2]"
               style={{ 
                 fontFamily: '"Inter", sans-serif', 
                 fontWeight: 500,
-                fontSize: 'clamp(48px, 8vw, 96px)', // Responsive scaling
+                fontSize: 'clamp(48px, 8vw, 96px)',
                 lineHeight: '120%',
                 letterSpacing: '-0.04em'
               }}
-            >
-              Scaling Enterprise
-            </h2>
+            />
             
-            <h3 
-              // UPDATED: Light #0e0e0e / Dark #e2e2e2
-              className="anim-title text-right text-[#0e0e0e] dark:text-[#e2e2e2]"
+            <TypewriterText 
+              text="SaaS"
+              delay={0.5}
+              className="text-right text-[#0e0e0e] dark:text-[#e2e2e2]"
               style={{ 
                 fontFamily: '"Italiana", serif', 
                 fontWeight: 400,
-                fontSize: 'clamp(32px, 6vw, 64px)', // Responsive scaling
+                fontSize: 'clamp(32px, 6vw, 64px)',
                 lineHeight: '120%',
                 letterSpacing: '-0.02em',
                 marginTop: '-5px' 
               }}
-            >
-              SaaS
-            </h3>
+            />
           </div>
 
           {/* IMAGE & NUMBER ROW */}
@@ -196,9 +248,13 @@ const NextProjectPage = () => {
             
             {/* Left Column: Image + Caption */}
             <div className="flex flex-col gap-6 w-full lg:w-auto">
-              {/* Image Container */}
+              
+              {/* Image Container with Tilt & Entrance Animation */}
               <div 
-                className="overflow-hidden bg-black w-full"
+                ref={imageContainerRef}
+                onMouseMove={handleMouseMove}
+                onMouseLeave={handleMouseLeave}
+                className="overflow-hidden w-full perspective-[1000px] bg-transparent" // bg-transparent fixes white flash
                 style={{
                   maxWidth: '1043px', 
                   height: 'auto',
@@ -209,13 +265,12 @@ const NextProjectPage = () => {
                   ref={imageRef}
                   src="/images/projectspage/projectimage2.svg" 
                   alt="Scaling Enterprise SaaS"
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover will-change-transform"
                 />
               </div>
 
               {/* Bottom Caption */}
               <p 
-                // UPDATED: Light #0E0E0EB2 / Dark #E2E2E2 (70%)
                 className="anim-caption text-[#0E0E0EB2] dark:text-[#E2E2E2]/70 lg:whitespace-nowrap"
                 style={{
                   fontFamily: '"Inter Variable", sans-serif',
@@ -236,7 +291,7 @@ const NextProjectPage = () => {
 
             {/* Right Column: Number 02 */}
             <div 
-              className="anim-number flex items-start justify-start pt-8 lg:pt-4"
+              className="anim-number flex items-start justify-start pt-8 lg:pt-0"
               style={{
                 width: '159px',
                 height: 'auto', 
@@ -244,7 +299,6 @@ const NextProjectPage = () => {
               }}
             >
               <span 
-                // UPDATED: Consistent watermark color (Light 10% / Dark 10%)
                 className="font-bold leading-none text-[#0E0E0E1A] dark:text-[#E2E2E2]/10"
                 style={{
                   fontFamily: '"Inter", sans-serif',
