@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
@@ -11,6 +11,11 @@ const ServicesHero = () => {
   const headerRef = useRef(null)
   const slidesRef = useRef([])
   const itemsRef = useRef([])
+
+  // --- TYPEWRITER STATE ---
+  const cursorRef = useRef(null)
+  const [displayedText, setDisplayedText] = useState('')
+  const fullText = "We make your complex ideas simple and beautiful."
 
   // MATH CONSTANTS
   const TOTAL_HEIGHT = 906;
@@ -32,6 +37,7 @@ const ServicesHero = () => {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
+      // Setup CSS Vars
       const activeColor = "var(--active-color)"
       const inactiveColor = "var(--inactive-color)"
       const activeBarColor = "#FF6B35" 
@@ -40,36 +46,57 @@ const ServicesHero = () => {
       const items = itemsRef.current
       const listWrapper = listWrapperRef.current
 
-      // 1. HEADER ANIMATION
-      gsap.from(headerRef.current.children, {
-        y: 50, opacity: 0, duration: 1.2, stagger: 0.2, ease: "power3.out",
-        scrollTrigger: { trigger: headerRef.current, start: "top 85%", toggleActions: "play none none reverse" }
+      // =========================================
+      // 1. TYPEWRITER & HEADER ANIMATION
+      // =========================================
+      setDisplayedText('') 
+      gsap.set(cursorRef.current, { opacity: 1 })
+
+      // Animate the "SERVICE" label first
+      gsap.from(headerRef.current.children[0], {
+        y: 20, opacity: 0, duration: 1, ease: "power3.out",
+        scrollTrigger: { trigger: headerRef.current, start: "top 85%" }
       });
 
-      // 2. SCROLL LOGIC
+      // Typewriter Timeline
+      const textObj = { value: 0 }
+      const splitPoint = Math.floor(fullText.length * 0.7) // Switch from linear to eased here
+
+      const tlTypewriter = gsap.timeline({
+        scrollTrigger: { trigger: headerRef.current, start: "top 85%" }
+      })
+
+      tlTypewriter.to(textObj, {
+          value: splitPoint, 
+          duration: splitPoint * 0.04, 
+          ease: 'none', 
+          onUpdate: () => setDisplayedText(fullText.slice(0, Math.floor(textObj.value))),
+      })
+      .to(textObj, {
+          value: fullText.length, 
+          duration: (fullText.length - splitPoint) * 0.06, 
+          ease: 'power1.inOut', 
+          onUpdate: () => setDisplayedText(fullText.slice(0, Math.floor(textObj.value))),
+      })
+      .to(cursorRef.current, { opacity: 0, duration: 0.5, ease: "power2.out" });
+
+      // =========================================
+      // 2. SCROLL / PIN LOGIC
+      // =========================================
       ScrollTrigger.matchMedia({
         "(min-width: 1024px)": function() {
             gsap.set(slides, { zIndex: (i) => slides.length - i, height: "100%" })
 
             const tl = gsap.timeline({
                 scrollTrigger: {
-                    // ✅ UPDATED TRIGGER: Triggers based on the Header text position
                     trigger: headerRef.current, 
-                    
-                    // ✅ UPDATED START: Pins exactly when Header hits 40px from top of screen
                     start: "top 40px", 
-                    
                     end: () => "+=" + (window.innerHeight * 3),
-                    
-                    // Pins the whole section (wrapper)
                     pin: sectionRef.current,
-                    
                     scrub: 0.4, 
                     invalidateOnRefresh: true,
                     onUpdate: (self) => {
-                        // Focus logic (starts at 2nd item)
                         const progress = (self.progress * (services.length - 1)) + 1;
-                        
                         items.forEach((item, i) => {
                             if (!item) return;
                             const text = item.querySelector('.service-text');
@@ -79,7 +106,6 @@ const ServicesHero = () => {
                             const opacity = Math.max(0.5, 1 - (distance * 0.2));
                             const isActive = distance < 0.5;
 
-                            // Typography
                             gsap.to(text, { 
                                 opacity: opacity, 
                                 fontSize: isActive ? "48px" : "40px",
@@ -89,7 +115,6 @@ const ServicesHero = () => {
                                 overwrite: 'auto'
                             });
                             
-                            // Bar Animation
                             gsap.to(bar, {
                                 opacity: opacity,
                                 height: isActive ? "1.5px" : "0.5px",
@@ -129,23 +154,50 @@ const ServicesHero = () => {
       className="
         w-full min-h-screen relative overflow-hidden flex flex-col justify-center
         bg-bg-light dark:bg-bg-dark transition-colors duration-300
-        z-[1]
+        z-[1] 
+        -mb-[1px] pb-[1px] /* FIX: Removes white border gap at bottom */
         [--active-color:#0E0E0E] dark:[--active-color:#FFFFFF]
         [--inactive-color:rgba(160,160,160,0.3)] dark:[--inactive-color:rgba(255,255,255,0.3)]
       "
     >
-      <div className="w-full lg:max-w-[1440px] mx-auto px-6 py-12 md:py-16 lg:px-[75px] lg:pt-[200px] lg:pb-[120px] flex flex-col box-border">
+      <div className="w-full lg:max-w-[1440px] mx-auto px-6 py-12 md:py-16 lg:px-[75px] lg:pt-[200px] lg:pb-0 flex flex-col box-border">
         
         {/* HEADER */}
         <div ref={headerRef} className="flex flex-col items-start gap-[12px] w-full lg:max-w-[1290px] shrink-0 mb-8 md:mb-10 lg:mb-[64px] z-20 relative">
           <div className="font-medium text-[#0e0e0e] dark:text-gray-200 text-[12px] md:text-[14px] tracking-[2px] uppercase opacity-60">
             SERVICE
           </div>
-          <h2 className="text-[#0e0e0e] dark:text-white w-full lg:w-[1290px] font-medium">
+          
+          {/* TYPEWRITER TEXT CONTAINER */}
+          <h2 className="text-[#0e0e0e] dark:text-white w-full lg:w-[1290px] font-medium min-h-[144px] md:min-h-[120px] lg:min-h-[180px]">
             <span className="block text-[32px] md:text-5xl lg:text-[72px] leading-[120%] tracking-[-0.04em] font-medium" style={{ fontFamily: "'Inter Variable', sans-serif" }}>
-              We make your{" "}
-              <span className="italic font-normal" style={{ fontFamily: "'Libre Caslon Text', serif" }}>complex ideas</span>{" "}
-              simple <br className="hidden md:block" /> and beautiful.
+              
+              {displayedText.split(' ').map((word, index) => {
+                 // Styling triggers
+                 const isItalic = word.includes("complex") || word.includes("ideas");
+                 const addBreak = word.includes("simple");
+
+                 return (
+                   <span key={index}>
+                     <span 
+                       className={isItalic ? "italic font-normal" : ""}
+                       style={isItalic ? { fontFamily: "'Libre Caslon Text', serif" } : {}}
+                     >
+                       {word}
+                     </span>
+                     {' '}
+                     {addBreak && <br className="hidden md:block" />}
+                   </span>
+                 )
+              })}
+
+              <span 
+                ref={cursorRef} 
+                className="inline-block ml-1 lg:ml-2 text-[#FF6B35]" 
+                style={{ fontSize: '0.8em', verticalAlign: '5%' }}
+              >
+                |
+              </span>
             </span>
           </h2>
         </div>
@@ -199,6 +251,5 @@ const ServicesHero = () => {
     </section>
   )
 }
-
 
 export default ServicesHero

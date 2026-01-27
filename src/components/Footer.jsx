@@ -80,8 +80,8 @@ const companyLinks = [
 
 const supportLinks = [
   { label: "Style Guide", href: "#" },
-  { label: "License", href: "#" },
-  { label: "Changelog", href: "#" },
+  { label: "404 page", href: "/not_found" },
+  { label: "FAQ", href: "/faqpage" },
   
 ];
 

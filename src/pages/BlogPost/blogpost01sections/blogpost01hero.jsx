@@ -1,6 +1,5 @@
 import React, { useLayoutEffect, useRef } from 'react';
 import gsap from 'gsap';
-import { Link, Linkedin, X, Facebook } from 'lucide-react';
 
 const FONT_INTER = 'Inter Variable, sans-serif';
 const FONT_CASLON = 'Libre Caslon Text, serif';
@@ -9,22 +8,93 @@ const FONT_CASLON = 'Libre Caslon Text, serif';
 const textMain = "text-[#0e0e0e] dark:text-[#e2e2e2]";
 const textSub = "text-[#0e0e0e]/70 dark:text-[#e2e2e2]/70";
 
+// --- CONFIGURATION: ADD YOUR SOCIAL ICON LINKS HERE ---
+const SOCIAL_ICONS = [
+  { name: "Link",      src: "/logos/blogpostlogo1.svg" }, // Put image URL here, e.g. "/icons/link.svg"
+  { name: "LinkedIn",  src: "/logos/blogpostlogo2.svg" }, // Put image URL here
+  { name: "X",         src: "/logos/blogpostlogo3.svg" }, // Put image URL here
+  { name: "Facebook",  src: "/logos/blogpostlogo4.svg" }, // Put image URL here
+];
+
+// --- HELPER: SPLIT TEXT FOR TYPEWRITER ---
+const SplitText = ({ children, className, style }) => {
+  return (
+    <div className={className} style={style}>
+      {children.split('').map((char, index) => (
+        <span 
+          key={index} 
+          className="char inline-block" 
+          style={{ opacity: 0 }} // Start hidden for animation
+        >
+          {char === ' ' ? '\u00A0' : char}
+        </span>
+      ))}
+    </div>
+  );
+};
+
+// --- HELPER: 3D TILT IMAGE COMPONENT ---
+const TiltImage = ({ src, alt, className, containerClassName }) => {
+  const imageRef = useRef(null);
+  const containerRef = useRef(null);
+
+  const handleMouseMove = (e) => {
+    if (!containerRef.current || !imageRef.current) return;
+    const { left, top, width, height } = containerRef.current.getBoundingClientRect();
+    const x = (e.clientX - left) / width - 0.5;
+    const y = (e.clientY - top) / height - 0.5;
+
+    gsap.to(imageRef.current, {
+      rotationY: x * 10,  // Subtle tilt
+      rotationX: -y * 10, 
+      transformPerspective: 1000,
+      transformOrigin: "center",
+      ease: "power1.out",
+      duration: 0.4
+    });
+  };
+
+  const handleMouseLeave = () => {
+    if (!imageRef.current) return;
+    gsap.to(imageRef.current, {
+      rotationY: 0,
+      rotationX: 0,
+      ease: "power3.out",
+      duration: 1
+    });
+  };
+
+  return (
+    <div 
+      ref={containerRef}
+      className={`perspective-[1000px] overflow-hidden bg-transparent ${containerClassName}`}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+    >
+      <div ref={imageRef} className="w-full h-full will-change-transform rounded-sm overflow-hidden">
+        <img src={src} alt={alt} className={className} />
+      </div>
+    </div>
+  );
+};
+
 const BlogPostHero = () => {
   const containerRef = useRef(null);
   const titleRef = useRef(null);
   const metaRef = useRef(null);
-  const imageRef = useRef(null);
+  const imageContainerRef = useRef(null);
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
       const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
 
-      // 1. Title Animation (Targeting the spans inside h1)
-      tl.from(titleRef.current.querySelectorAll("span"), {
-        y: 100,
-        opacity: 0,
-        duration: 1,
-        stagger: 0.1,
+      // 1. Typewriter Animation (Targeting .char classes inside title)
+      const chars = titleRef.current.querySelectorAll(".char");
+      tl.to(chars, {
+        opacity: 1,
+        duration: 0.05,
+        stagger: 0.03,
+        ease: "none",
       });
 
       // 2. Meta Data Row
@@ -34,8 +104,8 @@ const BlogPostHero = () => {
         duration: 0.8,
       }, "-=0.5");
 
-      // 3. Image Reveal
-      tl.from(imageRef.current, {
+      // 3. Image Reveal (Scaling up)
+      tl.from(imageContainerRef.current, {
         scale: 0.98,
         opacity: 0,
         duration: 1.2,
@@ -50,9 +120,7 @@ const BlogPostHero = () => {
   return (
     <div className="bg-bg-light dark:bg-bg-dark min-h-screen w-full transition-colors duration-300">
       
-      {/* MAIN CONTAINER 
-        Width: 1440px (max), Padding: 120px top/bottom, 75px sides
-      */}
+      {/* MAIN CONTAINER */}
       <div 
         ref={containerRef} 
         className="max-w-[1440px] mx-auto pt-[120px] pb-[120px] px-5 md:px-[64px] flex flex-col"
@@ -66,28 +134,28 @@ const BlogPostHero = () => {
           >
             {/* LINE 1: The psychology of (Inter) + color (Caslon) */}
             <div className="flex flex-wrap items-baseline gap-x-4 md:gap-x-6 w-full">
-               <span 
+               <SplitText 
                 className="font-medium text-[48px] md:text-[80px] lg:text-[128px]"
                 style={{ fontFamily: FONT_INTER }}
               >
                 The psychology of
-              </span>
+              </SplitText>
               
-              <span 
+              <SplitText 
                 className="italic font-normal text-[40px] md:text-[64px] lg:text-[104px]"
                 style={{ fontFamily: FONT_CASLON }}
               >
                 color
-              </span>
+              </SplitText>
             </div>
 
             {/* LINE 2: in 2026. (Caslon) */}
-            <span 
+            <SplitText 
               className="italic font-normal text-[40px] md:text-[64px] lg:text-[104px] w-full block mt-[-10px] md:mt-[-20px]"
               style={{ fontFamily: FONT_CASLON }}
             >
               in 2026.
-            </span>
+            </SplitText>
           </h1>
         </header>
 
@@ -115,30 +183,37 @@ const BlogPostHero = () => {
             </div>
           </div>
 
-          {/* Right: Social Icons */}
+          {/* Right: Social Icons (IMAGES) */}
           <div className="flex items-center justify-start md:justify-end gap-[3px] h-full">
-            {[Link, Linkedin, X, Facebook].map((Icon, i) => (
+            {SOCIAL_ICONS.map((icon, i) => (
               <button 
                 key={i}
-                // UPDATED: Border uses 10% opacity colors (#0e0e0e1a / #e2e2e21a) and main text color for icon
-                className={`w-[32px] h-[32px] rounded-[64px] p-[4px] border border-[#0e0e0e1a] dark:border-[#e2e2e21a] flex items-center justify-center ${textMain} hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors`}
+                className={`w-[32px] h-[32px] rounded-[64px] p-[6px] border border-[#0e0e0e1a] dark:border-[#e2e2e21a] flex items-center justify-center hover:bg-black hover:invert dark:hover:bg-white dark:hover:invert-0 transition-colors`}
+                title={icon.name}
               >
-                <Icon size={14} strokeWidth={2} />
+                {/* logic: display image if src exists, otherwise empty box.
+                   You can define specific widths/heights for your logos here.
+                */}
+                {icon.src && (
+                  <img 
+                    src={icon.src} 
+                    alt={icon.name} 
+                    className="w-full h-full object-contain filter dark:invert" 
+                  />
+                )}
               </button>
             ))}
           </div>
         </div>
 
-        {/* --- 3. HERO IMAGE --- */}
-        <div 
-          ref={imageRef} 
-          className="w-full max-w-[1312px] h-[300px] md:h-[600px] overflow-hidden rounded-sm bg-gray-200"
-        >
-          <img 
-            src="/images/blogpage/blogpostimage1.svg" 
-            alt="Interior design hero" 
-            className="w-full h-full object-cover"
-          />
+        {/* --- 3. HERO IMAGE (3D TILT) --- */}
+        <div ref={imageContainerRef} className="w-full max-w-[1312px]">
+            <TiltImage 
+                src="/images/blogpage/blogpostimage1.svg"
+                alt="Interior design hero"
+                containerClassName="w-full h-[300px] md:h-[600px] rounded-sm bg-gray-200"
+                className="w-full h-full object-cover"
+            />
         </div>
 
       </div>

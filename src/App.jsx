@@ -23,6 +23,7 @@ import BlogStandard02 from './pages/BlogStandard'
 import BlogGrid01 from './pages/BlogPage'
 import BlogPost01 from './pages/BlogPost'
 import Contact01 from './pages/ContactPage'
+import Faqpage from './pages/Faqpage'
 
 function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -54,6 +55,7 @@ function App() {
             <Route path="/blogpost01" element={<BlogPost01 />} />
             <Route path="/contact01" element={<Contact01 />} />
             <Route path="/not_found" element={<NotFound />} />
+            <Route path="/faqpage" element={<Faqpage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>

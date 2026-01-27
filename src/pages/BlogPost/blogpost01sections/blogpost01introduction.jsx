@@ -8,6 +8,39 @@ const BlogPostIntroduction = () => {
   const containerRef = useRef(null);
   const contentRef = useRef(null);
 
+  // --- TILT REFS & HANDLERS ---
+  const imageContainerRef = useRef(null);
+  const imageTiltRef = useRef(null);
+
+  const handleMouseMove = (e) => {
+    if (!imageContainerRef.current || !imageTiltRef.current) return;
+    const { left, top, width, height } = imageContainerRef.current.getBoundingClientRect();
+    // Calculate mouse position relative to center (-0.5 to 0.5)
+    const x = (e.clientX - left) / width - 0.5;
+    const y = (e.clientY - top) / height - 0.5;
+
+    gsap.to(imageTiltRef.current, {
+      rotationY: x * 10,  // Tilt horizontally
+      rotationX: -y * 10, // Tilt vertically (inverted)
+      transformPerspective: 1000,
+      transformOrigin: "center",
+      ease: "power1.out",
+      duration: 0.4
+    });
+  };
+
+  const handleMouseLeave = () => {
+    if (!imageTiltRef.current) return;
+    // Reset position
+    gsap.to(imageTiltRef.current, {
+      rotationY: 0,
+      rotationX: 0,
+      ease: "power3.out",
+      duration: 1
+    });
+  };
+  // ---------------------------
+
   useEffect(() => {
     const ctx = gsap.context(() => {
       // Select all elements with the 'reveal-on-scroll' class
@@ -46,7 +79,10 @@ const BlogPostIntroduction = () => {
   const borderMain = "border-[#0e0e0e] dark:border-[#e2e2e2]";
 
   return (
-    <div className="w-full min-h-screen bg-bg-light dark:bg-bg-dark flex flex-col items-center font-['Inter'] transition-colors duration-300">
+    <div 
+        className="w-full min-h-screen bg-bg-light dark:bg-bg-dark flex flex-col items-center transition-colors duration-300"
+        style={{ fontFamily: '"Inter Variable", sans-serif' }}
+    >
       
       {/* The Main Layout Container */}
       <div 
@@ -79,10 +115,22 @@ const BlogPostIntroduction = () => {
 
           {/* Section 2: Image Area with Caption */}
           <div className="reveal-on-scroll w-full h-[528px] py-[48px] flex flex-col gap-[8px]">
-            {/* Image Placeholder */}
-            <div className="flex-grow w-full bg-[#D9D9D9] dark:bg-[#333333] flex items-center justify-center relative overflow-hidden transition-colors duration-300">
-                <div className={`opacity-20 ${textMain}`}>
-                   <svg width="64" height="64" viewBox="0 0 24 24" fill="currentColor"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
+            
+            {/* --- TILT CONTAINER --- */}
+            <div 
+                ref={imageContainerRef}
+                className="flex-grow w-full perspective-[1000px] relative overflow-hidden"
+                onMouseMove={handleMouseMove}
+                onMouseLeave={handleMouseLeave}
+            >
+                 {/* TILTED ELEMENT (The Image Placeholder) */}
+                <div 
+                    ref={imageTiltRef}
+                    className="w-full h-full bg-[#D9D9D9] dark:bg-[#333333] flex items-center justify-center transition-colors duration-300 will-change-transform rounded-sm"
+                >
+                    <div className={`opacity-20 ${textMain}`}>
+                       <svg width="64" height="64" viewBox="0 0 24 24" fill="currentColor"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
+                    </div>
                 </div>
             </div>
             

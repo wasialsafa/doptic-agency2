@@ -29,9 +29,72 @@ const POSTS = [
   { id: 6, category: "Dev", title: "React server components deep dive", desc: "Understanding the next evolution of frontend architecture.", img: IMAGES.post2 },
 ];
 
+// --- HELPER: SPLIT TEXT FOR TYPEWRITER ---
+const SplitText = ({ children, className, style }) => {
+  return (
+    <div className={className} style={style}>
+      {children.split('').map((char, index) => (
+        <span 
+          key={index} 
+          className="char inline-block" 
+          style={{ opacity: 0 }} 
+        >
+          {char === ' ' ? '\u00A0' : char}
+        </span>
+      ))}
+    </div>
+  );
+};
+
+// --- HELPER: 3D TILT IMAGE COMPONENT ---
+const TiltImage = ({ src, alt, className, containerClassName }) => {
+  const imageRef = useRef(null);
+  const containerRef = useRef(null);
+
+  const handleMouseMove = (e) => {
+    if (!containerRef.current || !imageRef.current) return;
+    const { left, top, width, height } = containerRef.current.getBoundingClientRect();
+    const x = (e.clientX - left) / width - 0.5;
+    const y = (e.clientY - top) / height - 0.5;
+
+    gsap.to(imageRef.current, {
+      rotationY: x * 20, 
+      rotationX: -y * 20, 
+      transformPerspective: 1000,
+      transformOrigin: "center",
+      ease: "power1.out",
+      duration: 0.4
+    });
+  };
+
+  const handleMouseLeave = () => {
+    if (!imageRef.current) return;
+    gsap.to(imageRef.current, {
+      rotationY: 0,
+      rotationX: 0,
+      ease: "power3.out",
+      duration: 1
+    });
+  };
+
+  return (
+    <div 
+      ref={containerRef}
+      className={`perspective-[1000px] overflow-hidden bg-transparent ${containerClassName}`}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+    >
+      <div ref={imageRef} className="w-full h-full will-change-transform rounded-sm overflow-hidden">
+        <img src={src} alt={alt} className={className} />
+      </div>
+    </div>
+  );
+};
+
 const BlogPage = () => {
   const containerRef = useRef(null);
   const marqueeRef = useRef(null);
+  const headerRef = useRef(null);
   const [activeCategory, setActiveCategory] = useState('View all');
 
   useEffect(() => {
@@ -42,10 +105,20 @@ const BlogPage = () => {
         opacity: 0,
         duration: 1.2,
         stagger: 0.1,
-        ease: "power3.out"
+        ease: "power3.out",
+        delay: 0.5 
       });
 
-      // 2. Marquee Animation
+      // 2. Typewriter Effect
+      const chars = headerRef.current.querySelectorAll('.char');
+      gsap.to(chars, {
+        opacity: 1,
+        duration: 0.05,
+        stagger: 0.03,
+        ease: "none",
+      });
+
+      // 3. Marquee Animation
       const marqueeContent = marqueeRef.current;
       if (marqueeContent) {
         gsap.to(marqueeContent, {
@@ -56,7 +129,7 @@ const BlogPage = () => {
         });
       }
 
-      // 3. Scroll Trigger for Posts
+      // 4. Scroll Trigger for Posts
       const posts = gsap.utils.toArray('.blog-post');
       posts.forEach((post) => {
         gsap.from(post, {
@@ -87,6 +160,8 @@ const BlogPage = () => {
     letterSpacing: '0%',
   };
 
+  const circularLabelStyle = "flex items-center justify-center h-[25px] px-[12px] border border-[#0e0e0e1a] dark:border-white/20 rounded-[99px] text-[12px] font-bold uppercase tracking-wider text-[#0e0e0e]";
+
   const categories = ['View all', 'Category one', 'Category two', 'Category three', 'Category four'];
 
   return (
@@ -97,24 +172,45 @@ const BlogPage = () => {
     >
       
       {/* --- HERO HEADER --- */}
-      <header className={`${layoutWrapper} pb-0 mb-10 md:mb-[64px]`}>
-        <div className="flex flex-col items-start md:items-end hero-animate">
-          <h1 
-            className={`font-medium text-left md:text-right w-full ${textMain}`}
-            style={{ fontFamily: FONT_INTER }}
-          >
-            <span className="block text-5xl md:text-7xl lg:text-[128px] leading-[1.1] tracking-tighter">
+      <header ref={headerRef} className={`${layoutWrapper} pb-0 mb-10 md:mb-[64px]`}>
+        <div className="flex flex-col items-start md:items-end">
+          
+          {/* TYPEWRITER TITLE */}
+          <div className="w-full flex flex-col items-start md:items-end gap-2 lg:gap-4">
+            
+            {/* 1. CRAFTING TOMORROW'S */}
+            <SplitText 
+              className={`font-medium text-left md:text-right w-full ${textMain}`}
+              style={{ 
+                fontFamily: FONT_INTER,
+                fontWeight: 500,
+                fontSize: 'clamp(48px, 9vw, 128px)', // Max 128px
+                lineHeight: '120%',
+                letterSpacing: '-0.04em',
+                textAlign: 'right'
+              }}
+            >
               Crafting Tomorrow's
-            </span>
-            <span 
-              className="italic font-normal block text-4xl md:text-6xl lg:text-[104px] leading-[1.2] mt-2 md:mt-0"
-              style={{ fontFamily: FONT_CASLON }}
+            </SplitText>
+            
+            {/* 2. SOLUTIONS, TODAY. */}
+            <SplitText 
+              className={`italic font-normal block text-left md:text-right w-full mt-2 md:mt-0 ${textMain}`}
+              style={{ 
+                fontFamily: FONT_CASLON,
+                fontWeight: 400,
+                fontStyle: 'italic',
+                fontSize: 'clamp(36px, 7vw, 104px)', // Max 104px
+                lineHeight: '120%',
+                letterSpacing: '-0.04em',
+                textAlign: 'right'
+              }}
             >
               Solutions, Today.
-            </span>
-          </h1>
+            </SplitText>
+          </div>
           
-          <div className="w-full flex justify-start md:justify-end mt-6 md:mt-8">
+          <div className="w-full flex justify-start md:justify-end mt-6 md:mt-8 hero-animate">
             <p className={`font-normal text-base md:text-[18px] leading-[160%] text-left md:text-right max-w-[740px] ${textSub}`}>
               We're a group of creative thinkers, developers, and designers dedicated to turning your vision into impactful digital reality.
             </p>
@@ -124,9 +220,7 @@ const BlogPage = () => {
 
       {/* --- NAVIGATION BAR --- */}
       <nav className={`${layoutWrapper} !pt-0 !pb-10 hero-animate`}>
-        {/* GAP 0: Buttons sit flush against each other */}
         <div className={`${contentWidth} flex flex-wrap md:flex-nowrap items-center gap-0`}>
-          
           {categories.map((cat) => {
             const isActive = activeCategory === cat;
             return (
@@ -140,10 +234,6 @@ const BlogPage = () => {
                   bg-transparent whitespace-nowrap transition-all duration-300
                   ${textMain}
                   border
-                  /* LOGIC UPDATE:
-                     - Active: Border Visible (Full Opacity), Text 100% Opacity
-                     - Inactive: Border Transparent (Invisible), Text 70% Opacity
-                  */
                   ${isActive 
                     ? 'border-[#0E0E0E]/10 dark:border-[#e2e2e2]/10 opacity-100 z-10' 
                     : 'border-transparent opacity-100 hover:opacity-100'
@@ -155,7 +245,6 @@ const BlogPage = () => {
               </button>
             );
           })}
-          
         </div>
       </nav>
 
@@ -179,20 +268,19 @@ const BlogPage = () => {
       <main className={`${layoutWrapper} !pt-0`}>
         <div className={`${contentWidth} flex flex-col gap-12 md:gap-[64px]`}>
           
-          {POSTS.map((post) => (
+          {POSTS.map((post, idx) => (
             <article key={post.id} className="blog-post group cursor-pointer w-full">
-              {/* Image */}
-              <div className="aspect-[43/25] md:aspect-[43/10] w-full overflow-hidden bg-[#E5E5E5] dark:bg-[#333] mb-4 md:mb-6 rounded-sm">
-                <img 
-                  src={post.img} 
-                  alt={post.title}
-                  className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105" 
-                />
-              </div>
+              {/* Image with TILT */}
+              <TiltImage 
+                src={post.img} 
+                alt={post.title} 
+                containerClassName="aspect-[43/25] md:aspect-[43/10] w-full mb-4 md:mb-6"
+                className="w-full h-full object-cover" 
+              />
 
-              {/* Meta */}
+              {/* Meta with CIRCULAR LABELS */}
               <div className="flex justify-between items-center mb-2 md:mb-4">
-                <span className={`bg-[#FDE2E4] text-[#0e0e0e] text-[10px] md:text-[12px] font-bold px-3 py-1 rounded-sm uppercase tracking-wide`}>
+                <span className={`${circularLabelStyle} ${idx % 2 === 0 ? 'bg-blue-100' : 'bg-[#FDE2E4]'}`}>
                   {post.category}
                 </span>
                 <span className={`text-[10px] md:text-[12px] font-medium uppercase tracking-widest ${textSub}`}>

@@ -9,6 +9,23 @@ if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
+// --- HELPER: SPLIT TEXT FOR TYPEWRITER ---
+const SplitText = ({ children, className, style }) => {
+  return (
+    <span className={className} style={style}>
+      {children.split('').map((char, index) => (
+        <span 
+          key={index} 
+          className="char inline-block" 
+          style={{ opacity: 0 }} // Start hidden
+        >
+          {char === ' ' ? '\u00A0' : char}
+        </span>
+      ))}
+    </span>
+  );
+};
+
 const topRowData = [
   { 
     id: 1, 
@@ -41,25 +58,25 @@ const bottomRowData = [
     id: 5, 
     name: "Tom Cook", 
     role: "Backend Developer", 
-    image: "/images/aboutpage/teamimage4.svg" 
+    image: "/images/teamspage/teamimage5.svg" 
   },
   { 
     id: 6, 
     name: "Whitney Hellings", 
     role: "Product Designer", 
-    image: "/images/aboutpage/teamimage3.svg" 
+    image: "/images/teamspage/teamimage6.svg" 
   },
   { 
     id: 7, 
     name: "Jane Cooper", 
     role: "Marketing", 
-    image: "/images/aboutpage/teamimage2.svg" 
+    image: "/images/teamspage/teamimage7.svg" 
   },
   { 
     id: 8, 
     name: "Robert Fox", 
     role: "Director", 
-    image: "/images/aboutpage/teamimage1.svg" 
+    image: "/images/teamspage/teamimage8.svg" 
   },
 ];
 
@@ -71,49 +88,40 @@ export default function TeamSection() {
   useEffect(() => {
     const ctx = gsap.context(() => {
       
-      // --- NEW HANDWRITING ANIMATION FOR HEADER ---
+      // --- 1. HEADER ANIMATION (TYPEWRITER ONLY) ---
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: ".header-content",
           start: "top 90%",
         },
-        defaults: { ease: "power2.out" }
       });
 
-      // 1. Initial State: Hidden via clip-path
-      tl.set([".tw-title-1", ".tw-title-2", ".tw-desc"], {
-        clipPath: "polygon(0 0, 0% 0, 0% 100%, 0 100%)", // Masked to left
-        y: 20,
-        opacity: 0
-      });
+      // Select characters
+      const charsTitle1 = document.querySelectorAll(".tw-title-1 .char");
+      const charsTitle2 = document.querySelectorAll(".tw-title-2 .char");
 
-      // 2. Animate "Our talented"
-      tl.to(".tw-title-1", {
-        clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)", // Wipe reveal
-        y: 0,
+      // Typewriter sequence (ADJUSTED FOR VISIBILITY)
+      tl.to(charsTitle1, {
         opacity: 1,
-        duration: 0.8,
-      });
-
-      // 3. Animate "team" (Italic)
-      tl.to(".tw-title-2", {
-        clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)",
-        y: 0,
+        duration: 0.1,  // Slower fade per char
+        stagger: 0.05,  // Slower typing speed
+        ease: "power1.inOut"
+      })
+      .to(charsTitle2, {
         opacity: 1,
-        duration: 0.8,
-      }, "-=0.4"); // Overlap
+        duration: 0.1,
+        stagger: 0.05,
+        ease: "power1.inOut"
+      }, "-=0.2") // Slight overlap
+      
+      // Simple fade up for description
+      .fromTo(".tw-desc", 
+        { y: 20, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.8, ease: "power2.out" }, 
+        "-=0.2"
+      );
 
-      // 4. Animate Subtext
-      tl.to(".tw-desc", {
-        clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)",
-        y: 0,
-        opacity: 1,
-        duration: 0.8,
-      }, "-=0.4");
-
-      // --- EXISTING ANIMATIONS ---
-
-      // Rows entrance
+      // --- 2. EXISTING TEAM ROW ANIMATIONS ---
       gsap.fromTo(".team-row", 
         { y: 100, autoAlpha: 0 },
         {
@@ -129,7 +137,7 @@ export default function TeamSection() {
         }
       );
       
-      // Footer/Button entrance
+      // --- 3. FOOTER ANIMATION ---
       gsap.fromTo(".footer-content", 
         { y: 30, autoAlpha: 0 },
         {
@@ -158,9 +166,10 @@ export default function TeamSection() {
         
         {/* Header Section */}
         <header className="header-content w-full max-w-[1290px] mb-[64px]">
-          {/* UPDATED: Title Color */}
           <h1 className="text-[#0e0e0e] dark:text-[#e2e2e2] mb-[24px] flex items-baseline flex-wrap gap-4">
-            <span 
+            
+            {/* TYPEWRITER TEXT 1 */}
+            <SplitText 
               className="tw-title-1 font-medium"
               style={{
                 fontFamily: "'Inter Variable', sans-serif",
@@ -172,9 +181,10 @@ export default function TeamSection() {
               }}
             >
               Our talented
-            </span>
+            </SplitText>
             
-            <span 
+            {/* TYPEWRITER TEXT 2 */}
+            <SplitText 
               className="tw-title-2"
               style={{
                 fontFamily: "'Libre Caslon Text', serif",
@@ -187,10 +197,9 @@ export default function TeamSection() {
               }}
             >
               team
-            </span>
+            </SplitText>
           </h1>
 
-          {/* UPDATED: Subtext Color & Removed inline color */}
           <p 
             className="tw-desc whitespace-nowrap text-[#0E0E0EB2] dark:text-[#E2E2E2]/70"
             style={{
@@ -217,6 +226,12 @@ export default function TeamSection() {
                 <div 
                   key={member.id}
                   onMouseEnter={() => setActiveTopIndex(index)}
+                  // --- REDIRECT LOGIC FOR FIRST IMAGE ---
+                  onClick={() => {
+                    if (member.id === 1) {
+                      window.location.href = '/design_team'; // REPLACE WITH YOUR LINK
+                    }
+                  }}
                   className="relative group overflow-hidden cursor-pointer h-[520px] transition-[width] duration-700 ease-[cubic-bezier(0.25,1,0.5,1)]"
                   style={{
                     width: isActive ? '520px' : '226.66px',
@@ -230,7 +245,7 @@ export default function TeamSection() {
                     ${isActive ? 'scale-105' : 'scale-100'}`}
                   />
                   
-                  {/* Banner (Text stays white as it's on orange bg) */}
+                  {/* Banner */}
                   <div 
                     className="absolute left-0 w-full bg-[#FF4D2A] text-white flex flex-col justify-center transition-all duration-500 ease-in-out z-10"
                     style={{ 
@@ -302,7 +317,7 @@ export default function TeamSection() {
                     ${isActive ? 'scale-105' : 'scale-100'}`}
                   />
                   
-                  {/* Banner (Text stays white as it's on orange bg) */}
+                  {/* Banner */}
                   <div 
                     className="absolute left-0 w-full bg-[#FF4D2A] text-white flex flex-col justify-center transition-all duration-500 ease-in-out z-10"
                     style={{ 
@@ -348,7 +363,6 @@ export default function TeamSection() {
 
         {/* Footer CTA Section */}
         <div className="footer-content max-w-xl w-full opacity-0 invisible">
-          {/* UPDATED: Main Text Color */}
           <h2 className="text-[#0e0e0e] dark:text-[#e2e2e2] mb-[24px]">
             <span 
               style={{
@@ -377,7 +391,6 @@ export default function TeamSection() {
             </span>
           </h2>
 
-          {/* UPDATED: Subtext Color & Removed inline color */}
           <p 
             className="mb-[40px] text-[#0E0E0EB2] dark:text-[#E2E2E2]/70"
             style={{

@@ -133,7 +133,7 @@ const Services = () => {
         [--inactive-color:rgba(160,160,160,0.3)] dark:[--inactive-color:rgba(255,255,255,0.3)]
       "
     >
-      <div className="w-full lg:max-w-[1440px] mx-auto px-6 py-12 md:py-16 lg:px-[75px] lg:pt-[200px] lg:pb-[120px] flex flex-col box-border">
+      <div className="w-full lg:max-w-[1440px] mx-auto px-6 py-12 md:py-16 lg:px-[75px] lg:pt-[200px] lg:pb-[0px] flex flex-col box-border">
         
         {/* HEADER */}
         <div ref={headerRef} className="flex flex-col items-start gap-[12px] w-full lg:max-w-[1290px] shrink-0 mb-8 md:mb-10 lg:mb-[64px] z-20 relative">
