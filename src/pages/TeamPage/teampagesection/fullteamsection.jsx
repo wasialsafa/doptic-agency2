@@ -241,8 +241,8 @@ export default function TeamSection() {
                   <img 
                     src={member.image} 
                     alt={member.name}
-                    className={`absolute inset-0 w-full h-full object-cover opacity-100 transition-transform duration-1000 
-                    ${isActive ? 'scale-105' : 'scale-100'}`}
+                    className={`absolute inset-0 w-full h-full object-cover opacity-100 transition-all duration-1000 
+                    ${isActive ? 'scale-105 grayscale-0' : 'scale-100 grayscale'}`}
                   />
                   
                   {/* Banner */}
@@ -313,8 +313,8 @@ export default function TeamSection() {
                   <img 
                     src={member.image} 
                     alt={member.name}
-                    className={`absolute inset-0 w-full h-full object-cover opacity-100 transition-transform duration-1000 
-                    ${isActive ? 'scale-105' : 'scale-100'}`}
+                    className={`absolute inset-0 w-full h-full object-cover opacity-100 transition-all duration-1000 
+                    ${isActive ? 'scale-105 grayscale-0' : 'scale-100 grayscale'}`}
                   />
                   
                   {/* Banner */}

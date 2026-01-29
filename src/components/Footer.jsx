@@ -4,6 +4,8 @@ import { useCursor } from "../context/CursorContext";
 
 // --- START: CallToActionSection Component ---
 
+// --- START: CallToActionSection Component ---
+
 export const CallToActionSection = () => {
   const { setCursorVariant, setCursorText } = useCursor();
 
@@ -23,21 +25,23 @@ export const CallToActionSection = () => {
     setCursorVariant("default");
     setCursorText("");
     
-    // ✅ FIX: Force a manual refresh/hard load to the contact page
-    // This kills all stuck GSAP animations from the previous page
+    // Force a manual refresh/hard load to the contact page
     window.location.href = "/contact01";
   };
 
   return (
     <section 
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
+      // REMOVED onMouseEnter/Leave from here
       onClick={handleClick}
       className="flex flex-col w-full items-center gap-20 px-6 md:px-[75px] py-[100px] md:py-[200px] bg-[#ff4920] transition-colors duration-300 cursor-none"
     >
-      <div className="flex flex-col items-center gap-3.5 relative w-full pointer-events-none">
+      {/* REMOVED 'pointer-events-none' from this div so the H2 can capture the mouse hover */}
+      <div className="flex flex-col items-center gap-3.5 relative w-full">
         <h2 
-          className="w-fit font-normal text-transparent text-5xl md:text-7xl lg:text-9xl text-center leading-tight md:leading-[128px] relative mt-[-1.00px] translate-y-[-1rem] animate-fade-in opacity-1 [--animation-delay:200ms]"
+          // ADDED Event Listeners here specific to the text
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+          className="w-fit font-normal text-transparent text-5xl md:text-7xl lg:text-9xl text-center leading-tight md:leading-[128px] relative mt-[-1.00px] translate-y-[-1rem] animate-fade-in opacity-1 [--animation-delay:200ms] hover:scale-[1.02] transition-transform duration-300"
           style={{ fontFamily: '"Inter Variable", sans-serif' }}
         >
           <span className="font-medium text-text-dark  tracking-tighter md:tracking-[-6.55px] leading-tight md:leading-[153.6px]">
@@ -64,7 +68,6 @@ export const CallToActionSection = () => {
     </section>
   );
 };
-
 // --- END: CallToActionSection Component ---
 
 // --- START: FooterSection Component ---
