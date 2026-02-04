@@ -170,7 +170,7 @@ const AwardsSection = () => {
                    style={{ width: '85px' }}>
                 
                 <span 
-                  className="transition-all duration-300 text-[32px] group-hover:text-[40px]" 
+                  className="no-cursor-effect transition-all duration-300 text-[32px] group-hover:text-[40px]" 
                   style={{ 
                     fontFamily: '"Inter Variable", sans-serif',
                     fontWeight: 700,
@@ -180,7 +180,7 @@ const AwardsSection = () => {
                   {award.date.split(' ')[0]}
                 </span>
                 
-                <span className="whitespace-nowrap" style={{ 
+                <span className="no-cursor-effect whitespace-nowrap" style={{ 
                     fontFamily: '"Inter Variable", sans-serif',
                     fontWeight: 400,
                     fontSize: '16px',
@@ -195,14 +195,14 @@ const AwardsSection = () => {
               {/* Width auto on mobile, fixed 488px on desktop */}
               <div className="shrink-0 flex flex-col justify-center w-full md:w-[488px] mb-4 md:mb-0 md:mr-[64px]" 
                    style={{ minHeight: '60px' }}>
-                <h3 className="text-[#0e0e0e] dark:text-white text-2xl md:text-[32px]" style={{ 
+                <h3 className="no-cursor-effect text-[#0e0e0e] dark:text-white text-2xl md:text-[32px]" style={{ 
                     fontFamily: '"Inter Variable", sans-serif', fontWeight: 500, lineHeight: '120%', letterSpacing: '-0.04em'
                 }}>
                   {award.title}
                 </h3>
                 <p style={{ 
                     fontFamily: '"Inter Variable", sans-serif', fontWeight: 400, fontSize: '14px', lineHeight: '160%', color: '#0E0E0E', opacity: 0.7 
-                }} className="dark:text-white dark:opacity-70">
+                }} className="no-cursor-effect dark:text-white dark:opacity-70">
                     {award.subtitle}
                 </p>
               </div>
@@ -210,7 +210,7 @@ const AwardsSection = () => {
               {/* 3. DESCRIPTION SECTION */}
               <div className="flex-1 flex justify-start md:justify-end items-end w-full md:w-auto md:pb-[34px]">
                 {/* Text Wrap on mobile, No-Wrap on desktop */}
-                <p className="text-[#0e0e0e] dark:text-white opacity-70 whitespace-normal md:whitespace-nowrap text-left md:text-right" style={{ 
+                <p className="no-cursor-effect text-[#0e0e0e] dark:text-white opacity-70 whitespace-normal md:whitespace-nowrap text-left md:text-right" style={{ 
                     fontFamily: '"Inter Variable", sans-serif', fontWeight: 400, fontSize: '16px', lineHeight: '160%',
                 }}>
                   {award.desc}

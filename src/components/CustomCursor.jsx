@@ -33,6 +33,9 @@ const CustomCursor = () => {
 
     // 1. Text Hover
     const onTextEnter = () => {
+
+      if (e.target.closest('.no-cursor-effect')) return;
+      
       if (cursorVariant === 'contact') return; 
 
       gsap.to(cursor, { scale: 1, duration: 0.3 }) 
